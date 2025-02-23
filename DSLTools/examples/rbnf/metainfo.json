@@ -1,0 +1,10 @@
+{
+    "syntax": {
+        "type": "rbnf",
+        "info": {
+            "supportInfo": "DSLTools/examples/expression/rbnf.rbnf",
+            "diagrams": "_examples/expression"
+        }
+    },
+    "debugInfoDir": "_debug"
+}

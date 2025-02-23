@@ -1,0 +1,28 @@
+TERMINALS:
+    name          ::= '[A-Za-z_][A-Za-z0-9_]*';
+    string        ::= '\'(\\.|[^\\\'])*\'';
+    symbol        ::= '[:=#;(){}\[\]|.]';
+    whitespace    ::= '\s+'.
+
+KEYS:
+    'TERMINALS'; 'KEYS'; 'NONTERMINALS'; 'AXIOM'; 'RULES'; 'ERRORS'.
+
+NONTERMINALS:
+    Grammar; TerminalsBlock; KeysBlock; NonterminalsBlock;
+    AxiomBlock; RulesBlock; Rule; Rhs; Element; Group; Optional; Iteration.
+
+AXIOM: Grammar.
+
+RULES:
+    Grammar          ::= TerminalsBlock KeysBlock NonterminalsBlock AxiomBlock RulesBlock;
+    TerminalsBlock   ::= 'TERMINALS' ':' (name '::=' string ';')+;
+    KeysBlock        ::= 'KEYS' ':' ('\'' symbol '\'' ';')+;
+    NonterminalsBlock::= 'NONTERMINALS' ':' (name ';')+;
+    AxiomBlock       ::= 'AXIOM' ':' name ';';
+    RulesBlock       ::= 'RULES' ':' (Rule ';')+;
+    Rule             ::= name '::=' Rhs;
+    Rhs              ::= Element ('|' Element)*;
+    Element          ::= name | string | Group | Optional | Iteration;
+    Group            ::= '(' Rhs ')';
+    Optional         ::= '[' Rhs ']';
+    Iteration        ::= '{' Rhs ['#' name] '}';
