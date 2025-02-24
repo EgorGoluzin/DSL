@@ -1,22 +1,34 @@
 import pydot
 from collections import defaultdict
 from typing import Dict, List, Union, Optional, Set, Tuple
-import pathlib
+from pathlib import Path
 from DSLTools.models.parse import Rule, Terminal, GrammarElement, VirtNodeType, Iteration
+from DSLTools.models.interface import IGrammarParser, MetaObject, GrammarObject
 
-class VirtParser:
-    def __init__(self, diagrams_dir: str):
-        self.diagrams_dir = pathlib.Path(diagrams_dir)
-        self.rules: Dict[str, Rule] = {}
+
+class VirtParser(IGrammarParser):
+    def __init__(self):
+        self.rules: Dict[str, List[Rule]] = {}
         self.edges: Dict[str, List[Tuple[str, Optional[Terminal]]]] = defaultdict(list)
         self.node_map: Dict[str, Union[GrammarElement, VirtNodeType]] = {}
 
-    def parse(self) -> Dict[str, Rule]:
-        for dot_file in self.diagrams_dir.glob("*.gv"):
-            self._process_diagram(dot_file)
-        return self.rules
+    def parse(self, model_info: MetaObject) -> GrammarObject:
+        syntax_dir = model_info.syntax["info"]["syntax_dir"]
+        support_file = model_info.syntax["info"]["support_file"]
+        rules_of_grammar = self._syntax_parse(syntax_dir)
+        terminals, non_terminals, axiom = self._support_parse(support_file)
+        return GrammarObject(rules=rules_of_grammar, terminals=terminals,
+                             non_terminals=non_terminals, axiom=axiom)
 
-    def _process_diagram(self, file_path: pathlib.Path):
+    def _syntax_parse(self, diagrams_dir: Path):
+        for dot_file in diagrams_dir.glob("*.gv"):
+            self._process_diagram(dot_file)
+        return dict.fromkeys(self.rules.keys(), [item[0].get_grammar_rules() for item in self.rules.values()])
+
+    def _support_parse(self, support_file: Path):
+        return [""], [""], ""
+
+    def _process_diagram(self, file_path: Path):
         graph = pydot.graph_from_dot_file(str(file_path))[0]
         self._init_graph_data(graph)
 
@@ -32,7 +44,7 @@ class VirtParser:
         if not rule.alternatives:
             raise ValueError(f"Rule {rule.name} is empty")
 
-        self.rules[rule_name] = rule
+        self.rules[rule_name] = rule.alternatives[0]
 
     def _init_graph_data(self, graph: pydot.Dot):
         self.edges.clear()
@@ -150,6 +162,34 @@ class VirtParser:
         # Проверяем, что есть хотя бы одна альтернатива
         if not rule.alternatives:
             raise ValueError(f"Rule {rule.name} is empty")
+
+
+class UMLParser(IGrammarParser):
+    def parse(self, meta_object: MetaObject) -> GrammarObject:
+        syntax_dir = meta_object.syntax["info"]["syntax_dir"]
+        support_file = meta_object.syntax["info"]["support_file"]
+        rules_of_grammar = self._syntax_parse(syntax_dir)
+        terminals, non_terminals, axiom = self._support_parse(support_file)
+        return GrammarObject(rules=rules_of_grammar, terminals=terminals,
+                             non_terminals=non_terminals, axiom=axiom)
+
+    def _syntax_parse(self, syntax_dir) -> Dict[str, List[str]]:
+        return {"default": [""]}
+
+    def _support_parse(self, support_file: Path):
+        return [""], [""], ""
+
+
+class RBNFParser(IGrammarParser):
+    def parse(self, meta_object: MetaObject) -> GrammarObject:
+        syntax_dir = meta_object.syntax["info"]["syntax_dir"]
+        terminals, non_terminals, axiom, rules_of_grammar = self._syntax_parse(syntax_dir)
+
+        return GrammarObject(rules=rules_of_grammar, terminals=terminals,
+                             non_terminals=non_terminals, axiom=axiom)
+
+    def _syntax_parse(self, syntax_dir):
+        return {"default": [""]}
 
 
 class RBNFGenerator:
