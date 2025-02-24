@@ -1,5 +1,6 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 from enum import Enum
+from dataclasses import dataclass
 
 
 class VirtNodeType(Enum):
@@ -40,3 +41,14 @@ class Rule:
     def __init__(self, name: str):
         self.name = name
         self.alternatives: List[List[GrammarElement]] = []
+
+    def get_grammar_rules(self):
+        return self.alternatives[0][0]
+
+
+@dataclass
+class GrammarObject:
+    terminals: List[str]
+    non_terminals: List[str]
+    rules: Dict[str, List[str]]
+    axiom: str
