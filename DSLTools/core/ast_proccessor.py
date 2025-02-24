@@ -1,4 +1,6 @@
 from DSLTools.models.ast import TreeNode
+
+
 class ASTProcessor:
     def __init__(self, ast_root: TreeNode):
         self.ast_root = ast_root

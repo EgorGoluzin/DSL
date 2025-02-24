@@ -54,6 +54,7 @@ def extract_metadata(config):
     else:
         raise ValueError(f"Unsupported syntax type: {syntax_type}")
 
+
 def generate_dsl_info(metadata, output_dir):
     from core.dsl_generator import DSLInfoGenerator
     generator = DSLInfoGenerator(metadata)

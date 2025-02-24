@@ -10,7 +10,8 @@ class VirtNodeType(Enum):
     END = "point"
 
 
-class GrammarElement: pass
+class GrammarElement:
+    pass
 
 
 class Terminal(GrammarElement):
