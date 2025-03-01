@@ -1,9 +1,12 @@
-import pydot
 from collections import defaultdict
 from typing import Dict, List, Union, Optional, Set, Tuple
 from pathlib import Path
-from DSLTools.models.parse import Rule, Terminal, GrammarElement, VirtNodeType, Iteration
-from DSLTools.models.interface import IGrammarParser, MetaObject, GrammarObject
+import re
+from DSLTools.models import (
+    Rule, Terminal, GrammarElement, VirtNodeType, GrammarObject,
+    IGrammarParser, MetaObject)
+
+PROJECT_ROOT = Path(__file__).parent.parent
 
 
 class VirtParser(IGrammarParser):
@@ -21,147 +24,18 @@ class VirtParser(IGrammarParser):
                              non_terminals=non_terminals, axiom=axiom)
 
     def _syntax_parse(self, diagrams_dir: Path):
+        """"""
         for dot_file in diagrams_dir.glob("*.gv"):
             self._process_diagram(dot_file)
-        return dict.fromkeys(self.rules.keys(), [item[0].get_grammar_rules() for item in self.rules.values()])
+        return
 
     def _support_parse(self, support_file: Path):
+        """Даем путь к sgi файлу с инфой по лексике и вызываем функцию для ее парсинга"""
         return [""], [""], ""
 
-    def _process_diagram(self, file_path: Path):
-        graph = pydot.graph_from_dot_file(str(file_path))[0]
-        self._init_graph_data(graph)
-
-        rule_name = graph.get_name().strip('"')
-        rule = Rule(rule_name)
-
-        start_node = next(k for k, v in self.node_map.items() if v == VirtNodeType.START)
-        end_node = next(k for k, v in self.node_map.items() if v == VirtNodeType.END)
-
-        self._find_and_replace_cycles()
-        self._generate_alternatives(rule, start_node, end_node)
-
-        if not rule.alternatives:
-            raise ValueError(f"Rule {rule.name} is empty")
-
-        self.rules[rule_name] = rule.alternatives[0]
-
-    def _init_graph_data(self, graph: pydot.Dot):
-        self.edges.clear()
-        self.node_map.clear()
-
-        # Обработка узлов
-        for node in graph.get_nodes():
-            node_name = node.get_name().strip('"')
-            shape = node.get_shape() or "box"
-            label = node.get_label().strip('"') or node_name
-
-            if shape == VirtNodeType.START.value:
-                self.node_map[node_name] = VirtNodeType.START
-            elif shape == VirtNodeType.END.value:
-                self.node_map[node_name] = VirtNodeType.END
-            elif shape == VirtNodeType.NONTERMINAL.value:
-                self.node_map[node_name] = VirtNodeType(label)
-            elif shape in (VirtNodeType.TERMINAL.value, VirtNodeType.KEYWORD.value):
-                self.node_map[node_name] = Terminal(label)
-
-        # Обработка рёбер
-        for edge in graph.get_edges():
-            src = edge.get_source().strip('"')
-            dst = edge.get_destination().strip('"')
-            label = edge.get_label().strip('"') if edge.get_label() else None
-            self.edges[src].append((dst, Terminal(label) if label else None))
-
-    def _find_and_replace_cycles(self):
-        visited: Set[str] = set()
-        cycles = []
-
-        def dfs(node: str, path: List[str]):
-            if node in path:
-                cycle_start = path.index(node)
-                cycles.append(path[cycle_start:] + [node])
-                return
-            if node in visited:
-                return
-
-            visited.add(node)
-            for neighbor, _ in self.edges.get(node, []):
-                dfs(neighbor, path + [node])
-            visited.remove(node)
-
-        for node in self.node_map:
-            if node not in visited:
-                dfs(node, [])
-
-        # Обработка циклов
-        for cycle in cycles:
-            if len(cycle) > 1:
-                self._replace_cycle_with_iteration(cycle)
-
-    def _replace_cycle_with_iteration(self, cycle: List[str]):
-        if len(cycle) < 3:
-            return  # Цикл должен содержать как минимум стартовый узел и два элемента
-
-        main_node = cycle[0]
-        elements = []
-        separators = []
-
-        # Собираем элементы цикла и разделители
-        for i in range(1, len(cycle) - 1):
-            current_node = cycle[i]
-            edge = next((e for e in self.edges[cycle[i - 1]] if e[0] == current_node), None)
-            if edge:
-                separators.append(edge[1])
-            elements.append(self.node_map[current_node])
-
-        # Заменяем главный узел на итерацию
-        self.node_map[main_node] = Iteration(
-            elements=elements,
-            separator=separators[0] if separators else None
-        )
-
-        # Обновляем связи, удаляя цикличные переходы
-        self.edges[main_node] = [
-            (dst, label)
-            for dst, label in self.edges[main_node]
-            if dst not in cycle
-        ]
-
-    def _generate_alternatives(self, rule: Rule, start: str, end: str):
-        visited = set()
-
-        def traverse(node: str, path: List[GrammarElement], edge_label: Optional[Terminal]):
-            new_path = path.copy()
-
-            # Добавляем метку ребра
-            if edge_label is not None:
-                new_path.append(edge_label)
-
-            # Добавляем узел (если не старт/конец)
-            if node not in {start, end}:
-                elem = self.node_map.get(node)
-                if isinstance(elem, GrammarElement):
-                    new_path.append(elem)
-
-            # Если достигли конца, сохраняем путь
-            if node == end:
-                if new_path:
-                    rule.alternatives.append(new_path)
-                return
-
-            if node in visited:
-                return
-
-            visited.add(node)
-            for neighbor, label in self.edges.get(node, []):
-                traverse(neighbor, new_path, label)
-            visited.remove(node)
-
-        traverse(start, [], None)
-
-        # Проверяем, что есть хотя бы одна альтернатива
-        if not rule.alternatives:
-            raise ValueError(f"Rule {rule.name} is empty")
+    def _proces_diagram(self, dot_file):
+        """"""
+        pass
 
 
 class UMLParser(IGrammarParser):
@@ -181,39 +55,93 @@ class UMLParser(IGrammarParser):
 
 
 class RBNFParser(IGrammarParser):
+    def __init__(self):
+        self.keys = []
+        self.terminals = {}
+        self.non_terminals = []
+        self.axiom = ""
+        self.rules = {}
+        self.warnings = []
+
     def parse(self, meta_object: MetaObject) -> GrammarObject:
         syntax_dir = meta_object.syntax["info"]["syntax_dir"]
-        terminals, non_terminals, axiom, rules_of_grammar = self._syntax_parse(syntax_dir)
-
-        return GrammarObject(rules=rules_of_grammar, terminals=terminals,
-                             non_terminals=non_terminals, axiom=axiom)
+        syntax_path = rf"{PROJECT_ROOT}\{syntax_dir}\{meta_object.syntax['info']['filenames'][0]}"
+        self._syntax_parse(syntax_path)
+        return GrammarObject(keys=self.keys,
+                             terminals=self.terminals,
+                             non_terminals=self.non_terminals,
+                             axiom=self.axiom, rules=self.rules)
 
     def _syntax_parse(self, syntax_dir):
-        return {"default": [""]}
+        with open(syntax_dir, "r") as r:
+            content = r.read()
+            self._parse_iner(content)
 
+    def _parse_iner(self, content: str):
+        lines = content.split('\n')
+        for line_num, line in enumerate(lines, 1):
+            line = line.strip().rstrip(';.')
+            if not line or line.startswith('#'):
+                continue
+            # Detect section headers
+            if line.endswith(':'):
+                self.current_section = line[:-1].upper()
+                continue
+            self._parse_line(line, line_num)
 
-class RBNFGenerator:
-    @staticmethod
-    def generate(rule: Rule) -> str:
-        lines = []
-        for alt in rule.alternatives:
-            parts = []
-            for elem in alt:
-                if isinstance(elem, Iteration):
-                    iter_part = f"{{ {' '.join(map(str, elem.elements))}"
-                    if elem.separator:
-                        iter_part += f" # {elem.separator}"
-                    iter_part += " }"
-                    parts.append(iter_part)
-                else:
-                    parts.append(str(elem))
-            lines.append(" ".join(parts))
-        return f"{rule.name} ::= " + " |\n    ".join(lines) + " ."
+    def _parse_line(self, line: str, line_num: int):
+        try:
+            if self.current_section == 'TERMINALS':
+                self._parse_terminal(line)
+            elif self.current_section == 'KEYS':
+                self._parse_keys(line)
+            elif self.current_section == 'NONTERMINALS':
+                self._parse_non_terminals(line)
+            elif self.current_section == 'AXIOM':
+                self._parse_axiom(line)
+            elif self.current_section == 'RULES':
+                self._parse_rule(line)
+        except Exception as e:
+            self.warnings.append(f"Line {line_num}: Error parsing '{line}' - {str(e)}")
 
+    def _parse_terminal(self, line: str):
+        match = re.match(r'(\w+)\s*::=\s*(\'.*?\'|".*?")', line)
+        if not match:
+            raise ValueError(f"Invalid terminal format: {line}")
 
-# Пример использования
-parser = VirtParser(r"C:\Users\Hp\PycharmProjects\DSL\_examples\expression\\")
-grammar = parser.parse()
+        name = match.group(1)
+        pattern = match.group(2).strip('\'"')
+        self.terminals[name] = Terminal(name, pattern)
 
-for rule_name, rule in grammar.items():
-    print(RBNFGenerator.generate(rule))
+    def _parse_keys(self, line: str):
+        keys = [k.strip('\'" ') for k in line.split(';') if k.strip()]
+        self.keys.extend(keys)
+
+    def _parse_non_terminals(self, line: str):
+        nts = [nt.strip() for nt in line.split(';') if nt.strip()]
+        self.non_terminals.extend(nts)
+
+    def _parse_axiom(self, line: str):
+        self.axiom = line.strip()
+
+    def _parse_rule(self, line: str):
+        match = re.match(r'(\w+)\s*::=\s*{([^}]+)}', line)
+        if not match:
+            raise ValueError(f"Invalid rule format: {line}")
+
+        lhs = match.group(1)
+        rhs = match.group(2).strip()
+
+        # Split elements and separator
+        parts = rhs.split('#')
+        elements = [e.strip() for e in parts[0].split() if e.strip()]
+        separator = parts[1].strip() if len(parts) > 1 else None
+
+        self.rules[lhs] = Rule(
+            lhs=lhs,
+            elements=elements,
+            separator=separator
+        )
+
+    def get_warnings(self) -> List[str]:
+        return self.warnings

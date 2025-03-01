@@ -1,12 +1,9 @@
-class DSLGenerator:
-    def __init__(self, output_dir, terminals, keys, nonterminals, axiom):
-        self.output_dir = output_dir
-        self.terminals = terminals
-        self.keys = keys
-        self.nonterminals = nonterminals
-        self.axiom = axiom
+from pathlib import Path
+from DSLTools.models import GrammarObject
 
-    def generate_dsl_info(self):
+
+class DSLInfoGenerator:
+    def generate_dsl_info(self, go: GrammarObject, dest: Path):
         # Генерация dsl_info.py
         pass
 

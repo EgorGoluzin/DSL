@@ -2,8 +2,9 @@
     "syntax": {
         "type": "rbnf",
         "info": {
-            "supportInfo": "DSLTools/examples/expression/rbnf.rbnf",
-            "diagrams": "_examples/expression"
+            "syntax_dir": "examples\\rbnf",
+            "filenames": ["rbnf_sample.rbnf"],
+            "support_dir": ""
         }
     },
     "debugInfoDir": "_debug"

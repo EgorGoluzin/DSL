@@ -15,40 +15,23 @@ class GrammarElement:
     pass
 
 
-class Terminal(GrammarElement):
-    def __init__(self, value: str): self.value = value
-
-    def __repr__(self): return f"'{self.value}'"
-
-
-class NonTerminal(GrammarElement):
-    def __init__(self, name: str): self.name = name
-
-    def __repr__(self): return self.name
+@dataclass
+class Terminal:
+    name: str
+    pattern: str
 
 
-class Iteration(GrammarElement):
-    def __init__(self, elements: List[GrammarElement], separator: Optional[Terminal] = None):
-        self.elements = elements
-        self.separator = separator
-
-    def __repr__(self):
-        sep = f" # {self.separator}" if self.separator else ""
-        return f"{{ {' '.join(map(str, self.elements))} {sep} }}"
-
-
+@dataclass
 class Rule:
-    def __init__(self, name: str):
-        self.name = name
-        self.alternatives: List[List[GrammarElement]] = []
-
-    def get_grammar_rules(self):
-        return self.alternatives[0][0]
+    lhs: str
+    elements: List[str]
+    separator: Optional[str] = None
 
 
 @dataclass
 class GrammarObject:
-    terminals: List[str]
+    terminals: Dict[str, Terminal]
+    keys: List[str]
     non_terminals: List[str]
-    rules: Dict[str, List[str]]
     axiom: str
+    rules: Dict[str, Rule]

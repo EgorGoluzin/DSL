@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from parse import GrammarObject
-from support import MetaObject
+from .parse import GrammarObject
+from .support import MetaObject
 from pathlib import Path
 
 
