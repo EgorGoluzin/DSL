@@ -32,7 +32,7 @@ class Rule:
 @dataclass
 class GrammarObject:
     terminals: Dict[str, Terminal]
-    keys: List[str]
+    keys: List[tuple[str, str]]
     non_terminals: List[str]
     axiom: str
     rules: Dict[str, Rule]
@@ -45,17 +45,7 @@ class GrammarObject:
         return ",\n\t".join([f"(Terminal.{item.name}, r'{item.pattern}')" for item in self.terminals.values()])
 
     def get_keys_for_template(self):
-        keys_for_res = []
-        flag_error = False
-        for key in self.keys:
-            for terminal in self.terminals.values():
-                res = re.match(terminal.pattern, key)
-                if res is not None:
-                    keys_for_res.append(f"('{key}', Terminal.{terminal.name})")
-                    break
-            if flag_error:
-                raise "Somthing wrong in grammar keys..."
-        return ",\n\t".join(keys_for_res)
+        return ",\n\t".join([f"('{item[1]}', Terminal.{item[0]})" for item in self.keys])
 
     def get_non_terminals_for_template(self):
         return "\n\t" + "\n\t".join([f"{item} = '{item}'"for item in self.non_terminals])

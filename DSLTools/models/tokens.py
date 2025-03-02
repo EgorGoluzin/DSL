@@ -1,21 +1,14 @@
 from enum import Enum
 
 
-class TokenType(Enum):
-    TERMINAL = 1
-    KEYWORD = 2
-    NONTERMINAL = 3
-
-
 class Token:
     def __init__(self,
-                 type: TokenType,
+                 token_type: str,
                  value: str = None,
-                 terminal_type: str = None,
-                 keyword: str = None,
-                 attribute: object = None):
-        self.type = type
-        self.value = value
-        self.terminal_type = terminal_type
-        self.keyword = keyword
-        self.attribute = attribute
+                 position: int = None):
+        self.type = token_type  # Тип токена берем из грамматики.
+        self.value = value  # Лексическое значение
+        self.position = position  # Позиция в исходном коде
+
+    def __repr__(self):
+        return f"Token({self.type}, '{self.value}', pos: {self.position})"

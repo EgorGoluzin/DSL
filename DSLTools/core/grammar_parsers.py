@@ -33,7 +33,7 @@ class VirtParser(IGrammarParser):
         """Даем путь к sgi файлу с инфой по лексике и вызываем функцию для ее парсинга"""
         return [""], [""], ""
 
-    def _proces_diagram(self, dot_file):
+    def _process_diagram(self, dot_file):
         """"""
         pass
 
@@ -115,7 +115,21 @@ class RBNFParser(IGrammarParser):
 
     def _parse_keys(self, line: str):
         keys = [k.strip('\'" ') for k in line.split(';') if k.strip()]
-        self.keys.extend(keys)
+        is_key_in_regular_definition_error = True
+        is_key_in_more_than_one_regular_def_error = False
+        for key in keys:
+            for terminal in self.terminals.values():
+                res = re.match(terminal.pattern, key)
+                if res is not None and not is_key_in_more_than_one_regular_def_error:
+                    self.keys.append((terminal.name, key))
+                    is_key_in_regular_definition_error = False
+                    is_key_in_more_than_one_regular_def_error = True
+                elif is_key_in_more_than_one_regular_def_error and res is not None:
+                    raise f"More than one regular form included {key}"
+            if is_key_in_regular_definition_error:
+                raise f"No one regular form included {key}"
+
+
 
     def _parse_non_terminals(self, line: str):
         nts = [nt.strip() for nt in line.split(';') if nt.strip()]
