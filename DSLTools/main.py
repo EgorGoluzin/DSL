@@ -6,23 +6,26 @@ import json
 from argparse import ArgumentParser
 from DSLTools.models import (MetaObject, TypeParse, IGrammarParser, GrammarObject)
 from DSLTools.core.grammar_parsers import RBNFParser
+from DSLTools.utils.file_ops import validate_paths
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent.resolve()
 sys.path.insert(0, str(PROJECT_ROOT))
 
-#py -m DSLTools.main -j "ABSPATHFORMETAOBJ" -d "ABSPATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
+#py -m DSLTools.main -j "(ABS/REL)PATHFORMETAOBJ" -d "(ABS/REL)PATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
 def main():
     # Шаг 1: Парсинг аргументов
     args = parse_arguments()
+    json_path = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.jsonFile), is_dir=False)
+    directory_to_save = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.directory), is_dir=True)
     # Шаг 2: Загрузка конфигурации
-    config = load_config(args.jsonFile)
+    config = load_config(json_path)
     mo = MetaObject(config)
     # Пример использования
     parser = get_parser(mo)
     # Шаг 3. Парсинг грамматики.
     go = parser.parse(mo)
     # Шаг 4: Генерация dsl_info.py
-    generate_dsl_info(go=go, dest=args.directory)
+    generate_dsl_info(go=go, dest=directory_to_save)
 
     # # Шаг 5: Динамический импорт dsl_info
     # dsl_info = import_dsl_info(args.directory)
@@ -42,9 +45,6 @@ def parse_arguments():
 def load_config(json_path):
     with open(json_path) as f:
         return json.load(f)
-
-
-
 
 def get_parser(metadata: MetaObject)->IGrammarParser:
     ## TODO: Заменить на мапу
