@@ -23,8 +23,6 @@ class DefaultScanner(IScanner):
             key=lambda t: len(t.pattern),
             reverse=True
         )
-        print(" ".join([item.pattern for item in ordered_terminals]))
-
         for terminal in ordered_terminals:
             self.patterns.append(
                 (terminal.name, re.compile(f'{terminal.pattern}'))
@@ -52,12 +50,11 @@ class DefaultScanner(IScanner):
             for token_type, pattern in self.patterns:
                 if (regex_match := pattern.match(input_str, position)) is not None:
                     value = regex_match.group()
-                    # if value == '':
-
                     token = Token(
                         token_type=token_type,
                         value=value,
-                        position=line_num
+                        line=line_num,
+                        column=column
                     )
                     tokens.append(token)
 
@@ -65,7 +62,6 @@ class DefaultScanner(IScanner):
                     length = len(value)
                     position += length if length > 0 else 1
                     column += length
-                    print(value)
                     break
             else:
                 # Если не нашли совпадений
