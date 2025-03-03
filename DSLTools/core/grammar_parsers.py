@@ -60,8 +60,10 @@ class RBNFParser(IGrammarParser):
         self.terminals = {}
         self.non_terminals = []
         self.axiom = ""
-        self.rules = {}
+        self.rules: Dict[str, List[Rule]] = {}  # Изменено на список правил
         self.warnings = []
+        self.current_section = None
+
 
     def parse(self, meta_object: MetaObject) -> GrammarObject:
         syntax_dir = meta_object.syntax["info"]["syntax_dir"]
@@ -114,7 +116,14 @@ class RBNFParser(IGrammarParser):
         self.terminals[name] = Terminal(name, pattern)
 
     def _parse_keys(self, line: str):
-        keys = [k.strip('\'" ') for k in line.split(';') if k.strip()]
+        if line == ";":
+            key = line
+            for terminal in self.terminals.values():
+                res = re.match(terminal.pattern, key)
+                if res is not None:
+                    self.keys.append((terminal.name, key))
+                    return
+        keys = [k.strip('\'" ') for k in line.split(' ') if k.strip()]
         is_key_in_regular_definition_error = True
         is_key_in_more_than_one_regular_def_error = False
         for key in keys:
@@ -129,8 +138,6 @@ class RBNFParser(IGrammarParser):
             if is_key_in_regular_definition_error:
                 raise f"No one regular form included {key}"
 
-
-
     def _parse_non_terminals(self, line: str):
         nts = [nt.strip() for nt in line.split(';') if nt.strip()]
         self.non_terminals.extend(nts)
@@ -139,23 +146,35 @@ class RBNFParser(IGrammarParser):
         self.axiom = line.strip()
 
     def _parse_rule(self, line: str):
-        match = re.match(r'(\w+)\s*::=\s*{([^}]+)}', line)
+        # Обрабатываем альтернативы вида: A ::= B | C | D
+        match = re.match(r'(\w+)\s*::=\s*(.+)', line)
         if not match:
             raise ValueError(f"Invalid rule format: {line}")
 
         lhs = match.group(1)
-        rhs = match.group(2).strip()
+        rhs = match.group(2)
 
-        # Split elements and separator
-        parts = rhs.split('#')
-        elements = [e.strip() for e in parts[0].split() if e.strip()]
-        separator = parts[1].strip() if len(parts) > 1 else None
+        # Разделяем альтернативы
+        alternatives = [a.strip() for a in rhs.split('|')]
 
-        self.rules[lhs] = Rule(
-            lhs=lhs,
-            elements=elements,
-            separator=separator
-        )
+        rules_for_lhs = []
+        for alt in alternatives:
+            # Обрабатываем элементы и разделители внутри альтернативы
+            if '{' in alt and '}' in alt:
+                parts = re.match(r'\s*{(.*?)}(?:\s*#\s*(.*?))?\s*', alt)
+                elements = [e.strip() for e in parts.group(1).split() if e.strip()]
+                separator = parts.group(2).strip() if parts.group(2) else None
+            else:
+                elements = [alt.strip()]
+                separator = None
+
+            rules_for_lhs.append(Rule(
+                lhs=lhs,
+                elements=elements,
+                separator=separator
+            ))
+
+        self.rules[lhs] = rules_for_lhs
 
     def get_warnings(self) -> List[str]:
         return self.warnings

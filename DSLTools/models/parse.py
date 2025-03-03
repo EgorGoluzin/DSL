@@ -1,7 +1,6 @@
-import re
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 class VirtNodeType(Enum):
@@ -21,23 +20,45 @@ class Terminal:
     name: str
     pattern: str
 
+    def __str__(self) -> str:
+        return f"Terminal(name: {self.name}, pattern: {self.pattern})"
+
 
 @dataclass
 class Rule:
     lhs: str
     elements: List[str]
     separator: Optional[str] = None
+    def __str__(self):
+        return f"Rule(lhs: {self.lhs} els: {self.elements} sep: {self.separator})"
 
 
 @dataclass
 class GrammarObject:
-    terminals: Dict[str, Terminal]
-    keys: List[tuple[str, str]]
-    non_terminals: List[str]
-    axiom: str
-    rules: Dict[str, Rule]
+    terminals: Dict[str, Terminal] = field(default_factory=dict)
+    keys: List[Tuple[str, str]] = field(default_factory=list)
+    non_terminals: List[str] = field(default_factory=list)
+    axiom: str = ''
+    rules: Dict[str, List[Rule]] = field(default_factory=dict)
 
-    ## TODO: Mb... Refactor data class with template getters
+    def __post_init__(self):
+        self._validate()
+
+    def _validate(self):
+        # Проверка аксиомы
+        if self.axiom not in self.non_terminals:
+            raise ValueError(f"Axiom '{self.axiom}' is not a defined non-terminal")
+
+        # Проверка правил
+        for nt, rule in self.rules.items():
+            if nt not in self.non_terminals:
+                raise ValueError(f"Undefined non-terminal in rule: {nt}")
+
+        # Проверка уникальности терминалов и ключей
+        # all_symbols = [t.name for t in self.terminals.values()] + [k[0] for k in self.keys]
+        # if len(all_symbols) != len(set(all_symbols)):
+        #     raise ValueError("Duplicate terminal/key definitions")
+
     def get_terminals_for_template(self) -> str:
         return "\n\t" + "\n\t".join([f"{item} = '{item}'" for item in self.terminals.keys()])
 
@@ -50,16 +71,34 @@ class GrammarObject:
     def get_non_terminals_for_template(self):
         return "\n\t" + "\n\t".join([f"{item} = '{item}'"for item in self.non_terminals])
 
-"""
-GrammarObject(terminals={
-    'number': Terminal(name='number', pattern='[1-9]\\d*'), 
-    'operation': Terminal(name='operation', pattern='[\\+\\*]'), 
-    'terminator': Terminal(name='terminator', pattern=',')}, 
-    keys=['+', '*', ','], 
-    non_terminals=['EXPRESSIONS', 'EXPRESSION', 'TERM'], 
-    axiom='EXPRESSIONS', 
-    rules={'EXPRESSIONS': Rule(lhs='EXPRESSIONS', elements=['EXPRESSION'], separator=','), 
-    'EXPRESSION': Rule(lhs='EXPRESSION', elements=['TERM'], separator='+'), 
-    'TERM': Rule(lhs='TERM', elements=['number'], separator='*')})
+    def __str__(self):
+        res = "GrammarObject(\n\tTerminals:"
+        res += "\n\t\t" + "\n\t\t".join([item.__str__() for item in self.terminals.values()]) + ";"
+        ## TODO: Создать класс для ключей
+        res += "\n\tKeys:" + "\n\t\t" + "\n\t\t".join([f"type: {item[0]}, val: {item[1]}" for item in self.keys]) + ";"
+        res += "\n\tNonTerminals:" + "\n\t\t" + "\n\t\t".join(self.non_terminals) + ";"
+        res += "\n\tRules:" + "\n\t\t" + "\n\t\t".join(["| ".join([rule.__str__() for rule in item]) for item in self.rules.values()]) + ";"
+        res += "\n\tAxiom:" + f"\n\t\t{self.axiom}"
+        return res
 
+"""
+GrammarObject(
+        Terminals:
+                Terminal(name: number, pattern: [1-9]\d*)
+                Terminal(name: operation, pattern: [\+\*])
+                Terminal(name: terminator, pattern: ,);
+        Keys:
+                type: operation, val: +
+                type: operation, val: *
+                type: terminator, val: ,;
+        NonTerminals:
+                EXPRESSIONS
+                EXPRESSION
+                TERM;
+        Rules:
+                Rule(lhs: EXPRESSIONS els: ['EXPRESSION'] sep: ,)
+                Rule(lhs: EXPRESSION els: ['TERM'] sep: +)
+                Rule(lhs: TERM els: ['number'] sep: *);
+        Axiom:
+                EXPRESSIONS
 """

@@ -1,0 +1,10 @@
+{
+    "syntax": {
+        "type": "virt",
+        "info": {
+            "supportInfo": "DSLTools/examples/PSECO/pseco.rbnf",
+            "diagrams": "DSLTools/examples/PSECO/PSECOVIRT"
+        }
+    },
+    "debugInfoDir": "_debug"
+}

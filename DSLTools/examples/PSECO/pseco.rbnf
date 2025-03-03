@@ -1,0 +1,89 @@
+TERMINALS:
+    name          ::= '[A-Za-z_][A-Za-z0-9_]*';
+    number        ::= '[0-9]+';
+    symbol        ::= '[:=#;(){}\[\]|.,<>+]';
+    text          ::= '"[^"]*"';
+    whitespace    ::= '\s+'.
+
+KEYS:
+    'IF';
+    'THEN';
+    'ELSE';
+    'ELSEIF';
+    'END_IF';
+    'FOR';
+    'DO';
+    'END_FOR';
+    'REPEAT';
+    'UNTIL';
+    'WHILE';
+    'END_WHILE';
+    'FUNC';
+    'END_FUNC';
+    'PROC';
+    'END_PROC';
+    'ITERATOR';
+    'END_ITERATOR';
+    'INPUT';
+    'OUTPUT';
+    'GOTO';
+    'ARRAY';
+    'STRUCT';
+    'SELECT';
+    'YIELD';
+    'RETURN';
+    'NEXT';
+    'FROM';
+    'TO';
+    'IN';
+    '{';
+    '}';
+    ':';
+    ';';
+    '>';
+    '+'.
+
+NONTERMINALS:
+    Program; Statement; Block; Expression; FunctionCall; Arguments; Parameters;
+    Range; Set; Variable; Identifier; Number; Text; Assignment; Conditional;
+    Loop; LC; LA; LB; LS; FunctionDecl; ProcDecl; IteratorDecl; Input; Output;
+    Comment; Goto; ArrayDecl; StructDecl; FieldDecl; Select; Yield; Return; NextFor.
+
+AXIOM:
+    Program.
+
+RULES:
+    Program          ::= { Statement };
+    Statement        ::= Assignment | Conditional | Expression | Loop | FunctionDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor;
+    Block            ::= '{' { Statement } '}';
+    Expression       ::= '$' [^] '$';
+    FunctionCall     ::= Identifier '(' [ Arguments ] ')';
+    Arguments        ::= Expression { ',' Expression };
+    Parameters       ::= Variable { ',' Variable };
+    Range            ::= 'FROM' Number 'TO' Number;
+    Set              ::= Identifier | Range;
+    Variable         ::= Identifier;
+    Identifier       ::= name;
+    Number           ::= number;
+    Text             ::= text;
+    Assignment       ::= Variable ':' Expression;
+    Conditional      ::= 'IF' Expression 'THEN' Block [ { 'ELSEIF' Expression 'THEN' Block } ] [ 'ELSE' Block ] 'END_IF';
+    Loop             ::= LC | LA | LB | LS;
+    LC               ::= 'FOR' Variable Range 'DO' Block 'END_FOR';
+    LA               ::= 'REPEAT' Block 'UNTIL' Expression;
+    LB               ::= 'WHILE' Expression 'DO' Block 'END_WHILE';
+    LS               ::= 'FOR' Variable 'IN' Set 'DO' Block 'END_FOR';
+    FunctionDecl     ::= 'FUNC' Identifier '(' [ Parameters ] ')' Block Return 'END_FUNC';
+    ProcDecl         ::= 'PROC' Identifier '(' [ Parameters ] ')' Block 'END_PROC';
+    IteratorDecl     ::= 'ITERATOR' Identifier '(' [ Parameters ] ')' Block Yield 'END_ITERATOR';
+    Input            ::= 'INPUT' Expression;
+    Output           ::= 'OUTPUT' Expression;
+    Comment          ::= '//' Text;
+    Goto             ::= 'GOTO' Identifier;
+    ArrayDecl        ::= 'ARRAY' Expression 'OF' Identifier | 'ARRAY' Expression 'OF' Expression;
+    StructDecl       ::= 'STRUCT' Identifier '{' { FieldDecl } '}';
+    FieldDecl        ::= Identifier ':' Identifier | Identifier ':' Statement;
+    Select           ::= 'SELECT' Variable 'IN' Set;
+    Yield            ::= 'YIELD' Expression;
+    Return           ::= 'RETURN' Expression;
+    NextFor          ::= 'NEXT' 'FOR' Variable.

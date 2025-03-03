@@ -1,0 +1,46 @@
+TERMINALS:
+    shape ::= 'actor' | 'class' | 'interface' | 'package' | 'circle' | 'rectangle' | 'diamond';
+    arrow ::= '->' | '-->' | '<-' | '<->' | '..>' | '<..>' | 'o->' | '--o' | '<|--' | '*--';
+    position ::= 'left' | 'right' | 'top' | 'bottom' | 'over';
+    style_key ::= 'color' | 'background' | 'border' | 'font';
+    id ::= '[a-zA-Z][a-zA-Z0-9_]*';
+    text ::= '[a-zA-Z0-9,.!? -]+';
+    number ::= '[0-9]+';
+    start ::= '@startuml';
+    end ::= '@enduml';
+    as ::= 'as';
+    of ::= 'of';
+    note ::= 'note';
+    style ::= 'style';
+    colon ::= ':';
+    lbrace ::= '{';
+    rbrace ::= '}';
+    equals ::= '='.
+
+KEYS: '@startuml'; '@enduml'; 'as'; 'of'; 'note'; 'style'; ':'; '{'; '}'; '=';
+      '->'; '-->'; '<-'; '<->'; '..>'; '<..>'; 'o->'; '--o'; '<|--'; '*--';
+      'left'; 'right'; 'top'; 'bottom'; 'over';
+      'color'; 'background'; 'border'; 'font';
+      'actor'; 'class'; 'interface'; 'package'; 'circle'; 'rectangle'; 'diamond'.
+
+NONTERMINALS:
+    PROGRAM;
+    STATEMENT;
+    OBJECT_DECL;
+    RELATION;
+    NOTE;
+    STYLE;
+    PROPERTY;
+    STYLE_RULE.
+
+AXIOM: PROGRAM.
+
+RULES:
+    PROGRAM ::= { start # STATEMENT # end };
+    STATEMENT ::= { OBJECT_DECL } | { RELATION } | { NOTE } | { STYLE };
+    OBJECT_DECL ::= { shape # id # as # id # lbrace # PROPERTY # rbrace } | { shape # id # lbrace # PROPERTY # rbrace } | { shape # id # as # id } | { shape # id };
+    RELATION ::= { id # arrow # id # colon # text } | { id # arrow # id };
+    NOTE ::= { note # position # of # id # colon # text } | { note # position # colon # text };
+    STYLE ::= { style # id # lbrace # STYLE_RULE # rbrace };
+    PROPERTY ::= { id # equals # text } | { id # equals # number };
+    STYLE_RULE ::= { style_key # equals # text } | { style_key # equals # number }.

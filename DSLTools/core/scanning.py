@@ -13,19 +13,21 @@ class DefaultScanner(IScanner):
             # Экранируем специальные символы в ключах
             pattern = re.escape(key_value)
             self.patterns.append(
-                (key_type, re.compile(f'^{pattern}'))
+                (key_type, re.compile(f'{pattern}'))
             )
 
         # Затем добавляем терминалы по убыванию специфичности
+        # ordered_terminals = self.grammar.terminals.values()
         ordered_terminals = sorted(
             self.grammar.terminals.values(),
             key=lambda t: len(t.pattern),
             reverse=True
         )
+        print(" ".join([item.pattern for item in ordered_terminals]))
 
         for terminal in ordered_terminals:
             self.patterns.append(
-                (terminal.name, re.compile(f'^{terminal.pattern}'))
+                (terminal.name, re.compile(f'{terminal.pattern}'))
             )
 
     def tokenize(self, input_str: str) -> List[Token]:
@@ -50,6 +52,8 @@ class DefaultScanner(IScanner):
             for token_type, pattern in self.patterns:
                 if (regex_match := pattern.match(input_str, position)) is not None:
                     value = regex_match.group()
+                    # if value == '':
+
                     token = Token(
                         token_type=token_type,
                         value=value,
@@ -59,11 +63,13 @@ class DefaultScanner(IScanner):
 
                     # Обновляем позицию
                     length = len(value)
-                    position += length
+                    position += length if length > 0 else 1
                     column += length
+                    print(value)
                     break
             else:
                 # Если не нашли совпадений
+
                 context = input_str[position:position + 20]
                 raise SyntaxError(
                     f"Unexpected token at line {line_num}, column {column}\n"
