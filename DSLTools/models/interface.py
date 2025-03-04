@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from .parse import GrammarObject
 from .support import MetaObject
 from .tokens import Token
+from .ast import ASTNode
 from pathlib import Path
 from typing import List
 
@@ -44,4 +45,20 @@ class IAfterscanner(ABC):
 
     @abstractmethod
     def process(self, tokens: List[Token]) -> List[Token]:
+        pass
+
+
+class IAstBuilder(ABC):
+    """Абстрактный интерфейс для построения абстрактного синтаксического дерева."""
+
+    @abstractmethod
+    def build(self, go: GrammarObject, tokens: List[Token]) -> ASTNode:
+        pass
+
+
+class IAstRender(ABC):
+    """Абстрактный интерфейс для рендеринга абстрактного синтаксического дерева."""
+
+    @abstractmethod
+    def visualize(self, head: ASTNode, dest: Path) -> ASTNode:
         pass

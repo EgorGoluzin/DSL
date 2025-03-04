@@ -1,4 +1,5 @@
 # main.py
+import re
 import sys
 import importlib.util
 import pathlib
@@ -6,11 +7,28 @@ import json
 from argparse import ArgumentParser
 from DSLTools.models import (MetaObject, TypeParse, IGrammarParser, GrammarObject)
 from DSLTools.core.grammar_parsers import RBNFParser
-from DSLTools.utils.file_ops import validate_paths
+from DSLTools.utils.file_ops import validate_paths, load_config
 from DSLTools.core.scanning import DefaultScanner
+from DSLTools.core.astgenerator import GeneralizedParser
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent.resolve()
 sys.path.insert(0, str(PROJECT_ROOT))
+
+def sample_lexer():
+    args = parse_arguments()
+    json_path = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.jsonFile), is_dir=False)
+    config = load_config(json_path)
+    mo = MetaObject(config)
+    # Пример использования
+    parser = get_parser(mo)
+    # Шаг 3. Парсинг грамматики.
+    grammarObject = parser.parse(mo)
+    scanner = DefaultScanner(grammarObject) # Инициализация
+    test_input = "7 + 2 + 3" # Пример для expression
+    res = scanner.tokenize(test_input)
+
+
+
 
 
 # py -m DSLTools.main -j "(ABS/REL)PATHFORMETAOBJ" -d "(ABS/REL)PATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
@@ -20,19 +38,18 @@ def main():
     # json_path = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.jsonFile), is_dir=False)
     # directory_to_save = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.directory), is_dir=True)
 
-    json_path = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\PSECO\pseco_mo.json"
-    directory_to_save = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\PSECO"
+    json_path = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\rbnf\metainfo.json"
+    directory_to_save = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\rbnf"
 
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     mo = MetaObject(config)
-    print(mo)
     # Пример использования
     parser = get_parser(mo)
     # Шаг 3. Парсинг грамматики.
     go = parser.parse(mo)
+    print(go)
     # Шаг 4: Генерация dsl_info.py
-
     generate_dsl_info(go=go, dest=directory_to_save)
     scanner = DefaultScanner(go)
 
@@ -41,6 +58,8 @@ def main():
 
     res = scanner.tokenize(input_str)
     print("\n".join([item.__repr__() for item in res]))
+    astGen = GeneralizedParser(go)
+    ast_head = astGen.parse(res)
     # # Шаг 5: Динамический импорт dsl_info
     # dsl_info = import_dsl_info(args.directory)
     #
@@ -56,9 +75,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def load_config(json_path):
-    with open(json_path) as f:
-        return json.load(f)
+
 
 
 def get_parser(metadata: MetaObject) -> IGrammarParser:
@@ -110,4 +127,5 @@ def import_dsl_info(output_dir):
 
 
 if __name__ == "__main__":
+    # print(re.findall("Variable", "Variable : Test"))
     main()

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 
 class NodeType(Enum):
@@ -10,3 +11,10 @@ class TreeNode:
         self.nonterminal_type = nonterminal_type
         self.attribute = attribute
         self.childs = []
+
+@dataclass
+class ASTNode:
+    type: str          # Тип узла (нетерминал)
+    children: list     # Дочерние узлы
+    value: str = None  # Значение (для терминалов)
+    position: tuple = None  # (line, column)

@@ -1,8 +1,10 @@
 import shutil
 import os
 from pathlib import Path
-
-
+import json
+def load_config(json_path):
+    with open(json_path) as f:
+        return json.load(f)
 def copy_template(src_dir, dest_dir, filename):
     os.makedirs(dest_dir, exist_ok=True)
     shutil.copy(src_dir / filename, dest_dir / filename)
