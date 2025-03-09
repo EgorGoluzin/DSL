@@ -36,7 +36,7 @@ jobs:
           pip install .
 
       - name: Run tests
-        run: python -m unittest DSLTools.tests.core_tests.scanner_tests.TestDefaultScanner.test_tokenize_invalid_input -v
+        run: python -m unittest discover DSLTools/tests/core_tests/ -v
       
       - name: Generate JUnit report
         run: |
@@ -50,6 +50,15 @@ jobs:
               runner = xmlrunner.XMLTestRunner(output=output)
               runner.run(suite)
           "
+
+      - name: Debug JUnit report
+        run: |
+          if [ -f test-results.xml ]; then
+            echo "File test-results.xml exists."
+            cat test-results.xml
+          else
+            echo "File test-results.xml does not exist."
+          fi
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
