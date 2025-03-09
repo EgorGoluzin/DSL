@@ -22,18 +22,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Cache pip dependencies
+      - name: Cache dependencies
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-pyproject-${{ hashFiles('pyproject.toml') }}
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install .
 
       - name: Run tests with pytest
         run: pytest DSLTools/tests/ -v --junitxml=test-results.xml
