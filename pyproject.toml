@@ -7,6 +7,6 @@ name = "DSL"
 version = "0.1"
 dependencies = [
     "graphviz==0.20.1",
-    "pydot==1.4.2"
+    "pydot==1.4.2",
     "pytest==8.3.5"
 ]
