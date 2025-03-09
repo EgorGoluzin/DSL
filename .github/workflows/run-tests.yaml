@@ -36,7 +36,7 @@ jobs:
           pip install .
 
       - name: Run tests with pytest
-          pytest DSLTools/tests/core_tests/ -v --junitxml=test-results.xml
+        run: pytest DSLTools/tests/core_tests/ -v --junitxml=test-results.xml
       
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
