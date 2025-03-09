@@ -3,7 +3,8 @@ name: Run Tests on Commit & PR
 on:
   push:
     branches:
-      - [master, feature/add_ci_with_tests]
+      - master
+      - feature/add_ci_with_tests
   pull_request:
     branches:
       - master
