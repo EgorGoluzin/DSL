@@ -35,11 +35,30 @@ jobs:
           pip install --upgrade pip
           pip install .
 
-      - name: Run tests with pytest
+      - name: Run tests
         run: python -m unittest DSLTools.tests.core_tests.scanner_tests.TestDefaultScanner.test_tokenize_invalid_input -v
       
+      - name: Generate JUnit report
+        run: |
+          pip install xmlrunner
+          python -c "
+          import unittest
+          import xmlrunner
+          loader = unittest.TestLoader()
+          suite = loader.discover('DSLTools/tests/core_tests/')
+          with open('test-results.xml', 'wb') as output:
+              runner = xmlrunner.XMLTestRunner(output=output)
+              runner.run(suite)
+          "
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           files: test-results.xml
+            
+            - name: Publish Test Results
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              if: always()
+              with:
+                files: test-results.xml
