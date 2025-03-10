@@ -90,7 +90,7 @@ with open(sampleJsonFile, 'r') as jsonFile:
     jsonData = json.loads(jsonFile.read())
 
 syntaxInfo = GetSyntaxDesription(jsonData["syntax"])
-
+print(syntaxInfo)
 if "debugInfoDir" in jsonData:
     debugInfoDir = pathlib.Path(jsonData["debugInfoDir"])
     if not debugInfoDir.exists():
@@ -103,17 +103,17 @@ with open(sampleCodeFile, 'r') as codeFile:
 
 tokenList = Tokenize(code)
 __RenderTokenStream('token_stream_after_scanner', tokenList, debugInfoDir)
-tokenList = Afterscan(tokenList)
-__RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
+# tokenList = Afterscan(tokenList)
+# __RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
 
 ast = BuildAst(syntaxInfo, dsl_info.axiom, tokenList)
 print('We are here for AST')
 print(ast)
 __RenderAst('ast', ast, debugInfoDir)
-attributor.SetAttributes(ast, attribute_evaluator.attributesMap)
-__RenderAst('ast_attributed', ast, debugInfoDir)
-
-if debugInfoDir is not None and "semantics" in jsonData and "virt" == jsonData["semantics"]["type"]:
-    rCode = __GetRCode(ast)
-    with open(f"{debugInfoDir}/r_code.py", 'w') as codeFile:
-        codeFile.write(rCode)
+# attributor.SetAttributes(ast, attribute_evaluator.attributesMap)
+# __RenderAst('ast_attributed', ast, debugInfoDir)
+#
+# if debugInfoDir is not None and "semantics" in jsonData and "virt" == jsonData["semantics"]["type"]:
+#     rCode = __GetRCode(ast)
+#     with open(f"{debugInfoDir}/r_code.py", 'w') as codeFile:
+#         codeFile.write(rCode)

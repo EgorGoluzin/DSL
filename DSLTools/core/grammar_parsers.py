@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 from DSLTools.models import (
     Rule, Terminal, GrammarElement, VirtNodeType, GrammarObject,
-    IGrammarParser, MetaObject)
+    IGrammarParser, MetaObject, RuleElement)
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
@@ -63,6 +63,9 @@ class RBNFParser(IGrammarParser):
         self.rules: Dict[str, List[Rule]] = {}  # Изменено на список правил
         self.warnings = []
         self.current_section = None
+        self.non_terminals_opt = None
+        self.terminals_opt = None
+        self.keywords_opt = None
 
 
     def parse(self, meta_object: MetaObject) -> GrammarObject:
@@ -146,35 +149,164 @@ class RBNFParser(IGrammarParser):
         self.axiom = line.strip()
 
     def _parse_rule(self, line: str):
-        # Обрабатываем альтернативы вида: A ::= B | C | D
+        # Извлекаем LHS и RHS
+
+        if self.non_terminals_opt is None:
+            self.non_terminals_opt = set(self.non_terminals)
+            self.terminals_opt = set(self.terminals.keys())
+            self.keywords_opt = {f"'{k[1]}'" for k in self.keys}
+
         match = re.match(r'(\w+)\s*::=\s*(.+)', line)
         if not match:
             raise ValueError(f"Invalid rule format: {line}")
 
         lhs = match.group(1)
-        rhs = match.group(2)
+        if lhs not in self.non_terminals:
+            raise ValueError(f"Undefined non-terminal in LHS: {lhs}")
 
-        # Разделяем альтернативы
-        alternatives = [a.strip() for a in rhs.split('|')]
+        rhs = match.group(2).strip().rstrip(';')
+        alternatives = self._split_alternatives(rhs)
 
-        rules_for_lhs = []
-        for alt in alternatives:
-            # Обрабатываем элементы и разделители внутри альтернативы
-            if '{' in alt and '}' in alt:
-                parts = re.match(r'\s*{(.*?)}(?:\s*#\s*(.*?))?\s*', alt)
-                elements = [e.strip() for e in parts.group(1).split() if e.strip()]
-                separator = parts.group(2).strip() if parts.group(2) else None
+        self.rules[lhs] = [
+            Rule(lhs=lhs, elements=self._parse_rhs(alt))
+            for alt in alternatives
+        ]
+
+    def _split_alternatives(self, rhs: str) -> List[str]:
+        brackets = {'(': ')', '[': ']', '{': '}'}
+        stack = []
+        in_quote = False
+        split_indices = [0]
+
+        for i, char in enumerate(rhs):
+            if char in ('"', "'"):
+                in_quote = not in_quote
+            elif not in_quote:
+                if char in brackets:
+                    stack.append(brackets[char])
+                elif stack and char == stack[-1]:
+                    stack.pop()
+                elif not stack and char == '|':
+                    split_indices.append(i)
+
+        split_indices.append(len(rhs))
+        return [rhs[i:j].strip() for i, j in zip(split_indices, split_indices[1:])]
+
+    def _tokenize_rhs(self, rhs: str) -> List[str]:
+        # Регулярка разделяет:
+        # 1. Строковые литералы (в кавычках)
+        # 2. Синтаксические скобки EBNF
+        # 3. Идентификаторы (терминалы/нетерминалы)
+        tokens = re.findall(
+            r"""
+            ( '.*?'      |   # строки в одинарных кавычках
+              ".*?"      ) | # строки в двойных кавычках
+            ( \{         |   # синтаксическая {
+              \}         |   # синтаксическая }
+              \[         |   # синтаксическая [
+              \]         |
+              \# ) | # синтаксическая ]
+            ( \w+        )   # слова (терминалы/нетерминалы)
+            """,
+            rhs,
+            flags=re.VERBOSE
+        )
+
+        # Объединяем результаты групп и фильтруем пустые
+        return [
+            t[0] or t[1] or t[2]
+            for t in tokens
+            if any(t)
+        ]
+
+    def _parse_rhs(self, rhs: str) -> List[Dict]:
+        tokens = self._tokenize_rhs(rhs)
+        elements = []
+        i = 0
+
+        while i < len(tokens):
+            token = tokens[i]
+
+            if token == '{':
+                group, i = self._parse_group(tokens, i)
+                elements.append(group)
+            elif token == '[':
+                optional, i = self._parse_optional(tokens, i)
+                elements.append(optional)
             else:
-                elements = [alt.strip()]
-                separator = None
+                elem_type = self._determine_element_type(token)
+                elements.append({'type': elem_type, 'value': token.strip("'")})
+                i += 1
 
-            rules_for_lhs.append(Rule(
-                lhs=lhs,
-                elements=elements,
-                separator=separator
-            ))
+        return elements
 
-        self.rules[lhs] = rules_for_lhs
+    def _determine_element_type(self, token: str) -> str:
+        if token in self.keywords_opt:
+            return 'keyword'
+        if token in self.terminals_opt:
+            return 'terminal'
+        if token in self.non_terminals_opt:
+            return 'nonterminal'
+        if token.startswith('#') and len(token) > 1:
+            return 'separator_marker'
+        raise ValueError(f"Undefined symbol: {token}")
 
+    def _parse_group(self, tokens, start_idx):
+        elements = []
+        i = start_idx + 1
+        depth = 1
+
+        # Собираем элементы внутри группы
+        while i < len(tokens):
+            token = tokens[i]
+            if token == '{':
+                depth += 1
+            elif token == '}':
+                depth -= 1
+                if depth == 0:
+                    i += 1  # Пропускаем '}'
+                    break
+            elements.append(token)
+            i += 1
+
+        # Парсим содержимое группы
+        parsed_elements = self._parse_rhs(' '.join(elements))
+
+        # Обрабатываем сепаратор после группы
+        separator = None
+        if i < len(tokens) and tokens[i] == '#':
+            if i + 1 < len(tokens) and (tokens[i + 1] in self.terminals_opt or tokens[i + 1] in self.keywords_opt):
+                separator = tokens[i + 1].strip("'")
+                i += 2
+            else:
+                raise ValueError(f"Invalid separator after group at position {i}")
+
+        return {
+            'type': 'group',
+            'elements': parsed_elements,
+            'separator': separator
+        }, i
+
+    def _parse_optional(self, tokens, start_idx):
+        elements = []
+        i = start_idx + 1
+        depth = 1
+
+        while i < len(tokens):
+            token = tokens[i]
+            if token == '[':
+                depth += 1
+            elif token == ']':
+                depth -= 1
+                if depth == 0:
+                    i += 1  # Пропускаем ']'
+                    break
+            elements.append(token)
+            i += 1
+
+        return {
+            'type': 'optional',
+            'elements': self._parse_rhs(' '.join(elements))
+        }, i
     def get_warnings(self) -> List[str]:
         return self.warnings

@@ -1,8 +1,9 @@
 from .support import MetaObject, TypeParse
-from .parse import VirtNodeType, GrammarElement, GrammarObject, Terminal, Rule
+from .parse import VirtNodeType, GrammarElement, GrammarObject, Terminal, Rule, RuleElement
 from .ast import NodeType, TreeNode, ASTNode
 from .diagraph import Node, Edge, Digraph
-from .interface import IGrammarParser, IGrammarConverter, IVisualRepresentation, IScanner, IAfterscanner, IAstRender, IAstBuilder
+from .interface import IGrammarParser, IGrammarConverter, IVisualRepresentation, IScanner, IAfterscanner, IAstRender,\
+    IAstBuilder
 from .tokens import Token
 
 __all__ = {
@@ -25,4 +26,7 @@ __all__ = {
     "IScanner",
     "IAfterscanner",
     "Token",
+    "IAstRender",
+    "IAstBuilder",
+    "RuleElement"
 }

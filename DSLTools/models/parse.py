@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Tuple, Union
 from enum import Enum
 from dataclasses import dataclass, field
 
@@ -25,12 +25,24 @@ class Terminal:
 
 
 @dataclass
+class RuleElement:
+    type: str  # "element", "group", "optional"
+    value: Union[str, List[str]]  # Для "element" - строка, для "group"/"optional" - список
+    separator: Optional[str] = None
+
+    def __str__(self):
+
+        return f"RuleEl(t: {self.type}\nvalue:{self.value}\nsep:{self.separator})"
+
+@dataclass
 class Rule:
     lhs: str
-    elements: List[str]
+    elements: List[RuleElement]
     separator: Optional[str] = None
-    def __str__(self):
-        return f"Rule(lhs: {self.lhs} els: {self.elements} sep: {self.separator})"
+
+    # def __str__(self):
+    #     return f"Rule( lhs = {self.lhs}, elements: " + "\n\t".join([el.__str__() for el in self.elements])\
+    #         + f"\n\tsep={self.separator})"
 
 
 @dataclass
@@ -45,14 +57,15 @@ class GrammarObject:
         self._validate()
 
     def _validate(self):
+        pass
         # Проверка аксиомы
-        if self.axiom not in self.non_terminals:
-            raise ValueError(f"Axiom '{self.axiom}' is not a defined non-terminal")
-
-        # Проверка правил
-        for nt, rule in self.rules.items():
-            if nt not in self.non_terminals:
-                raise ValueError(f"Undefined non-terminal in rule: {nt}")
+        # if self.axiom not in self.non_terminals:
+        #     raise ValueError(f"Axiom '{self.axiom}' is not a defined non-terminal")
+        #
+        # # Проверка правил
+        # for nt, rule in self.rules.items():
+        #     if nt not in self.non_terminals:
+        #         raise ValueError(f"Undefined non-terminal in rule: {nt}")
 
         # Проверка уникальности терминалов и ключей
         # all_symbols = [t.name for t in self.terminals.values()] + [k[0] for k in self.keys]

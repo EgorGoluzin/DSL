@@ -4,10 +4,12 @@ from dsl_info import Terminal, Nonterminal
 from typing import Union
 
 
+
 class NodeType(Enum):
     NONTERMINAL = 'nonterminal'
     TERMINAL = 'terminal'
     KEY = 'key'
+
 
 
 class TreeNode:

@@ -19,7 +19,7 @@ def __GetCurrentToken(code, pos):
         token = Token(Token.Type.TERMINAL)
         token.terminalType = terminal
         token.str = result.group(0)
-        return token, pos + len(token.str)
+        return token, pos + max(len(token.str), 1)
     raise SyntaxError("Failed to recognize token")
 
 
