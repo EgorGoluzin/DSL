@@ -78,6 +78,14 @@ class SeparatorError(ParserError):
         message = f"Invalid use of separator '{separator}' in key '{key}'"
         super().__init__(message, line)
 
+class Separators:
+    """Класс для управления разделителями в RBNF-парсере."""
+    def __init__(self):
+        self.separators = {';', '.'}
+
+    def is_separator(self, char: str) -> bool:
+        return char in self.separators
+
 class RBNFParser(IGrammarParser):
     def __init__(self):
         self.keys = []
@@ -140,32 +148,42 @@ class RBNFParser(IGrammarParser):
         self.terminals[name] = Terminal(name, pattern)
 
     def _parse_keys(self, line: str):
-        # Убираем лишние пробелы и разбиваем строку с учётом ; и .
+        # Вот эта версия может не работать. В предыдущем коммите еще ок)
         line = line.strip()
         if not line:
             return
 
+        separators = Separators()  # Создаём экземпляр разделителей
         keys = []
         current_key = ""
+        in_quotes = False
+        quote_char = None
 
         for char in line:
-            if char in (';', '.'):
+            if char in ('"', "'") and not in_quotes:  # Начало кавычек
+                in_quotes = True
+                quote_char = char
+                current_key += char
+            elif char == quote_char and in_quotes:  # Конец кавычек
+                in_quotes = False
+                current_key += char
+            elif separators.is_separator(char) and not in_quotes:  # Разделитель вне кавычек
                 if current_key.strip():
-                    keys.append(current_key.strip('\'" '))
+                    keys.append(current_key.strip())
                 current_key = ""
-            elif char == ' ' and current_key.strip():
-                keys.append(current_key.strip('\'" '))
+            elif char == ' ' and not in_quotes and current_key.strip():  # Пробел вне кавычек
+                keys.append(current_key.strip())
                 current_key = ""
             else:
                 current_key += char
 
-        # Добавляем последний ключ, если он есть
+        # Добавляем последний ключ
         if current_key.strip():
-            keys.append(current_key.strip('\'" '))
+            keys.append(current_key.strip())
 
-        # Проверка ключей через регулярки
+        # Проверка ключей
         for key in keys:
-            if not key:  # Пропускаем пустые элементы
+            if not key:
                 continue
             is_key_in_regular_definition_error = True
             is_key_in_more_than_one_regular_def_error = False
