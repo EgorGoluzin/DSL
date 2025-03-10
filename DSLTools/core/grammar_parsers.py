@@ -116,17 +116,35 @@ class RBNFParser(IGrammarParser):
         self.terminals[name] = Terminal(name, pattern)
 
     def _parse_keys(self, line: str):
-        if line == ";":
-            key = line
-            for terminal in self.terminals.values():
-                res = re.match(terminal.pattern, key)
-                if res is not None:
-                    self.keys.append((terminal.name, key))
-                    return
-        keys = [k.strip('\'" ') for k in line.split(' ') if k.strip()]
-        is_key_in_regular_definition_error = True
-        is_key_in_more_than_one_regular_def_error = False
+        # Убираем лишние пробелы и разбиваем строку с учётом ; и .
+        line = line.strip()
+        if not line:
+            return
+
+        keys = []
+        current_key = ""
+
+        for char in line:
+            if char in (';', '.'):
+                if current_key.strip():
+                    keys.append(current_key.strip('\'" '))
+                current_key = ""
+            elif char == ' ' and current_key.strip():
+                keys.append(current_key.strip('\'" '))
+                current_key = ""
+            else:
+                current_key += char
+
+        # Добавляем последний ключ, если он есть
+        if current_key.strip():
+            keys.append(current_key.strip('\'" '))
+
+        # Проверка ключей через регулярки
         for key in keys:
+            if not key:  # Пропускаем пустые элементы
+                continue
+            is_key_in_regular_definition_error = True
+            is_key_in_more_than_one_regular_def_error = False
             for terminal in self.terminals.values():
                 res = re.match(terminal.pattern, key)
                 if res is not None and not is_key_in_more_than_one_regular_def_error:
@@ -134,9 +152,9 @@ class RBNFParser(IGrammarParser):
                     is_key_in_regular_definition_error = False
                     is_key_in_more_than_one_regular_def_error = True
                 elif is_key_in_more_than_one_regular_def_error and res is not None:
-                    raise f"More than one regular form included {key}"
+                    raise ValueError(f"More than one regular form included '{key}'")
             if is_key_in_regular_definition_error:
-                raise f"No one regular form included {key}"
+                raise ValueError(f"No one regular form included '{key}'")
 
     def _parse_non_terminals(self, line: str):
         nts = [nt.strip() for nt in line.split(';') if nt.strip()]
