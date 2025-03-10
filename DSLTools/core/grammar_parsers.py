@@ -53,6 +53,30 @@ class UMLParser(IGrammarParser):
     def _support_parse(self, support_file: Path):
         return [""], [""], ""
 
+class ParserError(Exception):
+    """Базовый класс для ошибок парсинга RBNF-грамматики."""
+    def __init__(self, message: str, line: str = None):
+        self.message = message
+        self.line = line
+        super().__init__(self.message)
+
+class KeyNotMatchedError(ParserError):
+    """Ошибка, когда ключ не соответствует ни одному терминалу."""
+    def __init__(self, key: str, line: str = None):
+        message = f"No one regular form included '{key}'"
+        super().__init__(message, line)
+
+class MultipleKeyMatchError(ParserError):
+    """Ошибка, когда ключ соответствует нескольким терминалам."""
+    def __init__(self, key: str, line: str = None):
+        message = f"More than one regular form included '{key}'"
+        super().__init__(message, line)
+
+class SeparatorError(ParserError):
+    """Ошибка, связанная с некорректным использованием разделителей."""
+    def __init__(self, key: str, separator: str, line: str = None):
+        message = f"Invalid use of separator '{separator}' in key '{key}'"
+        super().__init__(message, line)
 
 class RBNFParser(IGrammarParser):
     def __init__(self):
@@ -152,9 +176,9 @@ class RBNFParser(IGrammarParser):
                     is_key_in_regular_definition_error = False
                     is_key_in_more_than_one_regular_def_error = True
                 elif is_key_in_more_than_one_regular_def_error and res is not None:
-                    raise ValueError(f"More than one regular form included '{key}'")
+                    raise MultipleKeyMatchError(key, line)
             if is_key_in_regular_definition_error:
-                raise ValueError(f"No one regular form included '{key}'")
+                raise KeyNotMatchedError(key, line)
 
     def _parse_non_terminals(self, line: str):
         nts = [nt.strip() for nt in line.split(';') if nt.strip()]
