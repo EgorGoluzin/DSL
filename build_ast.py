@@ -82,9 +82,11 @@ def __GetRCode(node):
 # parser.add_argument("-c", "--code", dest="codeFile", help="File with code", metavar="FILE", required=True)
 # parser.add_argument("-j", "--json", dest="jsonFile", help="Json file with settings", metavar="FILE", required=True)
 # args = parser.parse_args()
-j_path = r"C:\Users\Hp\PycharmProjects\DSL\_examples\expression\expression.json"
-f_path = r"C:\Users\Hp\PycharmProjects\DSL\_examples\expression\example.txt"
-with open(j_path, 'r') as jsonFile:
+
+sampleJsonFile = './_examples/expression/expression.json'
+sampleCodeFile = './_examples/expression/example.txt'
+
+with open(sampleJsonFile, 'r') as jsonFile:
     jsonData = json.loads(jsonFile.read())
 
 syntaxInfo = GetSyntaxDesription(jsonData["syntax"])
@@ -96,7 +98,7 @@ if "debugInfoDir" in jsonData:
 else:
     debugInfoDir = None
 
-with open(f_path, 'r') as codeFile:
+with open(sampleCodeFile, 'r') as codeFile:
     code = codeFile.read()
 
 tokenList = Tokenize(code)
@@ -105,6 +107,8 @@ __RenderTokenStream('token_stream_after_scanner', tokenList, debugInfoDir)
 # __RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
 
 ast = BuildAst(syntaxInfo, dsl_info.axiom, tokenList)
+print('We are here for AST')
+print(ast)
 __RenderAst('ast', ast, debugInfoDir)
 # attributor.SetAttributes(ast, attribute_evaluator.attributesMap)
 # __RenderAst('ast_attributed', ast, debugInfoDir)

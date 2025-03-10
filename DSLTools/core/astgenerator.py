@@ -1,15 +1,151 @@
 import re
 from typing import List
+import graphviz
 
 from _elementtree import ParseError
 
 from DSLTools.models import (GrammarObject, Token, ASTNode, Rule, IAstBuilder, IAstRender)
+from DSLTools.models.ast import NodeType
 
 
 class DefaultAstBuilder(IAstBuilder):
+    def __init__(self):
+        self.states = []
+    
+    def __ret(self):
+        self.states[-1]['rule_index'] += 1
+        while self.states[-1]['rule_index'] >= len(self.states[-1]['node']):
+            self.states.pop()
+            if len(self.states) == 0:
+                raise Exception("Ran out of states")
+            self.states[-1]['rule_index'] += 1
+
+    def __walk(self):
+        self.states = [{
+            'parent_state': None,
+            'pos': 0,
+            'node': self.go.rules[self.go.axiom],
+            'rule_index': 0,
+            'nonterm': self.go.axiom,
+        }]
+        while True:
+            state = self.states[-1]
+            pos = state['pos']
+            node = state['node']
+            rule = node[state['rule_index']]  # what is going on here?
+            
+            # if node type is end?
+            # --------------------------------------
+            if NodeType.END == rule[0].type:
+                parent_state = state['parent_state']
+                if parent_state is None:
+                    if pos == self.end:
+                        return
+                    else:
+                        self.__ret()
+                        continue
+                self.states.append({
+                    'parent_state': parent_state['parent_state'],
+                    'pos': pos,
+                    'node': parent_state['node'][parent_state['rule_index']][0],  # what??
+                    'rule_index': 0,
+                    'nonterm': parent_state['nonterm']
+                })
+                continue
+            elif NodeType.NONTERMINAL == rule[0].type:
+                if rule[0].nonterminal not in self.grammar:
+                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description")
+                self.states.append({
+                    'parent_state': state,
+                    'pos': pos,
+                    'node': self.grammar[rule[0].nonterminal],
+                    'rule_index': 0,
+                    'nonterm': rule[0].nonterminal
+                })
+                continue
+            if pos >= self.end:
+                self.__ret()
+                continue
+            newToken = self.tokenList[pos]
+            if NodeType.KEY == rule[0].type and Token.Type.KEY == newToken.type and newToken.str == rule[0].str:
+                self.states.append({
+                    'parent_state': state['parent_state'],
+                    'pos': pos+1,
+                    'node': rule[0],
+                    'rule_index': 0,
+                    'nonterm': state['nonterm']
+                })
+                continue
+            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == newToken.type and newToken.terminalType == rule[0].terminal:
+                self.states.append({
+                    'parent_state': state['parent_state'],
+                    'pos': pos+1,
+                    'node': rule[0],
+                    'rule_index': 0,
+                    'nonterm': state['nonterm']
+                })
+                continue
+
+            self.__ret()
+            continue
+
 
     def build(self, go: GrammarObject, tokens: List[Token]) -> ASTNode:
-        pass
+        self.go = go
+        self.tokens = tokens
+        self.end = len(tokens)
+        
+        ast = ASTNode('axiom', [])
+        nodes_stack = [ast]
+        self.__walk()
+        for state in self.states:
+            pos = state['pos']
+            node = state['node']
+            rule = node.nextNodes[state['rule_index']]
+
+            if NodeType.END == rule[0].type:
+                parent_state = state['parent_state']
+                if parent_state is None:
+                    if pos == self.end:
+                        nodes_stack[-1].commands.append(rule[1])
+                        return ast
+                    else:
+                        raise Exception("Fail")
+                nodes_stack[-1].commands.append(rule[1])
+                nodes_stack.pop()
+                continue
+            elif NodeType.NONTERMINAL == rule[0].type:
+                if rule[0].nonterminal not in self.grammar:
+                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description")
+                newNonterm = TreeNode(TreeNode.Type.NONTERMINAL)
+                newNonterm.nonterminalType = rule[0].nonterminal
+                newNonterm.childs = []
+                newNonterm.commands = []
+                nodes_stack[-1].childs.append(newNonterm)
+                nodes_stack[-1].commands.append(rule[1])
+                node = rule[0]
+                nodes_stack.append(newNonterm)
+                continue
+            if pos >= self.end:
+                raise Exception(f"Fail")
+            newToken = self.tokenList[pos]
+            if NodeType.KEY == rule[0].type and Token.Type.KEY == newToken.type and newToken.str == rule[0].str:
+                element = TreeNode(TreeNode.Type.TOKEN)
+                element.attribute = newToken.attribute
+                element.token = newToken
+                nodes_stack[-1].childs.append(element)
+                nodes_stack[-1].commands.append(rule[1])
+                continue
+            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == newToken.type and newToken.terminalType == rule[0].terminal:
+                element = TreeNode(TreeNode.Type.TOKEN)
+                element.attribute = newToken.attribute
+                element.token = newToken
+                nodes_stack[-1].childs.append(element)
+                nodes_stack[-1].commands.append(rule[1])
+                continue
+
+            raise Exception(f"Fail")
+        return ast
 
     def _log(self, message: str):
         """Логирование процесса парсинга"""
@@ -19,7 +155,52 @@ class DefaultAstBuilder(IAstBuilder):
 
 class DefaultAstRenderer(IAstRender):
     def visualize(self, go: GrammarObject, tokens: List[Token]):
-        pass
+        # Шаг 1: Построить AST из GrammarObject и токенов
+        parser = GeneralizedParser(go)
+        ast = parser.parse(tokens)
+
+        # Шаг 2: Создать граф с помощью graphviz
+        diagram_name = "ast_visualization"
+        h = graphviz.Digraph(diagram_name, format='svg')
+        h.attr(rankdir='TB')  # Сверху вниз для читаемости
+
+        # Шаг 3: Обойти AST и построить граф
+        i = 1
+        nodes = [(ast, 0)]  # (узел, ID родителя)
+        while nodes:
+            node, parent_id = nodes.pop(0)
+
+            # Определяем тип узла и его форму
+            if node.type in go.non_terminals:
+                # Нетерминал
+                label = f"NONTERMINAL\ntype: {node.type}"
+                if node.value:
+                    label += f"\nvalue: {node.value}"
+                h.node(str(i), label, shape='box')
+            elif node.type in go.terminals:
+                # Терминал
+                label = f"TERMINAL\ntype: {node.type}\nvalue: {node.value}"
+                h.node(str(i), label, shape='diamond')
+            elif any(key[0] == node.type for key in go.keys):
+                # Ключ
+                label = f"KEY\nstring: {node.value}"
+                h.node(str(i), label, shape='oval')
+            else:
+                # Неизвестный тип (на всякий случай)
+                label = f"UNKNOWN\ntype: {node.type}\nvalue: {node.value}"
+                h.node(str(i), label, shape='ellipse')
+
+            # Связываем с родителем, если он есть
+            if parent_id != 0:
+                h.edge(str(parent_id), str(i))
+
+            # Добавляем детей в очередь
+            nodes.extend((child, i) for child in node.children)
+            i += 1
+
+        # Шаг 4: Сохраняем и рендерим граф
+        output_dir = "debug_ast"  # Можно сделать параметром, если нужно
+        h.render(directory=output_dir, view=True, cleanup=False)  # Оставляем .gv файл для отладки
 
 
 class GeneralizedParser:
