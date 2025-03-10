@@ -16,10 +16,10 @@ class DefaultAstBuilder(IAstBuilder):
         if self._debug:
             print(f"[Parser] {message}")
 
-class DefaultAstRenderer(IAstRender):
-    def build(self, go: GrammarObject, tokens: List[Token]) -> ASTNode:
-        pass
 
+class DefaultAstRenderer(IAstRender):
+    def visualize(self, go: GrammarObject, tokens: List[Token]):
+        pass
 
 
 class GeneralizedParser:

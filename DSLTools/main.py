@@ -38,8 +38,8 @@ def main():
     # json_path = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.jsonFile), is_dir=False)
     # directory_to_save = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.directory), is_dir=True)
 
-    json_path = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\rbnf\metainfo.json"
-    directory_to_save = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\rbnf"
+    json_path = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\PSECO\pseco_mo.json"
+    directory_to_save = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\PSECO"
 
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
@@ -49,17 +49,18 @@ def main():
     # Шаг 3. Парсинг грамматики.
     go = parser.parse(mo)
     print(go)
+    print("\n".join(list(go.rules.keys())))
     # Шаг 4: Генерация dsl_info.py
-    generate_dsl_info(go=go, dest=directory_to_save)
-    scanner = DefaultScanner(go)
-
-    with open(directory_to_save/pathlib.Path("test.smpl")) as f:
-        input_str = f.read()
-
-    res = scanner.tokenize(input_str)
-    print("\n".join([item.__repr__() for item in res]))
-    astGen = GeneralizedParser(go)
-    ast_head = astGen.parse(res)
+    # generate_dsl_info(go=go, dest=directory_to_save)
+    # scanner = DefaultScanner(go)
+    #
+    # with open(directory_to_save/pathlib.Path("test.smpl")) as f:
+    #     input_str = f.read()
+    #
+    # res = scanner.tokenize(input_str)
+    # print("\n".join([item.__repr__() for item in res]))
+    # astGen = GeneralizedParser(go)
+    # ast_head = astGen.parse(res)
     # # Шаг 5: Динамический импорт dsl_info
     # dsl_info = import_dsl_info(args.directory)
     #

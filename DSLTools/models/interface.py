@@ -60,5 +60,5 @@ class IAstRender(ABC):
     """Абстрактный интерфейс для рендеринга абстрактного синтаксического дерева."""
 
     @abstractmethod
-    def visualize(self, head: ASTNode, dest: Path) -> ASTNode:
+    def visualize(self, head: ASTNode, dest: Path):
         pass
