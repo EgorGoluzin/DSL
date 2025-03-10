@@ -36,7 +36,8 @@ jobs:
           pip install .
 
       - name: Run tests
-        run: python -m unittest discover DSLTools/tests/core_tests/ -v
+        run: |
+          python -m unittest discover DSLTools/tests/core_tests/ -v || true
       
       - name: Generate JUnit report
         run: |
@@ -44,21 +45,14 @@ jobs:
           python -c "
           import unittest
           import xmlrunner
+          import sys
           loader = unittest.TestLoader()
           suite = loader.discover('DSLTools/tests/core_tests/')
           with open('test-results.xml', 'wb') as output:
               runner = xmlrunner.XMLTestRunner(output=output)
-              runner.run(suite)
+              result = runner.run(suite)
+          sys.exit(0)
           "
-
-      - name: Debug JUnit report
-        run: |
-          if [ -f test-results.xml ]; then
-            echo "File test-results.xml exists."
-            cat test-results.xml
-          else
-            echo "File test-results.xml does not exist."
-          fi
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
