@@ -78,16 +78,17 @@ def __GetRCode(node):
     return res
 
 
-parser = ArgumentParser(prog="create_ast", description="Create AST")
-parser.add_argument("-c", "--code", dest="codeFile", help="File with code", metavar="FILE", required=True)
-parser.add_argument("-j", "--json", dest="jsonFile", help="Json file with settings", metavar="FILE", required=True)
-args = parser.parse_args()
-
-with open(args.jsonFile, 'r') as jsonFile:
+# parser = ArgumentParser(prog="create_ast", description="Create AST")
+# parser.add_argument("-c", "--code", dest="codeFile", help="File with code", metavar="FILE", required=True)
+# parser.add_argument("-j", "--json", dest="jsonFile", help="Json file with settings", metavar="FILE", required=True)
+# args = parser.parse_args()
+j_path = r"C:\Users\Hp\PycharmProjects\DSL\_examples\expression\expression.json"
+f_path = r"C:\Users\Hp\PycharmProjects\DSL\_examples\expression\example.txt"
+with open(j_path, 'r') as jsonFile:
     jsonData = json.loads(jsonFile.read())
 
 syntaxInfo = GetSyntaxDesription(jsonData["syntax"])
-
+print(syntaxInfo)
 if "debugInfoDir" in jsonData:
     debugInfoDir = pathlib.Path(jsonData["debugInfoDir"])
     if not debugInfoDir.exists():
@@ -95,20 +96,20 @@ if "debugInfoDir" in jsonData:
 else:
     debugInfoDir = None
 
-with open(args.codeFile, 'r') as codeFile:
+with open(f_path, 'r') as codeFile:
     code = codeFile.read()
 
 tokenList = Tokenize(code)
 __RenderTokenStream('token_stream_after_scanner', tokenList, debugInfoDir)
-tokenList = Afterscan(tokenList)
-__RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
+# tokenList = Afterscan(tokenList)
+# __RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
 
 ast = BuildAst(syntaxInfo, dsl_info.axiom, tokenList)
 __RenderAst('ast', ast, debugInfoDir)
-attributor.SetAttributes(ast, attribute_evaluator.attributesMap)
-__RenderAst('ast_attributed', ast, debugInfoDir)
-
-if debugInfoDir is not None and "semantics" in jsonData and "virt" == jsonData["semantics"]["type"]:
-    rCode = __GetRCode(ast)
-    with open(f"{debugInfoDir}/r_code.py", 'w') as codeFile:
-        codeFile.write(rCode)
+# attributor.SetAttributes(ast, attribute_evaluator.attributesMap)
+# __RenderAst('ast_attributed', ast, debugInfoDir)
+#
+# if debugInfoDir is not None and "semantics" in jsonData and "virt" == jsonData["semantics"]["type"]:
+#     rCode = __GetRCode(ast)
+#     with open(f"{debugInfoDir}/r_code.py", 'w') as codeFile:
+#         codeFile.write(rCode)
