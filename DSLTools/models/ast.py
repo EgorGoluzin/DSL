@@ -1,10 +1,13 @@
 from dataclasses import dataclass
 from enum import Enum
+from dsl_info import Terminal, Nonterminal
+from typing import Union
 
 
 class NodeType(Enum):
-    NONTERMINAL = 1
-    TERMINAL = 2
+    NONTERMINAL = 'nonterminal'
+    TERMINAL = 'terminal'
+    KEY = 'key'
 
 
 class TreeNode:
@@ -17,7 +20,8 @@ class TreeNode:
 
 @dataclass
 class ASTNode:
-    type: str          # Тип узла (нетерминал)
-    children: list     # Дочерние узлы
-    value: str = None  # Значение (для терминалов)
+    type: NodeType          # Тип узла: терминал-нетерминал-ключ
+    subtype: Union[Terminal, Nonterminal] = None     # Подтип нетерминала или терминала
+    children: list = []   # Дочерние узлы
+    value: str = ''       # Значение (для терминалов)
     position: tuple = None  # (line, column)

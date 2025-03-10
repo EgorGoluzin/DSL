@@ -34,6 +34,7 @@ class DefaultAstBuilder(IAstBuilder):
             rule = node[state['rule_index']]  # what is going on here?
             
             # if node type is end?
+            # --------------------------------------
             if NodeType.END == rule[0].type:
                 parent_state = state['parent_state']
                 if parent_state is None:

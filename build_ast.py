@@ -78,12 +78,15 @@ def __GetRCode(node):
     return res
 
 
-parser = ArgumentParser(prog="create_ast", description="Create AST")
-parser.add_argument("-c", "--code", dest="codeFile", help="File with code", metavar="FILE", required=True)
-parser.add_argument("-j", "--json", dest="jsonFile", help="Json file with settings", metavar="FILE", required=True)
-args = parser.parse_args()
+# parser = ArgumentParser(prog="create_ast", description="Create AST")
+# parser.add_argument("-c", "--code", dest="codeFile", help="File with code", metavar="FILE", required=True)
+# parser.add_argument("-j", "--json", dest="jsonFile", help="Json file with settings", metavar="FILE", required=True)
+# args = parser.parse_args()
 
-with open(args.jsonFile, 'r') as jsonFile:
+sampleJsonFile = './_examples/expression/expression.json'
+sampleCodeFile = './_examples/expression/example.txt'
+
+with open(sampleJsonFile, 'r') as jsonFile:
     jsonData = json.loads(jsonFile.read())
 
 syntaxInfo = GetSyntaxDesription(jsonData["syntax"])
@@ -95,7 +98,7 @@ if "debugInfoDir" in jsonData:
 else:
     debugInfoDir = None
 
-with open(args.codeFile, 'r') as codeFile:
+with open(sampleCodeFile, 'r') as codeFile:
     code = codeFile.read()
 
 tokenList = Tokenize(code)
@@ -104,6 +107,8 @@ tokenList = Afterscan(tokenList)
 __RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
 
 ast = BuildAst(syntaxInfo, dsl_info.axiom, tokenList)
+print('We are here for AST')
+print(ast)
 __RenderAst('ast', ast, debugInfoDir)
 attributor.SetAttributes(ast, attribute_evaluator.attributesMap)
 __RenderAst('ast_attributed', ast, debugInfoDir)
