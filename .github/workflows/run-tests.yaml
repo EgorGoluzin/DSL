@@ -51,8 +51,18 @@ jobs:
           with open('test-results.xml', 'wb') as output:
               runner = xmlrunner.XMLTestRunner(output=output)
               result = runner.run(suite)
+              output.write(result.to_xml().encode('utf-8'))  # Явное преобразование в байты
           sys.exit(0)
           "
+
+      - name: Debug JUnit report
+        run: |
+          if [ -f test-results.xml ]; then
+            echo "File test-results.xml exists."
+            cat test-results.xml
+          else
+            echo "File test-results.xml does not exist."
+          fi
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
