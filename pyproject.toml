@@ -9,9 +9,8 @@ dependencies = [
     "graphviz==0.20.1",
     "pydot==1.4.2",
     "pytest==8.3.5",
-    "xmlrunner==1.7.7"
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]  # Искать пакеты в корне
-include = ["DSLTools*", "syntax*", "afterscan*"]  # Явно указать пакеты
+where = ["."]
+include = ["DSLTools*", "syntax*", "afterscan*"]
