@@ -1,5 +1,6 @@
 import re
 from typing import List
+import graphviz
 
 from _elementtree import ParseError
 
@@ -153,8 +154,53 @@ class DefaultAstBuilder(IAstBuilder):
 
 
 class DefaultAstRenderer(IAstRender):
-    def build(self, go: GrammarObject, tokens: List[Token]) -> ASTNode:
-        pass
+    def visualize(self, go: GrammarObject, tokens: List[Token]):
+        # Шаг 1: Построить AST из GrammarObject и токенов
+        parser = GeneralizedParser(go)
+        ast = parser.parse(tokens)
+
+        # Шаг 2: Создать граф с помощью graphviz
+        diagram_name = "ast_visualization"
+        h = graphviz.Digraph(diagram_name, format='svg')
+        h.attr(rankdir='TB')  # Сверху вниз для читаемости
+
+        # Шаг 3: Обойти AST и построить граф
+        i = 1
+        nodes = [(ast, 0)]  # (узел, ID родителя)
+        while nodes:
+            node, parent_id = nodes.pop(0)
+
+            # Определяем тип узла и его форму
+            if node.type in go.non_terminals:
+                # Нетерминал
+                label = f"NONTERMINAL\ntype: {node.type}"
+                if node.value:
+                    label += f"\nvalue: {node.value}"
+                h.node(str(i), label, shape='box')
+            elif node.type in go.terminals:
+                # Терминал
+                label = f"TERMINAL\ntype: {node.type}\nvalue: {node.value}"
+                h.node(str(i), label, shape='diamond')
+            elif any(key[0] == node.type for key in go.keys):
+                # Ключ
+                label = f"KEY\nstring: {node.value}"
+                h.node(str(i), label, shape='oval')
+            else:
+                # Неизвестный тип (на всякий случай)
+                label = f"UNKNOWN\ntype: {node.type}\nvalue: {node.value}"
+                h.node(str(i), label, shape='ellipse')
+
+            # Связываем с родителем, если он есть
+            if parent_id != 0:
+                h.edge(str(parent_id), str(i))
+
+            # Добавляем детей в очередь
+            nodes.extend((child, i) for child in node.children)
+            i += 1
+
+        # Шаг 4: Сохраняем и рендерим граф
+        output_dir = "debug_ast"  # Можно сделать параметром, если нужно
+        h.render(directory=output_dir, view=True, cleanup=False)  # Оставляем .gv файл для отладки
 
 
 class GeneralizedParser:
