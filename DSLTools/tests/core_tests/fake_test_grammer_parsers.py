@@ -11,6 +11,7 @@ from DSLTools.models.parse import (    Rule,
     Iteration,
     Terminal)
 
+
 # Тестовые классы
 class TestGrammarParser(unittest.TestCase):
     def setUp(self):
