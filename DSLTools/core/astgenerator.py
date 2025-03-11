@@ -154,45 +154,39 @@ class DefaultAstBuilder(IAstBuilder):
 
 
 class DefaultAstRenderer(IAstRender):
-    def visualize(self, go: GrammarObject, tokens: List[Token]):
-        parser = GeneralizedParser(go)
-        ast = parser.parse(tokens)
-
-        # Создаём граф
+    def visualize(self, head: ASTNode, dest: Path):
         h = graphviz.Digraph('AST', format='svg')
         h.attr(rankdir='TB')
+
         i = 1
-        nodes = [(ast, 0)]
+        nodes = [(head, 0)]
+
         while nodes:
             node, parent_idx = nodes.pop(0)
-
-            # Формируем метку узла в зависимости от типа
-            if node.type in go.non_terminals:
-                label = f"NONTERMINAL\ntype: {node.type}"
-                shape = 'box'
-            elif node.type == "keyword":
+            if node.type == "keyword":
                 label = f"KEY\nvalue: {node.value}"
                 shape = 'oval'
-            else:  # Терминал
+            elif node.type in {"Expression", "Term"} or node.type.isupper():
+                label = f"NONTERMINAL\ntype: {node.type}"
+                shape = 'box'
+            else:
                 label = f"TERMINAL\ntype: {node.type}\nvalue: {node.value}"
                 shape = 'diamond'
 
-            # Добавляем позицию, если она есть
             if node.position:
                 label += f"\npos: {node.position[0]}:{node.position[1]}"
 
             h.node(str(i), label, shape=shape)
-
             if parent_idx != 0:
                 h.edge(str(parent_idx), str(i))
 
             if node.children:
                 nodes.extend((child, i) for child in node.children)
-
             i += 1
 
-        # Сохраняем и отображаем граф
-        h.render(directory='output', view=True, cleanup=False)
+        dest_dir = dest.parent
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        h.render(filename=dest.stem, directory=str(dest_dir), format='svg', view=True, cleanup=False)
 
 class GeneralizedParser:
     def __init__(self, grammar: GrammarObject):
