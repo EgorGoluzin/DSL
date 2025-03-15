@@ -62,3 +62,10 @@ class IAstRender(ABC):
     @abstractmethod
     def visualize(self, head: ASTNode, dest: Path):
         pass
+
+
+class IRetranslator(ABC):
+    """Абстрактный интерфейс для ретранслирования абстрактного синтаксического дерева."""
+    @abstractmethod
+    def translate(self, head: ASTNode):
+        pass
