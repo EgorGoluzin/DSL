@@ -39,15 +39,6 @@ class ElementType(Enum):
 
 @dataclass
 class RuleElement:
-<<<<<<< HEAD
-    type: str  # "element", "group", "optional"
-    node_type: str
-    value: Union[str, List[str]]  # Для "element" - строка, для "group"/"optional" - список
-    separator: Optional[str] = None
-
-    def __str__(self):
-        return f"RuleEl(t: {self.type}\nvalue:{self.value}\nsep:{self.separator})"
-=======
     type: ElementType
     value: Union[str, List['RuleElement']]  # Для групп и альтернатив. Будет str, если keyword | nonterminal | terminal
     modifier: str = ""  # "*", "+", "?" для повторений и опционалов
@@ -88,7 +79,6 @@ class RuleElement:
         base = self._format_base_with_sep(sep)
         return f"{base}{self.modifier}" if self.modifier else base
 
->>>>>>> master
 
 @dataclass
 class Rule:
@@ -113,7 +103,7 @@ class GrammarObject:
     non_terminals: List[str] = field(default_factory=list)
     axiom: str = ''
     rules: Dict[str, Rule] = field(default_factory=dict)
-    syntax_info: Any
+    syntax_info: dict = None
 
     def __post_init__(self):
         self._validate()

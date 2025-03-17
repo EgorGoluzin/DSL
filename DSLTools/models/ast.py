@@ -33,12 +33,13 @@ class ASTNode:
     type: 'str'         # Тип узла: терминал-нетерминал-ключ
     subtype: 'str'     # Подтип нетерминала или терминала - используемые в
     # вашем коде
-    children: list = []   # Дочерние узлы
-    value: str = ''       # Значение (для терминалов)
+    children: list = field(default_factory=list)   # Дочерние узлы
+    value: str = ''       # Значение (для терминалов, для нетерминалов - )
     position: tuple = None  # (line, column)
     evaluation: Callable[[str, list[TASTNode]], Any] = None
     # собственное значение, список значений дочерних узлов,
     # возвращаемый тип (любой)
 
     def evaluate(self):
-        return self.evaluation(self.value, self.children)
+        self.value = self.evaluation(self.value, self.children)
+        return self.value

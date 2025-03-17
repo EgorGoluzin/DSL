@@ -10,7 +10,7 @@ PROJECT_ROOT = pathlib.Path(__file__).parent.parent.parent.resolve()
 path_sample = validate_paths(PROJECT_ROOT, pathlib.Path("examples/rbnf/example.txt"), is_dir=False)
 
 
-class TestRetranslator(unittest.TestCase):
+class TestASTNode(unittest.TestCase):
     def setUp(self):
         self.ast = ASTNode(
             type=NodeType.NONTERMINAL,
@@ -87,6 +87,7 @@ class TestRetranslator(unittest.TestCase):
                 )
             ],
         )
+
     def test_for_expression(self):
         with open(path_sample, "r") as f:
             value = f.read()
