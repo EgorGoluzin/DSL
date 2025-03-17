@@ -314,18 +314,11 @@ class RBNFParser(IGrammarParser):
         for j, el in enumerate(parsed_elements):
             if el.type == ElementType.SEP_MARKER:
                 separator = parsed_elements[j+1]
+                parsed_elements.pop(j+1)
                 parsed_elements.pop(j)
                 # TODO: продумать здесь кринж логику
                 break
         # Обрабатываем сепаратор после группы
-
-        # if i < len(tokens) and tokens[i] == '#':
-        #     if i + 1 < len(tokens) and (tokens[i + 1] in self.terminals_opt or tokens[i + 1] in self.keywords_opt):
-        #         separator = RuleElement(type=self._determine_element_type(tokens[i + 1].strip("'")),
-        #                                 value=tokens[i + 1].strip("'"))
-        #         i += 2
-        #     else:
-        #         raise ValueError(f"Invalid separator after group at position {i}")
 
         return RuleElement(
             type=ElementType.GROUP,

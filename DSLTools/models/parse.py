@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Tuple, Union
+from typing import List, Optional, Dict, Tuple, Union, Any
 from enum import Enum
 from dataclasses import dataclass, field
 
@@ -40,7 +40,7 @@ class ElementType(Enum):
 @dataclass
 class RuleElement:
     type: ElementType
-    value: Union[str, List['RuleElement']]  # Для групп и альтернатив
+    value: Union[str, List['RuleElement']]  # Для групп и альтернатив. Будет str, если keyword | nonterminal | terminal
     modifier: str = ""  # "*", "+", "?" для повторений и опционалов
     separator: Optional['RuleElement'] = None  # Для групп с сепаратором
 
@@ -73,11 +73,11 @@ class RuleElement:
             inner = sep + ch.join([e.to_string(sep) for e in self.value])
             return f"{sep}Seq ({inner})"
         return f'"Key(value={self.value})"' if self.type == ElementType.KEYWORD else f"Nonterminal(value = {self.value})"
-    def to_string(self, sep: str)-> str :
+
+    def to_string(self, sep: str) -> str:
         sep += "\t"
         base = self._format_base_with_sep(sep)
         return f"{base}{self.modifier}" if self.modifier else base
-
 
 
 @dataclass
@@ -97,11 +97,13 @@ class Rule:
 
 @dataclass
 class GrammarObject:
+    """Замена dsl_info"""
     terminals: Dict[str, Terminal] = field(default_factory=dict)
     keys: List[Tuple[str, str]] = field(default_factory=list)
     non_terminals: List[str] = field(default_factory=list)
     axiom: str = ''
     rules: Dict[str, Rule] = field(default_factory=dict)
+    syntax_info: Any
 
     def __post_init__(self):
         self._validate()
