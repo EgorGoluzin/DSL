@@ -4,7 +4,7 @@ from .support import MetaObject
 from .tokens import Token
 from .ast import ASTNode
 from pathlib import Path
-from typing import List
+from typing import List, NewType
 
 
 class IGrammarParser(ABC):

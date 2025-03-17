@@ -8,7 +8,9 @@ from DSLTools.core.retranslator import ReToExpression
 from DSLTools.utils.file_ops import validate_paths
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent.parent.resolve()
 path_sample = validate_paths(PROJECT_ROOT, pathlib.Path("examples/rbnf/example.txt"), is_dir=False)
-class TestDefaultScanner(unittest.TestCase):
+
+
+class TestRetranslator(unittest.TestCase):
     def setUp(self):
         self.ast = ASTNode(
             type=NodeType.NONTERMINAL,
