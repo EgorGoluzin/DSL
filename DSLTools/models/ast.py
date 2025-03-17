@@ -39,6 +39,6 @@ class ASTNode(IASTNode, IJsonMedia):
     def evaluated(self):
         self.attribute = self.evaluation(self.value, self.children)
         return self.attribute
-    
-    def to_json(self):
+
+    def to_json(self, offset:int = 0):
         return ''

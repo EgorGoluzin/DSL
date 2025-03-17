@@ -77,7 +77,7 @@ JsonString = NewType('JsonString', str)
 class IJsonMedia(ABC):
     """Объект, преобразуемый в формат JSON."""
     @abstractmethod
-    def to_json(self) -> JsonString:
+    def to_json(self, offset: int = 0) -> JsonString:
         pass
 
 
