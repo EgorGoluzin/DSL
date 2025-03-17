@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
-from dsl_info import Terminal, Nonterminal
-from typing import Union
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 
 class NodeType(Enum):
@@ -19,10 +19,20 @@ class TreeNode:
         self.childs = []
 
 
+TASTNode = TypeVar('TASTNode', bound='ASTNode')
+
+
 @dataclass
 class ASTNode:
-    type: NodeType          # Тип узла: терминал-нетерминал-ключ
-    subtype: Union[Terminal, Nonterminal] = None     # Подтип нетерминала или терминала
+    type: 'str'         # Тип узла: терминал-нетерминал-ключ
+    subtype: 'str'     # Подтип нетерминала или терминала - используемые в
+    # вашем коде
     children: list = []   # Дочерние узлы
     value: str = ''       # Значение (для терминалов)
     position: tuple = None  # (line, column)
+    evaluation: Callable[[str, list[TASTNode]], Any] = None
+    # собственное значение, список значений дочерних узлов,
+    # возвращаемый тип (любой)
+
+    def evaluate(self):
+        return self.evaluation(self.value, self.children)

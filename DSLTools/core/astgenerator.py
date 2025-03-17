@@ -58,19 +58,20 @@ class DefaultAstBuilder(IAstBuilder):
                     WalkStep(
                         parent_state=parent_state.parent_state,
                         pos=pos,
-                        node=parent_state.node[parent_state.rule_index],
-                        
+                        node=parent_state.node[parent_state.rule_index], # what? [0]
+                        rule_index=0,
+                        nonterm=parent_state.nonterm
                     )
                 )
-                self.states.append({
-                    'parent_state': parent_state['parent_state'],
-                    'pos': pos,
-                    'node': parent_state['node'][parent_state['rule_index']][0],  # what??
-                    'rule_index': 0,
-                    'nonterm': parent_state['nonterm']
-                })
+                # self.states.append({
+                #     'parent_state': parent_state['parent_state'],
+                #     'pos': pos,
+                #     'node': parent_state['node'][parent_state['rule_index']][0],  # what??
+                #     'rule_index': 0,
+                #     'nonterm': parent_state['nonterm']
+                # })
                 continue
-            elif NodeType.NONTERMINAL == rule[0].type:
+            elif NodeType.NONTERMINAL == rule.elements[0].node_type:
                 if rule[0].nonterminal not in self.grammar:
                     raise Exception(f"Failed to find '{rule[0].nonterminal}' description")
                 self.states.append({

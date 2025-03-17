@@ -21,7 +21,7 @@ class Node:
         self.nextNodes = []
 
     def __str__(self):
-        res = f'Node: type = {self.type}; str = {self.str}; nextNodes = [\n'
+        res = f'Node: type = {self.type}; str = {self.str}; nextNodes = ['
         for i, node in enumerate(self.nextNodes):
-            res += f'{i}: ' + str(node) + '\n'
-        return res + ']\n'
+            res += f'{i}: ' + str(node) + '; '
+        return res + ']'

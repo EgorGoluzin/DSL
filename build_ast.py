@@ -102,7 +102,7 @@ with open(sampleCodeFile, 'r') as codeFile:
     code = codeFile.read()
 
 tokenList = Tokenize(code)
-__RenderTokenStream('token_stream_after_scanner', tokenList, debugInfoDir)
+# __RenderTokenStream('token_stream_after_scanner', tokenList, debugInfoDir)
 # tokenList = Afterscan(tokenList)
 # __RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
 
