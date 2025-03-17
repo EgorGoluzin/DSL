@@ -1,10 +1,16 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
+<<<<<<< HEAD
 from collections.abc import Callable
 from typing import Any, TypeVar
+=======
+from dsl_info import Terminal, Nonterminal
+from typing import Union, List
+
+>>>>>>> master
 
 
-class NodeType(Enum):
+class NodeType(str, Enum):
     NONTERMINAL = 'nonterminal'
     TERMINAL = 'terminal'
     KEY = 'key'

@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Tuple, Union
+from typing import List, Optional, Dict, Tuple, Union, Any
 from enum import Enum
 from dataclasses import dataclass, field
 
@@ -24,8 +24,22 @@ class Terminal:
         return f"Terminal(name: {self.name}, pattern: {self.pattern})"
 
 
+class ElementType(Enum):
+    KEYWORD = "keyword"
+    NONTERMINAL = "nonterminal"
+    TERMINAL = "terminal"
+    GROUP = "group"
+    OPTIONAL = "optional"
+    ALTERNATIVE = "alternative"
+    SEQUENCE = "sequence"
+    SEPARATOR = "separator"
+    MODIFIER = "modifier"
+    SEP_MARKER = "sep_marker"
+
+
 @dataclass
 class RuleElement:
+<<<<<<< HEAD
     type: str  # "element", "group", "optional"
     node_type: str
     value: Union[str, List[str]]  # Для "element" - строка, для "group"/"optional" - список
@@ -33,13 +47,59 @@ class RuleElement:
 
     def __str__(self):
         return f"RuleEl(t: {self.type}\nvalue:{self.value}\nsep:{self.separator})"
+=======
+    type: ElementType
+    value: Union[str, List['RuleElement']]  # Для групп и альтернатив. Будет str, если keyword | nonterminal | terminal
+    modifier: str = ""  # "*", "+", "?" для повторений и опционалов
+    separator: Optional['RuleElement'] = None  # Для групп с сепаратором
+
+    def __str__(self):
+        base = self._format_base("")
+        return f"{base}{self.modifier}" if self.modifier else base
+
+    def _format_base(self, sep: str) -> str:
+        if self.type == ElementType.ALTERNATIVE:
+            return f"({' | '.join(str(e) for e in self.value)})"
+        if self.type == ElementType.GROUP:
+            inner = f"{self.separator} ".join(str(e) for e in self.value)
+            return f"({inner})"
+        if self.type == ElementType.OPTIONAL:
+            return f"[{''.join(str(e) for e in self.value)}]"
+        return f'"{self.value}"' if self.type == ElementType.KEYWORD else self.value
+
+    def _format_base_with_sep(self, sep: str) -> str:
+        if self.type == ElementType.ALTERNATIVE:
+            ch = ' | '
+            return f"Alter( {sep} {ch.join([e.to_string(sep) for e in self.value])})"
+        if self.type == ElementType.GROUP:
+            ch = sep + str(self.separator)
+            inner = sep + ch.join([e.to_string(sep) for e in self.value])
+            return f"({inner})"
+        if self.type == ElementType.OPTIONAL:
+            return sep + f"Optional[{f'{sep}'.join([e.to_string(sep) for e in self.value])}]"
+        if self.type == ElementType.SEQUENCE:
+            ch = sep
+            inner = sep + ch.join([e.to_string(sep) for e in self.value])
+            return f"{sep}Seq ({inner})"
+        return f'"Key(value={self.value})"' if self.type == ElementType.KEYWORD else f"Nonterminal(value = {self.value})"
+
+    def to_string(self, sep: str) -> str:
+        sep += "\t"
+        base = self._format_base_with_sep(sep)
+        return f"{base}{self.modifier}" if self.modifier else base
+
+>>>>>>> master
 
 @dataclass
 class Rule:
-    lhs: str
-    elements: List[RuleElement]
-    separator: Optional[str] = None
+    lpart: str
+    rpart: RuleElement  # Основное изменение: список альтернатив
 
+    def __str__(self):
+        return f"{self.lpart} ::= \n" + str(self.rpart)
+
+    def to_string(self, sep) -> str:
+        return f"{self.lpart} ::=" + self.rpart.to_string(sep)
     # def __str__(self):
     #     return f"Rule( lhs = {self.lhs}, elements: " + "\n\t".join([el.__str__() for el in self.elements])\
     #         + f"\n\tsep={self.separator})"
@@ -47,11 +107,13 @@ class Rule:
 
 @dataclass
 class GrammarObject:
+    """Замена dsl_info"""
     terminals: Dict[str, Terminal] = field(default_factory=dict)
     keys: List[Tuple[str, str]] = field(default_factory=list)
     non_terminals: List[str] = field(default_factory=list)
     axiom: str = ''
-    rules: Dict[str, List[Rule]] = field(default_factory=dict)
+    rules: Dict[str, Rule] = field(default_factory=dict)
+    syntax_info: Any
 
     def __post_init__(self):
         self._validate()
@@ -82,7 +144,7 @@ class GrammarObject:
         return ",\n\t".join([f"('{item[1]}', Terminal.{item[0]})" for item in self.keys])
 
     def get_non_terminals_for_template(self):
-        return "\n\t" + "\n\t".join([f"{item} = '{item}'"for item in self.non_terminals])
+        return "\n\t" + "\n\t".join([f"{item} = '{item}'" for item in self.non_terminals])
 
     def __str__(self):
         res = "GrammarObject(\n\tTerminals:"
@@ -90,9 +152,10 @@ class GrammarObject:
         ## TODO: Создать класс для ключей
         res += "\n\tKeys:" + "\n\t\t" + "\n\t\t".join([f"type: {item[0]}, val: {item[1]}" for item in self.keys]) + ";"
         res += "\n\tNonTerminals:" + "\n\t\t" + "\n\t\t".join(self.non_terminals) + ";"
-        res += "\n\tRules:" + "\n\t\t" + "\n\t\t".join(["| ".join([rule.__str__() for rule in item]) for item in self.rules.values()]) + ";"
+        res += "\n\tRules:" + "\n\t\t" + "\n\t\t".join([rule.to_string("\n\t\t") for rule in self.rules.values()])
         res += "\n\tAxiom:" + f"\n\t\t{self.axiom}"
         return res
+
 
 """
 GrammarObject(

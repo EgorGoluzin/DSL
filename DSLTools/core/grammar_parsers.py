@@ -4,9 +4,27 @@ from pathlib import Path
 import re
 from DSLTools.models import (
     Rule, Terminal, GrammarElement, VirtNodeType, GrammarObject,
-    IGrammarParser, MetaObject, RuleElement)
+    IGrammarParser, MetaObject, RuleElement, ElementType)
 
 PROJECT_ROOT = Path(__file__).parent.parent
+
+
+class Tokenizer:
+    def __init__(self, tokens):
+        self.tokens = tokens
+        self.index = 0
+
+    def peek(self):
+        if self.index < len(self.tokens):
+            return self.tokens[self.index]
+        return None
+
+    def consume(self):
+        if self.index < len(self.tokens):
+            token = self.tokens[self.index]
+            self.index += 1
+            return token
+        return None
 
 
 class VirtParser(IGrammarParser):
@@ -60,13 +78,12 @@ class RBNFParser(IGrammarParser):
         self.terminals = {}
         self.non_terminals = []
         self.axiom = ""
-        self.rules: Dict[str, List[Rule]] = {}  # Изменено на список правил
+        self.rules: Dict[str, Rule] = {}  # Изменено на список правил
         self.warnings = []
         self.current_section = None
         self.non_terminals_opt = None
         self.terminals_opt = None
         self.keywords_opt = None
-
 
     def parse(self, meta_object: MetaObject) -> GrammarObject:
         syntax_dir = meta_object.syntax["info"]["syntax_dir"]
@@ -165,32 +182,8 @@ class RBNFParser(IGrammarParser):
             raise ValueError(f"Undefined non-terminal in LHS: {lhs}")
 
         rhs = match.group(2).strip().rstrip(';')
-        alternatives = self._split_alternatives(rhs)
-
-        self.rules[lhs] = [
-            Rule(lhs=lhs, elements=self._parse_rhs(alt))
-            for alt in alternatives
-        ]
-
-    def _split_alternatives(self, rhs: str) -> List[str]:
-        brackets = {'(': ')', '[': ']', '{': '}'}
-        stack = []
-        in_quote = False
-        split_indices = [0]
-
-        for i, char in enumerate(rhs):
-            if char in ('"', "'"):
-                in_quote = not in_quote
-            elif not in_quote:
-                if char in brackets:
-                    stack.append(brackets[char])
-                elif stack and char == stack[-1]:
-                    stack.pop()
-                elif not stack and char == '|':
-                    split_indices.append(i)
-
-        split_indices.append(len(rhs))
-        return [rhs[i:j].strip() for i, j in zip(split_indices, split_indices[1:])]
+        self.rules[lhs] = Rule(lpart=lhs, rpart=RuleElement(type=ElementType.SEQUENCE,
+                                                            value=self._parse_rhs(rhs)))
 
     def _tokenize_rhs(self, rhs: str) -> List[str]:
         # Регулярка разделяет:
@@ -205,7 +198,8 @@ class RBNFParser(IGrammarParser):
               \}         |   # синтаксическая }
               \[         |   # синтаксическая [
               \]         |
-              \# ) | # синтаксическая ]
+              \#         |
+              \|) | # синтаксическая ]
             ( \w+        )   # слова (терминалы/нетерминалы)
             """,
             rhs,
@@ -219,39 +213,84 @@ class RBNFParser(IGrammarParser):
             if any(t)
         ]
 
-    def _parse_rhs(self, rhs: str) -> List[Dict]:
+    def _parse_rhs(self, rhs: str) -> List[RuleElement]:
+        """
+        Функция для обработки правила, она как раз таки является рекурсивной.
+        В ней происходит обработка всех случаев: Optional | Group | Alternative.
+        """
         tokens = self._tokenize_rhs(rhs)
         elements = []
         i = 0
-
         while i < len(tokens):
             token = tokens[i]
-
             if token == '{':
                 group, i = self._parse_group(tokens, i)
                 elements.append(group)
+                continue
             elif token == '[':
                 optional, i = self._parse_optional(tokens, i)
                 elements.append(optional)
-            else:
+                continue
+            elif len(tokens) > i+1:
+                if tokens[i+1] == '|':
+                    alternative, i = self._parse_alternative(tokens, i)
+                    elements.append(alternative)
+                    continue
+                if token == '|':
+                    alternative, i = self._parse_alternative(tokens, i)
+                    elements.append(alternative)
+                    continue
+
+            if token:
                 elem_type = self._determine_element_type(token)
-                elements.append({'type': elem_type, 'value': token.strip("'")})
+                elements.append(RuleElement(type=elem_type, value=token.strip("'")))
                 i += 1
 
         return elements
 
-    def _determine_element_type(self, token: str) -> str:
-        if token in self.keywords_opt:
-            return 'keyword'
-        if token in self.terminals_opt:
-            return 'terminal'
-        if token in self.non_terminals_opt:
-            return 'nonterminal'
-        if token.startswith('#') and len(token) > 1:
-            return 'separator_marker'
-        raise ValueError(f"Undefined symbol: {token}")
+    def _parse_alternative(self, tokens, start_index) -> (RuleElement, int):
+        alternatives = []
+        i = start_index
+        depth = 0  # Для отслеживания вложенности скобок
 
-    def _parse_group(self, tokens, start_idx):
+        while True:
+            current_alt_tokens = []
+            # Собираем токены текущей альтернативы, учитывая вложенность
+            while i < len(tokens):
+                token = tokens[i]
+                if token == '|' and depth == 0:
+                    i += 1  # Пропускаем '|' для следующей альтернативы
+                    break
+                # Обновляем глубину вложенности
+                if token in ['{', '[', '(']:
+                    depth += 1
+                elif token in ['}', ']', ')']:
+                    depth -= 1
+                current_alt_tokens.append(token)
+                i += 1
+
+            # Парсим собранные токены в последовательность элементов
+            if current_alt_tokens:
+                rhs = ' '.join(current_alt_tokens)
+                parsed_elements = self._parse_rhs(rhs)
+                # Каждая альтернатива — это последовательность (SEQUENCE)
+                if len(parsed_elements) > 1:
+                    alt_element = RuleElement(
+                        type=ElementType.SEQUENCE,
+                        value=parsed_elements
+                    )
+                else:
+                    alt_element = parsed_elements[0]
+                alternatives.append(alt_element)
+
+            # Выходим, если больше нет альтернатив
+            if i >= len(tokens) or (len(current_alt_tokens) == 0 and tokens[i - 1] != '|'):
+                break
+
+        return RuleElement(type=ElementType.ALTERNATIVE, value=alternatives), i
+
+    def _parse_group(self, tokens, start_idx) -> (RuleElement, int):
+        """Функция для парсинга случая групп"""
         elements = []
         i = start_idx + 1
         depth = 1
@@ -270,24 +309,24 @@ class RBNFParser(IGrammarParser):
             i += 1
 
         # Парсим содержимое группы
-        parsed_elements = self._parse_rhs(' '.join(elements))
-
-        # Обрабатываем сепаратор после группы
         separator = None
-        if i < len(tokens) and tokens[i] == '#':
-            if i + 1 < len(tokens) and (tokens[i + 1] in self.terminals_opt or tokens[i + 1] in self.keywords_opt):
-                separator = tokens[i + 1].strip("'")
-                i += 2
-            else:
-                raise ValueError(f"Invalid separator after group at position {i}")
+        parsed_elements = self._parse_rhs(' '.join(elements))
+        for j, el in enumerate(parsed_elements):
+            if el.type == ElementType.SEP_MARKER:
+                separator = parsed_elements[j+1]
+                parsed_elements.pop(j+1)
+                parsed_elements.pop(j)
+                # TODO: продумать здесь кринж логику
+                break
+        # Обрабатываем сепаратор после группы
 
-        return {
-            'type': 'group',
-            'elements': parsed_elements,
-            'separator': separator
-        }, i
+        return RuleElement(
+            type=ElementType.GROUP,
+            value=parsed_elements,
+            separator=separator), i
 
-    def _parse_optional(self, tokens, start_idx):
+    def _parse_optional(self, tokens, start_idx) -> (RuleElement, int):
+        """Функция для парсинга случая опциональных моментов"""
         elements = []
         i = start_idx + 1
         depth = 1
@@ -304,9 +343,18 @@ class RBNFParser(IGrammarParser):
             elements.append(token)
             i += 1
 
-        return {
-            'type': 'optional',
-            'elements': self._parse_rhs(' '.join(elements))
-        }, i
+        return RuleElement(type=ElementType.OPTIONAL, value=self._parse_rhs(' '.join(elements))), i
+
+    def _determine_element_type(self, token: str) -> ElementType:
+        if token in self.keywords_opt:
+            return ElementType.KEYWORD
+        if token in self.terminals_opt:
+            return ElementType.TERMINAL
+        if token in self.non_terminals_opt:
+            return ElementType.NONTERMINAL
+        if token == "#":
+            return ElementType.SEP_MARKER
+        raise ValueError(f"Undefined symbol: {token}")
+
     def get_warnings(self) -> List[str]:
         return self.warnings

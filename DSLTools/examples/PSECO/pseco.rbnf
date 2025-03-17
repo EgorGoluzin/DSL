@@ -60,8 +60,9 @@ AXIOM:
     Program
 
 RULES:
-    Arguments        ::= { Expression } # ',';
+    Loop             ::= LC | LA | LB | LS;
     Expression       ::= '$' ['^'] '$';
+    Arguments        ::= { Expression } # ',';
     Block            ::= '{' { Statement } '}';
     Program          ::= { Statement };
     Statement        ::= Assignment | Conditional | Expression | Loop | FunctionDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor;
@@ -75,7 +76,6 @@ RULES:
     Text             ::= text;
     Assignment       ::= Variable ':' Expression;
     Conditional      ::= 'IF' Expression 'THEN' Block [ { 'ELSEIF' Expression 'THEN' Block } ] [ 'ELSE' Block ] 'END_IF';
-    Loop             ::= LC | LA | LB | LS;
     LC               ::= 'FOR' Variable Range 'DO' Block 'END_FOR';
     LA               ::= 'REPEAT' Block 'UNTIL' Expression;
     LB               ::= 'WHILE' Expression 'DO' Block 'END_WHILE';
