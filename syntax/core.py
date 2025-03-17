@@ -19,3 +19,9 @@ class Node:
         self.type = type
         self.str = str
         self.nextNodes = []
+
+    def __str__(self):
+        res = f'Node: type = {self.type}; str = {self.str}; nextNodes = [\n'
+        for i, node in enumerate(self.nextNodes):
+            res += f'{i}: ' + str(node) + '\n'
+        return res + ']\n'

@@ -27,11 +27,11 @@ class Terminal:
 @dataclass
 class RuleElement:
     type: str  # "element", "group", "optional"
+    node_type: str
     value: Union[str, List[str]]  # Для "element" - строка, для "group"/"optional" - список
     separator: Optional[str] = None
 
     def __str__(self):
-
         return f"RuleEl(t: {self.type}\nvalue:{self.value}\nsep:{self.separator})"
 
 @dataclass

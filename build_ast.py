@@ -106,6 +106,11 @@ __RenderTokenStream('token_stream_after_scanner', tokenList, debugInfoDir)
 # tokenList = Afterscan(tokenList)
 # __RenderTokenStream('token_stream_after_afterscan', tokenList, debugInfoDir)
 
+print('syntax info:')
+for key, val in syntaxInfo.items():
+    print(f'Key: {key, type(key)}')
+    print(f'Value: {str(val), type(val)}')
+
 ast = BuildAst(syntaxInfo, dsl_info.axiom, tokenList)
 print('We are here for AST')
 print(ast)

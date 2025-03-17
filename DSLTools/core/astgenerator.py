@@ -1,5 +1,5 @@
 import re
-from typing import List
+from typing import List, TypeVar
 import graphviz
 
 from _elementtree import ParseError
@@ -8,10 +8,11 @@ from DSLTools.models import (GrammarObject, Token, ASTNode, Rule, IAstBuilder, I
 from DSLTools.models.ast import NodeType
 
 
+TWalkStep = TypeVar('TWalkStep', bound='WalkStep')
 class WalkStep:
     def __init__(
         self,
-        parent_state=None,
+        parent_state: TWalkStep = None,
         pos: int = 0,
         node: List[Rule] = [],
         rule_index: int = 0,
@@ -26,8 +27,8 @@ class WalkStep:
 
 class DefaultAstBuilder(IAstBuilder):
     def __init__(self):
-        self.states = []
-    
+        self.states: list[WalkStep] = []
+
     def __ret(self):
         self.states[-1]['rule_index'] += 1
         while self.states[-1]['rule_index'] >= len(self.states[-1]['node']):
@@ -37,29 +38,30 @@ class DefaultAstBuilder(IAstBuilder):
             self.states[-1]['rule_index'] += 1
 
     def __walk(self):
-        self.states = [{
-            'parent_state': None,
-            'pos': 0,
-            'node': self.go.rules[self.go.axiom],
-            'rule_index': 0,
-            'nonterm': self.go.axiom,
-        }]
+        self.states = [WalkStep(None, 0, self.go.rules[self.go.axiom], 0, self.go.axiom)]
         while True:
             state = self.states[-1]
-            pos = state['pos']
-            node = state['node']
-            rule = node[state['rule_index']]  # what is going on here?
-            
+            pos = state.pos
+            node = state.node
+            rule = node[state.rule_index]  # what is going on here?
             # if node type is end?
             # --------------------------------------
-            if NodeType.END == rule[0].type:
-                parent_state = state['parent_state']
+            if NodeType.END == rule.elements[0].node_type:
+                parent_state = state.parent_state
                 if parent_state is None:
                     if pos == self.end:
                         return
                     else:
                         self.__ret()
                         continue
+                self.states.append(
+                    WalkStep(
+                        parent_state=parent_state.parent_state,
+                        pos=pos,
+                        node=parent_state.node[parent_state.rule_index],
+                        
+                    )
+                )
                 self.states.append({
                     'parent_state': parent_state['parent_state'],
                     'pos': pos,
