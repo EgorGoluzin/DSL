@@ -8,6 +8,22 @@ from DSLTools.models import (GrammarObject, Token, ASTNode, Rule, IAstBuilder, I
 from DSLTools.models.ast import NodeType
 
 
+class WalkStep:
+    def __init__(
+        self,
+        parent_state=None,
+        pos: int = 0,
+        node: List[Rule] = [],
+        rule_index: int = 0,
+        nonterm: str = ''
+    ):
+        self.parent_state = parent_state
+        self.pos = pos
+        self.node = node
+        self.rule_index = rule_index
+        self.nonterm = nonterm
+
+
 class DefaultAstBuilder(IAstBuilder):
     def __init__(self):
         self.states = []
