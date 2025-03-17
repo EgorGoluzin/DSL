@@ -1,13 +1,8 @@
 from dataclasses import dataclass, field
 from enum import Enum
-<<<<<<< HEAD
 from collections.abc import Callable
 from typing import Any, TypeVar
-=======
-from dsl_info import Terminal, Nonterminal
-from typing import Union, List
-
->>>>>>> master
+from interface import IASTNode, IJsonMedia
 
 
 class NodeType(str, Enum):
@@ -29,7 +24,7 @@ TASTNode = TypeVar('TASTNode', bound='ASTNode')
 
 
 @dataclass
-class ASTNode:
+class ASTNode(IASTNode, IJsonMedia):
     type: NodeType         # Тип узла: терминал-нетерминал-ключ
     subtype: 'str'     # Подтип нетерминала или терминала - используемые в
     # вашем коде
@@ -44,3 +39,6 @@ class ASTNode:
     def evaluated(self):
         self.attribute = self.evaluation(self.value, self.children)
         return self.attribute
+    
+    def to_json(self):
+        return ''

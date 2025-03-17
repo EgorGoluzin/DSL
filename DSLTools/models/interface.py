@@ -4,7 +4,7 @@ from .support import MetaObject
 from .tokens import Token
 from .ast import ASTNode
 from pathlib import Path
-from typing import List
+from typing import List, NewType
 
 
 class IGrammarParser(ABC):
@@ -71,8 +71,14 @@ class IASTNode(ABC):
         pass
 
 
+JsonString = NewType('JsonString', str)
+
+
 class IJsonMedia(ABC):
-    """"""
+    """Объект, преобразуемый в формат JSON."""
+    @abstractmethod
+    def to_json(self) -> JsonString:
+        pass
 
 
 class IRetranslator(ABC):
