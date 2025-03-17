@@ -64,6 +64,17 @@ class IAstRender(ABC):
         pass
 
 
+class IASTNode(ABC):
+    """Элемент абстрактного синтаксического дерева."""
+    @abstractmethod
+    def evaluated(self):
+        pass
+
+
+class IJsonMedia(ABC):
+    """"""
+
+
 class IRetranslator(ABC):
     """Абстрактный интерфейс для ретранслирования абстрактного синтаксического дерева."""
     @abstractmethod
