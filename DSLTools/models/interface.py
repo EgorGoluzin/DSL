@@ -64,23 +64,6 @@ class IAstRender(ABC):
         pass
 
 
-class IASTNode(ABC):
-    """Элемент абстрактного синтаксического дерева."""
-    @abstractmethod
-    def evaluated(self):
-        pass
-
-
-JsonString = NewType('JsonString', str)
-
-
-class IJsonMedia(ABC):
-    """Объект, преобразуемый в формат JSON."""
-    @abstractmethod
-    def to_json(self, offset: int = 0) -> JsonString:
-        pass
-
-
 class IRetranslator(ABC):
     """Абстрактный интерфейс для ретранслирования абстрактного синтаксического дерева."""
     @abstractmethod

@@ -1,33 +1,128 @@
 import pathlib
 import unittest
-import re
-
 from DSLTools.models.ast import ASTNode, NodeType
-from dsl_info import Nonterminal, Terminal
-from DSLTools.core.retranslator import ReToExpression
-from DSLTools.utils.file_ops import validate_paths
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent.parent.resolve()
-path_sample = validate_paths(PROJECT_ROOT, pathlib.Path("examples/rbnf/example.txt"), is_dir=False)
 
 
 class TestASTNode(unittest.TestCase):
     class TermEval:
-        def __call__(self, *args, **kwds):
-            value = args[0]
-            children = 
+        def __call__(self, value: str, children: list[ASTNode]):
+            cum = 1
+            for i in range(0, len(children), 2):
+                cum *= children[i].evaluated()
+            return cum
+
+    class NumberEval:
+        def __call__(self, value: str, children: list[ASTNode]):
+            return int(value)
+
+    class KeyEval:
+        def __call__(self, value: str, children: list[ASTNode]):
+            return value
+
     def setUp(self):
-        self.term_eval = 
-    def term():
+        self.term_eval = self.TermEval()
+        self.number_eval = self.NumberEval()
+        self.key_eval = self.KeyEval()
+
+    def simple_term(self):
         return ASTNode(
             'nonterminal', 'TERM',
             [
-                
-            ]
+                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+            ],
+            evaluation=self.term_eval
         )
 
-    def test_for_expression(self):
-        ast = ASTNode(...)
-        print(ast.evaluate())
+    def test_term_evaluation(self):
+        ast = self.simple_term()
+        self.assertEqual(1024, ast.evaluated())
+    
+    def test_term_to_json(self):
+        ast = self.simple_term()
+        ast.evaluated()
+        # print(ast.to_json())
+        expected = '''{
+    type: 'nonterminal',
+    subtype: 'TERM',
+    value: '',
+    attribute: '1024',
+    children: [
+        {
+            type: 'terminal',
+            subtype: 'number',
+            value: '4',
+            attribute: '4',
+            children: []
+        },
+        {
+            type: 'key',
+            subtype: '',
+            value: '*',
+            attribute: '',
+            children: []
+        },
+        {
+            type: 'terminal',
+            subtype: 'number',
+            value: '4',
+            attribute: '4',
+            children: []
+        },
+        {
+            type: 'key',
+            subtype: '',
+            value: '*',
+            attribute: '',
+            children: []
+        },
+        {
+            type: 'terminal',
+            subtype: 'number',
+            value: '4',
+            attribute: '4',
+            children: []
+        },
+        {
+            type: 'key',
+            subtype: '',
+            value: '*',
+            attribute: '',
+            children: []
+        },
+        {
+            type: 'terminal',
+            subtype: 'number',
+            value: '4',
+            attribute: '4',
+            children: []
+        },
+        {
+            type: 'key',
+            subtype: '',
+            value: '*',
+            attribute: '',
+            children: []
+        },
+        {
+            type: 'terminal',
+            subtype: 'number',
+            value: '4',
+            attribute: '4',
+            children: []
+        }
+    ]
+}
+'''
+        self.assertEqual(ast.to_json(), expected)
 
 
 if __name__ == "__main__":
