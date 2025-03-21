@@ -1,23 +1,5 @@
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
-import uuid
-from DSLTools.models import Rule, ElementType, RuleElement
-
-
-@dataclass
-class Node:
-    node_type: str  # 'start', 'end', 'nonterminal', 'terminal', 'group', 'optional'
-    label: str = ""
-    next_nodes: List['Node'] = field(default_factory=list)
-    edge_label: str = ""
-    id: str = field(default_factory=lambda: str(uuid.uuid4()))
-
-
-@dataclass
-class Diagram:
-    start: Node
-    end: Node
-    nodes: Dict[str, Node] = field(default_factory=dict)
+from typing import Dict
+from DSLTools.models import Rule, ElementType, RuleElement, RuleWirthNode, Diagram
 
 
 def convert_rules_to_diagrams(rules: Dict[str, Rule]) -> Dict[str, Diagram]:
@@ -25,17 +7,17 @@ def convert_rules_to_diagrams(rules: Dict[str, Rule]) -> Dict[str, Diagram]:
 
     for lhs, rule_list in rules.items():
         # Создаем диаграмму для каждого нетерминала
-        start_node = Node(node_type='start', label=lhs)
-        end_node = Node(node_type='end')
+        start_node = RuleWirthNode(node_type='start', label=lhs)
+        end_node = RuleWirthNode(node_type='end')
         current_node = start_node
 
         start_sequence = rule_list.rpart
         # Пробегаемся по правилам внешней последовательности
         for rule in start_sequence.value:
             if rule.type == ElementType.NONTERMINAL:
-                new_node = Node(node_type='nonterminal', label=rule.value)
+                new_node = RuleWirthNode(node_type='nonterminal', label=rule.value)
             elif rule.type == ElementType.TERMINAL:
-                new_node = Node(node_type='terminal', label=rule.value)
+                new_node = RuleWirthNode(node_type='terminal', label=rule.value)
             elif rule.type == ElementType.GROUP:
                 new_node = create_group_diagram(rule, rule, current_node)
             elif rule.type == ElementType.OPTIONAL:
@@ -43,7 +25,7 @@ def convert_rules_to_diagrams(rules: Dict[str, Rule]) -> Dict[str, Diagram]:
                 current_node = current_node.next_nodes[-1]
                 break
             elif rule.type == ElementType.KEYWORD:
-                new_node = Node(node_type='keyword', label=rule.value)
+                new_node = RuleWirthNode(node_type='keyword', label=rule.value)
             # Связываем узлы
             current_node.next_nodes.append(new_node)
             current_node = new_node
@@ -60,7 +42,7 @@ def convert_rules_to_diagrams(rules: Dict[str, Rule]) -> Dict[str, Diagram]:
     return diagrams
 
 
-def create_group_diagram(element: RuleElement, rule, current_node) -> Node:
+def create_group_diagram(element: RuleElement, rule, current_node) -> RuleWirthNode:
     """Обрабатывает группы с сепараторами и циклами."""
     nodes = []
     for item in element.value:
@@ -95,7 +77,7 @@ def find_prev_element(element: RuleElement, rule: list[RuleElement]):
             return rule[i - 1]
 
 
-def create_optional_diagram(optional_element: RuleElement, rule, current_node: Node) -> Node:
+def create_optional_diagram(optional_element: RuleElement, rule, current_node: RuleWirthNode) -> RuleWirthNode:
     """Создает ветвление для опционального элемента."""
     # Обработка элементов внутри опционального блока
     start_node_in_optional = create_node(optional_element.value[0], rule, current_node)
@@ -118,14 +100,14 @@ def create_optional_diagram(optional_element: RuleElement, rule, current_node: N
     return start_node_in_optional
 
 
-def create_node(element: RuleElement, rule, current_node) -> Node:
+def create_node(element: RuleElement, rule, current_node) -> RuleWirthNode:
     """Создает узлы для всех типов элементов."""
     if element.type == ElementType.NONTERMINAL:
-        return Node(node_type="nonterminal", label=element.value)
+        return RuleWirthNode(node_type="nonterminal", label=element.value)
     elif element.type == ElementType.TERMINAL:
-        return Node(node_type="terminal", label=element.value)
+        return RuleWirthNode(node_type="terminal", label=element.value)
     elif element.type == ElementType.KEYWORD:
-        return Node(node_type="keyword", label=element.value)  # Ключевые слова как терминалы
+        return RuleWirthNode(node_type="keyword", label=element.value)  # Ключевые слова как терминалы
     elif element.type == ElementType.GROUP:
         return create_group_diagram(element, rule, current_node)
     elif element.type == ElementType.OPTIONAL:
@@ -134,7 +116,7 @@ def create_node(element: RuleElement, rule, current_node) -> Node:
         raise ValueError(f"Unknown element type: {element['type']}")
 
 
-def collect_all_nodes(start_node: Node) -> Dict[str, Node]:
+def collect_all_nodes(start_node: RuleWirthNode) -> Dict[str, RuleWirthNode]:
     nodes = {}
     stack = [start_node]
 

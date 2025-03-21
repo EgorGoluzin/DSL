@@ -66,6 +66,7 @@ class IAstRender(ABC):
 
 class IRetranslator(ABC):
     """Абстрактный интерфейс для ретранслирования абстрактного синтаксического дерева."""
+
     @abstractmethod
     def translate(self, head: ASTNode):
         pass

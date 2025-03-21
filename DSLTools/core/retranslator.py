@@ -3,7 +3,7 @@ from DSLTools.models import IRetranslator, ASTNode, NodeType
 
 
 class ReToExpression(IRetranslator):
-    def translate(self, head: ASTNode) -> str:
+    def translate(self, head: ASTNode) -> str | None:
         # Обработка терминалов
         if head.type == NodeType.TERMINAL:
             return head.value
@@ -23,6 +23,4 @@ class ReToExpression(IRetranslator):
 
             elif head.subtype in (Nonterminal.EXPRESSION, Nonterminal.TERM):
                 return "".join(children_results)  # Объединяем в одну строку
-
-        # Если тип узла не распознан, возвращаем None
         return None
