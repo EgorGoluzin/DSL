@@ -25,5 +25,6 @@ class ASTNode:
     type: NodeType          # Тип узла: терминал-нетерминал-ключ
     subtype: Union[Terminal, Nonterminal] = None     # Подтип нетерминала или терминала
     children: List = field(default_factory=list)  # Дочерние узлы
+    attribute: any = None
     value: str = ''       # Значение (для терминалов)
     position: tuple = None  # (line, column)

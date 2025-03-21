@@ -103,7 +103,7 @@ class GrammarObject:
     non_terminals: List[str] = field(default_factory=list)
     axiom: str = ''
     rules: Dict[str, Rule] = field(default_factory=dict)
-    syntax_info: Any
+    syntax_info: dict = None
 
     def __post_init__(self):
         self._validate()

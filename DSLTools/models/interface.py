@@ -69,3 +69,17 @@ class IRetranslator(ABC):
     @abstractmethod
     def translate(self, head: ASTNode):
         pass
+
+
+class ITokenPostProcessor(ABC):
+    @abstractmethod
+    def process(self, tokens: List[Token]) -> List[Token]:
+        """Обработка списка токенов с возможностью модификации"""
+        pass
+
+
+class ISemanticRule(ABC):
+    @abstractmethod
+    def apply(self, node: ASTNode, context: dict):
+        """Применяет правило к узлу"""
+        pass

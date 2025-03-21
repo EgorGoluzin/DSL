@@ -4,7 +4,7 @@ from .parse import VirtNodeType, GrammarElement, GrammarObject, Terminal, Rule, 
 from .ast import NodeType, TreeNode, ASTNode
 from .diagraph import Node, Edge, Digraph
 from .interface import IGrammarParser, IGrammarConverter, IVisualRepresentation, IScanner, IAfterscanner, IAstRender,\
-    IAstBuilder, IRetranslator
+    IAstBuilder, IRetranslator, ITokenPostProcessor, ISemanticRule
 from .tokens import Token
 
 __all__ = {
@@ -31,5 +31,7 @@ __all__ = {
     "IAstBuilder",
     "RuleElement",
     "ElementType",
-    "IRetranslator"
+    "IRetranslator",
+    "ITokenPostProcessor",
+    "ISemanticRule"
 }
