@@ -7,9 +7,6 @@ from DSLTools.models.interface import (
     IVisualRepresentation,
     GrammarObject,
 )
-from DSLTools.models.parse import (    Rule,
-    Iteration,
-    Terminal)
 
 
 # Тестовые классы

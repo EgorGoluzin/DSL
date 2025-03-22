@@ -1,46 +1,25 @@
 # main.py
 import re
 import sys
-import importlib.util
 import pathlib
-import json
-from argparse import ArgumentParser
+
+from DSLTools.core.tools import get_parser
+from DSLTools.core.wirth_diagram_generation import generate_dot
 from DSLTools.models import (MetaObject, TypeParse, IGrammarParser, GrammarObject)
-from DSLTools.core.grammar_parsers import RBNFParser
-from DSLTools.utils.file_ops import validate_paths, load_config
+from DSLTools.utils.file_ops import validate_paths, load_config, generate_file
 from DSLTools.core.scanning import DefaultScanner
+from DSLTools.core.rule_wirth_converter import convert_rules_to_diagrams
 from DSLTools.core.astgenerator import GeneralizedParser
+from DSLTools.utils.wirth_render import render_dot_to_png
+from settings import settings
 
-PROJECT_ROOT = pathlib.Path(__file__).parent.parent.resolve()
-sys.path.insert(0, str(PROJECT_ROOT))
-
-def sample_lexer():
-    args = parse_arguments()
-    json_path = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.jsonFile), is_dir=False)
-    config = load_config(json_path)
-    mo = MetaObject(config)
-    # Пример использования
-    parser = get_parser(mo)
-    # Шаг 3. Парсинг грамматики.
-    grammarObject = parser.parse(mo)
-    scanner = DefaultScanner(grammarObject) # Инициализация
-    test_input = "7 + 2 + 3" # Пример для expression
-    res = scanner.tokenize(test_input)
-
-
-
-
+PROJECT_ROOT = settings.PROJECT_ROOT
 
 # py -m DSLTools.main -j "(ABS/REL)PATHFORMETAOBJ" -d "(ABS/REL)PATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
 def main():
     # Шаг 1: Парсинг аргументов
-    # args = parse_arguments()
-    # json_path = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.jsonFile), is_dir=False)
-    # directory_to_save = validate_paths(project_path=PROJECT_ROOT, input_path=pathlib.Path(args.directory), is_dir=True)
-
-    json_path = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\PSECO\pseco_mo.json"
-    directory_to_save = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\PSECO"
-
+    json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
+    directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     mo = MetaObject(config)
@@ -48,8 +27,14 @@ def main():
     parser = get_parser(mo)
     # Шаг 3. Парсинг грамматики.
     go = parser.parse(mo)
-    print(go)
-    print("\n".join(list(go.rules.keys())))
+    diagrams = convert_rules_to_diagrams(go.rules)
+
+    for name, diagram in diagrams.items():
+        cur_path = fr"{directory_to_save}\wirthN\{name}.gv"
+        generate_file(generate_dot(diagram), pathlib.Path(cur_path))
+        render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpngN")
+
+
     # Шаг 4: Генерация dsl_info.py
     # generate_dsl_info(go=go, dest=directory_to_save)
     # scanner = DefaultScanner(go)
@@ -68,37 +53,7 @@ def main():
     # process_pipeline(config, dsl_info, args.directory)
 
 
-# Вспомогательные функции
-def parse_arguments():
-    parser = ArgumentParser()
-    parser.add_argument("-j", "--json", dest="jsonFile", required=True)
-    parser.add_argument("-d", "--dir", dest="directory", required=True)
-    return parser.parse_args()
 
-
-
-
-
-def get_parser(metadata: MetaObject) -> IGrammarParser:
-    ## TODO: Заменить на мапу
-    if metadata.type_to_parse == TypeParse.RBNF:
-        return RBNFParser()
-
-
-def generate_dsl_info(dest: pathlib.Path, go: GrammarObject):
-    from DSLTools.core.dsl_generator import DSLInfoGenerator
-    generator = DSLInfoGenerator()
-    generator.generate_dsl_info(go=go, dest=dest)
-
-
-def import_dsl_info(output_dir):
-    spec = importlib.util.spec_from_file_location(
-        "dsl_info",
-        str(pathlib.Path(output_dir) / "dsl_info.py")
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 # def process_pipeline(config, dsl_info, output_dir):
