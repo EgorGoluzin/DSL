@@ -14,7 +14,7 @@ class WalkStep:
         self,
         parent_state: TWalkStep = None,
         pos: int = 0,
-        node: List[Rule] = [],
+        node: list = [],
         rule_index: int = 0,
         nonterm: str = ''
     ):
@@ -28,25 +28,32 @@ class WalkStep:
 class DefaultAstBuilder(IAstBuilder):
     def __init__(self):
         self.states: list[WalkStep] = []
+        self.go: GrammarObject = None
+        self.tokens: list[Token] = []
+        self.end: int = 0
+        self.axiom: str = ''
 
     def __ret(self):
-        self.states[-1]['rule_index'] += 1
-        while self.states[-1]['rule_index'] >= len(self.states[-1]['node']):
+        self.states[-1].rule_index += 1
+        while self.states[-1].rule_index >= len(self.states[-1].node.nextNodes):
             self.states.pop()
             if len(self.states) == 0:
                 raise Exception("Ran out of states")
-            self.states[-1]['rule_index'] += 1
+            self.states[-1].rule_index += 1
 
     def __walk(self):
-        self.states = [WalkStep(None, 0, self.go.rules[self.go.axiom], 0, self.go.axiom)]
+        self.states = [
+            WalkStep(
+                node=self.go.syntax_info[self.axiom], nonterm=self.axiom
+            )
+        ]
         while True:
             state = self.states[-1]
             pos = state.pos
             node = state.node
-            rule = node[state.rule_index]  # what is going on here?
-            # if node type is end?
-            # --------------------------------------
-            if NodeType.END == rule.elements[0].node_type:
+            rule = node.nextNodes[state.rule_index]
+
+            if NodeType.END == rule[0].type:
                 parent_state = state.parent_state
                 if parent_state is None:
                     if pos == self.end:
@@ -56,65 +63,66 @@ class DefaultAstBuilder(IAstBuilder):
                         continue
                 self.states.append(
                     WalkStep(
-                        parent_state=parent_state.parent_state,
-                        pos=pos,
-                        node=parent_state.node[parent_state.rule_index], # what? [0]
-                        rule_index=0,
-                        nonterm=parent_state.nonterm
+                        parent_state.parent_state,
+                        pos,
+                        parent_state.node.nextNodes[parent_state.rule_index][0],
+                        0,
+                        parent_state.nonterm
                     )
                 )
-                # self.states.append({
-                #     'parent_state': parent_state['parent_state'],
-                #     'pos': pos,
-                #     'node': parent_state['node'][parent_state['rule_index']][0],  # what??
-                #     'rule_index': 0,
-                #     'nonterm': parent_state['nonterm']
-                # })
                 continue
-            elif NodeType.NONTERMINAL == rule.elements[0].node_type:
-                if rule[0].nonterminal not in self.grammar:
-                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description")
-                self.states.append({
-                    'parent_state': state,
-                    'pos': pos,
-                    'node': self.grammar[rule[0].nonterminal],
-                    'rule_index': 0,
-                    'nonterm': rule[0].nonterminal
-                })
+            elif NodeType.NONTERMINAL == rule[0].type:
+                if rule[0].nonterminal not in self.go.syntax_info:
+                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info}")
+                self.states.append(
+                    WalkStep(
+                        state,
+                        pos,
+                        self.go.syntax_info[rule[0].nonterminal],
+                        0,
+                        rule[0].nonterminal
+                    )
+                )
                 continue
             if pos >= self.end:
                 self.__ret()
                 continue
-            newToken = self.tokenList[pos]
-            if NodeType.KEY == rule[0].type and Token.Type.KEY == newToken.type and newToken.str == rule[0].str:
-                self.states.append({
-                    'parent_state': state['parent_state'],
-                    'pos': pos+1,
-                    'node': rule[0],
-                    'rule_index': 0,
-                    'nonterm': state['nonterm']
-                })
+            new_token = self.tokens[pos]
+            if NodeType.KEY == rule[0].type and Token.Type.KEY == new_token.token_type and new_token.str == rule[0].str:
+                self.states.append(
+                    WalkStep(
+                        state.parent_state,
+                        pos + 1,
+                        rule[0],
+                        0,
+                        state.nonterm
+                    )
+                )
                 continue
-            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == newToken.type and newToken.terminalType == rule[0].terminal:
-                self.states.append({
-                    'parent_state': state['parent_state'],
-                    'pos': pos+1,
-                    'node': rule[0],
-                    'rule_index': 0,
-                    'nonterm': state['nonterm']
-                })
+            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.type and new_token.terminalType == rule[0].terminal:
+                self.states.append(
+                    WalkStep(
+                        state.parent_state,
+                        pos + 1,
+                        rule[0],
+                        0,
+                        state.nonterm
+                    )
+                )
                 continue
-
             self.__ret()
             continue
-
 
     def build(self, go: GrammarObject, tokens: List[Token]) -> ASTNode:
         self.go = go
         self.tokens = tokens
-        self.end = len(tokens)
+        self.end = len(self.tokens)
+        self.axiom = self.go.axiom
         
-        ast = ASTNode('axiom', [])
+        ast = TreeNode(TreeNode.Type.NONTERMINAL)
+        ast.nonterminalType = self.axiom
+        ast.childs = []
+        ast.commands = []
         nodes_stack = [ast]
         self.__walk()
         for state in self.states:
@@ -129,7 +137,7 @@ class DefaultAstBuilder(IAstBuilder):
                         nodes_stack[-1].commands.append(rule[1])
                         return ast
                     else:
-                        raise Exception("Fail")
+                        raise Exception(f"Fail")
                 nodes_stack[-1].commands.append(rule[1])
                 nodes_stack.pop()
                 continue
