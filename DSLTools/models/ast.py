@@ -6,6 +6,9 @@ from abc import ABC, abstractmethod
 
 
 class NodeType(str, Enum):
+    """Перечисление типов узлов. Оставлено для обратной совместимости. Для
+    явного обозначения того, что тип узла - тип узла АСД, используется NodeType
+    как элемент класса ASTNode."""
     NONTERMINAL = 'nonterminal'
     TERMINAL = 'terminal'
     KEY = 'key'
@@ -42,7 +45,13 @@ class IJsonMedia(ABC):
 
 @dataclass
 class ASTNode(IASTNode, IJsonMedia):
-    type: NodeType         # Тип узла: терминал-нетерминал-ключ
+    class Type(str, Enum):
+        """Тип узла АСД."""
+        NONTERMINAL = 'nonterminal'
+        TERMINAL = 'terminal'
+        KEY = 'key'
+        END = 'end'
+    type: NodeType | Type         # Тип узла: терминал-нетерминал-ключ
     subtype: 'str' = ''    # Подтип нетерминала или терминала - используемые в
     # вашем коде
     children: list[TASTNode] = field(default_factory=list)   # Дочерние узлы

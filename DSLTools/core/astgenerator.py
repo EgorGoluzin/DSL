@@ -118,7 +118,8 @@ class DefaultAstBuilder(IAstBuilder):
         self.tokens = tokens
         self.end = len(self.tokens)
         self.axiom = self.go.axiom
-        
+
+        ast = ASTNode(NodeType.NONTERMINAL)
         ast = TreeNode(TreeNode.Type.NONTERMINAL)
         ast.nonterminalType = self.axiom
         ast.childs = []
