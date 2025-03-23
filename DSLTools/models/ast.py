@@ -6,9 +6,8 @@ from abc import ABC, abstractmethod
 
 
 class NodeType(str, Enum):
-    """Перечисление типов узлов. Оставлено для обратной совместимости. Для
-    явного обозначения того, что тип узла - тип узла АСД, используется NodeType
-    как элемент класса ASTNode."""
+    """Тип узла в ПОТОКЕ ТОКЕНОВ. Это не тип узла в АСД, для них используется
+    другой тип."""
     NONTERMINAL = 'nonterminal'
     TERMINAL = 'terminal'
     KEY = 'key'
@@ -46,11 +45,15 @@ class IJsonMedia(ABC):
 @dataclass
 class ASTNode(IASTNode, IJsonMedia):
     class Type(str, Enum):
-        """Тип узла АСД."""
-        NONTERMINAL = 'nonterminal'
-        TERMINAL = 'terminal'
-        KEY = 'key'
-        END = 'end'
+        """Тип узла АСД. Бинарная классификация узлов на токены и нетерминалы
+        унаследована от алгоритма псевдокода прошлого года. Почему именно
+        токен - неизвестно. Тип поля type оставлен как NodeType | Type для
+        обратной совместимости. Вообще говоря, тут должен быть только Type,
+        т. к. NodeType относится к токенам. Причина путаницы - у Воротникова
+        и псевдокода прошлого года Node обозначало не узел дерева, а элемент
+        правил."""
+        TOKEN = 'TOKEN'
+        NONTERMINAL = 'NONTERMINAL'
     type: NodeType | Type         # Тип узла: терминал-нетерминал-ключ
     subtype: 'str' = ''    # Подтип нетерминала или терминала - используемые в
     # вашем коде
@@ -62,7 +65,6 @@ class ASTNode(IASTNode, IJsonMedia):
     # собственное значение, список значений дочерних узлов,
     # возвращаемый тип (любой)
     SHIFT = 4
-
 
     def __blank(self, offset: int):
         return ' ' * self.SHIFT * offset
