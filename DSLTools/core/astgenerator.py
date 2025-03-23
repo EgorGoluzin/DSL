@@ -119,60 +119,53 @@ class DefaultAstBuilder(IAstBuilder):
         self.end = len(self.tokens)
         self.axiom = self.go.axiom
 
-        ast = ASTNode(NodeType.NONTERMINAL)
-        ast = TreeNode(TreeNode.Type.NONTERMINAL)
+        ast = ASTNode(ASTNode.Type.NONTERMINAL)
         ast.nonterminalType = self.axiom
-        ast.childs = []
-        ast.commands = []
         nodes_stack = [ast]
         self.__walk()
         for state in self.states:
-            pos = state['pos']
-            node = state['node']
-            rule = node.nextNodes[state['rule_index']]
-
+            pos = state.pos
+            node = state.node
+            rule = node.nextNodes[state.rule_index]
             if NodeType.END == rule[0].type:
-                parent_state = state['parent_state']
+                parent_state = state.parent_state
                 if parent_state is None:
                     if pos == self.end:
                         nodes_stack[-1].commands.append(rule[1])
                         return ast
                     else:
-                        raise Exception(f"Fail")
+                        raise Exception(f"Reached an end node, but {pos = }, {self.end = }")
                 nodes_stack[-1].commands.append(rule[1])
                 nodes_stack.pop()
                 continue
             elif NodeType.NONTERMINAL == rule[0].type:
-                if rule[0].nonterminal not in self.grammar:
-                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description")
-                newNonterm = TreeNode(TreeNode.Type.NONTERMINAL)
-                newNonterm.nonterminalType = rule[0].nonterminal
-                newNonterm.childs = []
-                newNonterm.commands = []
-                nodes_stack[-1].childs.append(newNonterm)
+                if rule[0].nonterminal not in self.go.syntax_info:
+                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info = }")
+                new_nonterm = ASTNode(ASTNode.Type.NONTERMINAL)
+                new_nonterm.nonterminalType = rule[0].nonterminal
+                nodes_stack[-1].children.append(new_nonterm)
                 nodes_stack[-1].commands.append(rule[1])
                 node = rule[0]
-                nodes_stack.append(newNonterm)
+                nodes_stack.append(new_nonterm)
                 continue
             if pos >= self.end:
-                raise Exception(f"Fail")
-            newToken = self.tokenList[pos]
-            if NodeType.KEY == rule[0].type and Token.Type.KEY == newToken.type and newToken.str == rule[0].str:
-                element = TreeNode(TreeNode.Type.TOKEN)
-                element.attribute = newToken.attribute
-                element.token = newToken
-                nodes_stack[-1].childs.append(element)
+                raise Exception(f"{pos = } exceeded {self.end = }")
+            new_token = self.tokens[pos]
+            if NodeType.KEY == rule[0].type and Token.Type.KEY == new_token.type and new_token.str == rule[0].str:
+                element = ASTNode(ASTNode.Type.TOKEN)
+                element.attribute = new_token.attribute
+                element.token = new_token
+                nodes_stack[-1].children.append(element)
                 nodes_stack[-1].commands.append(rule[1])
                 continue
-            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == newToken.type and newToken.terminalType == rule[0].terminal:
-                element = TreeNode(TreeNode.Type.TOKEN)
-                element.attribute = newToken.attribute
-                element.token = newToken
-                nodes_stack[-1].childs.append(element)
+            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.type and new_token.terminalType == rule[0].terminal:
+                element = ASTNode(ASTNode.Type.TOKEN)
+                element.attribute = new_token.attribute
+                element.token = new_token
+                nodes_stack[-1].children.append(element)
                 nodes_stack[-1].commands.append(rule[1])
                 continue
-
-            raise Exception(f"Fail")
+            raise Exception(f"Current state of {rule = } and {new_token = } does not satisfy any of the cases.")
         return ast
 
     def _log(self, message: str):

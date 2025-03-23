@@ -3,11 +3,14 @@ from enum import Enum
 from collections.abc import Callable
 from typing import Any, TypeVar, NewType
 from abc import ABC, abstractmethod
+from tokens import Token
 
 
 class NodeType(str, Enum):
     """Тип узла в ПОТОКЕ ТОКЕНОВ. Это не тип узла в АСД, для них используется
-    другой тип."""
+    тип ASTNode.Type.
+    UPD: кажется, то этот тип нужен для правил, т к если элемент правила
+    - Node, то NodeType должен быть типом для правила?..."""
     NONTERMINAL = 'nonterminal'
     TERMINAL = 'terminal'
     KEY = 'key'
@@ -15,6 +18,9 @@ class NodeType(str, Enum):
 
 
 class TreeNode:
+    """Дублирует существующий класс Воротникова, но в предыдущей реализации
+    TreeNode содержится класс для типа. Что делает этот класс? Возможно,
+    это предыдущая реализация ASTNode?"""
     def __init__(self, node_type, nonterminal_type=None, attribute=None):
         self.type = node_type
         self.nonterminal_type = nonterminal_type
@@ -54,16 +60,31 @@ class ASTNode(IASTNode, IJsonMedia):
         правил."""
         TOKEN = 'TOKEN'
         NONTERMINAL = 'NONTERMINAL'
-    type: NodeType | Type         # Тип узла: терминал-нетерминал-ключ
-    subtype: 'str' = ''    # Подтип нетерминала или терминала - используемые в
-    # вашем коде
-    children: list[TASTNode] = field(default_factory=list)   # Дочерние узлы
-    value: str = ''       # Значение (для терминалов)
+    type: NodeType | Type
+    """Тип узла: терминал-нетерминал-ключ"""
+    subtype: 'str' = ''
+    """Подтип нетерминала или терминала - используемые в вашем коде"""
+    children: list[TASTNode] = field(default_factory=list)
+    """Дочерние узлы"""
+    nonterminalType: str = ''
+    """Неизвестное на данный момент поле. Прописано явно для улучшения
+    читаемости"""
+    commands: list = field(default_factory=list)
+    """Неизвестное на данный момент поле. Прописано явно для улучшения
+    читаемости"""
+    token: Token = None
+    """Токен, сохраняемый в элементе дерева. Появилось в результате
+    переписывания алгоритма псевдокода предыдущего года."""
+    value: str = ''
+    """Значение (для терминалов)"""
     attribute: Any = None
-    position: tuple = None  # (line, column)
+    """Вычисляемый атрибут. Для терминалов - после послесканера, для
+    нетерминалов - при обсчете дерева."""
+    position: tuple = None
+    """(line, column)"""
     evaluation: Callable[[str, list[TASTNode]], Any] = None
-    # собственное значение, список значений дочерних узлов,
-    # возвращаемый тип (любой)
+    """собственное значение, список значений дочерних узлов,
+    # возвращаемый тип (любой)"""
     SHIFT = 4
 
     def __blank(self, offset: int):
