@@ -1,0 +1,16 @@
+digraph FIELDDECL {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="FieldDecl" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Identifier" shape=box];
+  B [label=":" shape=oval];
+  C [label="Identifier" shape=box];
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+}

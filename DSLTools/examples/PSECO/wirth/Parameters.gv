@@ -1,0 +1,12 @@
+digraph PARAMETERS {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Parameters" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Variable" shape=box];
+  B [label="," shape=diamond];
+  start -> A;
+  A -> B;
+  A -> end;
+  B -> A;
+}

@@ -1,0 +1,21 @@
+digraph STRUCTDECL {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="StructDecl" shape=plaintext];
+  end [label="" shape=point];
+  A [label="}" shape=oval];
+  B [label="FieldDecl" shape=box];
+  C [label="{" shape=oval];
+  D [label="Identifier" shape=box];
+  E [label="STRUCT" shape=oval];
+  start -> E;
+  start -> D;
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+  D -> end;
+  E -> end;
+}

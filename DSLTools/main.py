@@ -27,34 +27,27 @@ def main():
     parser = get_parser(mo)
     # Шаг 3. Парсинг грамматики.
     go = parser.parse(mo)
-    print(go)
-    diagrams = convert_rules_to_diagrams(go.rules)
-
-    for name, diagram in diagrams.items():
-        cur_path = fr"{directory_to_save}\wirthN\{name}.gv"
-        generate_file(generate_dot(diagram), pathlib.Path(cur_path))
-        render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpngN")
+    go.upload(pathlib.Path(fr"{directory_to_save}\wirth"))
 
     # Шаг 4: Генерация dsl_info.py
     # generate_dsl_info(go=go, dest=directory_to_save)
     scanner = DefaultScanner(go)
-    
+    #
     with open(directory_to_save/pathlib.Path("test.smpl")) as f:
         input_str = f.read()
-    
+    #
     res = scanner.tokenize(input_str)
     print("\n".join([item.__repr__() for item in res]))
-    astGen = GeneralizedParser(go)
-    ast_head = astGen.parse(res)
-    # Шаг 5: Динамический импорт dsl_info
-    dsl_info = import_dsl_info(args.directory)
-    
-    # Шаг 6: Основной пайплайн обработки
-    process_pipeline(config, dsl_info, args.directory)
+
+    #
+    # # Шаг 6: Основной пайплайн обработки
+    # process_pipeline(config, dsl_info, args.directory)
 
 
 
-
+    # paths = pathlib.Path(pathlib.Path(fr"{directory_to_save}\wirth")).glob('**/*.gv')
+    # for cur_path in paths:
+    #     render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpngN")
 
 # def process_pipeline(config, dsl_info, output_dir):
 #     # Инициализация компонентов с использованием dsl_info
@@ -81,7 +74,12 @@ def main():
 #     from core.dot_generator import DotGenerator
 #     DotGenerator(ast).generate(pathlib.Path(output_dir) / "diagrams")
 
+    # diagrams = convert_rules_to_diagrams(go.rules)
 
+    # for name, diagram in diagrams.items():
+    #     cur_path = fr"{directory_to_save}\wirthN\{name}.gv"
+    #     generate_file(generate_dot(diagram), pathlib.Path(cur_path))
+    #     render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpngN")
 if __name__ == "__main__":
     # print(re.findall("Variable", "Variable : Test"))
     main()

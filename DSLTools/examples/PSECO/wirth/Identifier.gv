@@ -1,0 +1,9 @@
+digraph IDENTIFIER {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Identifier" shape=plaintext];
+  end [label="" shape=point];
+  A [label="name" shape=diamond];
+  start -> A;
+  A -> end;
+}

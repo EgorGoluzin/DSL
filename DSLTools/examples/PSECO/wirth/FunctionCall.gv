@@ -1,0 +1,15 @@
+digraph FUNCTIONCALL {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="FunctionCall" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Identifier" shape=box];
+  B [label="(" shape=oval];
+  C [label="Arguments" shape=box];
+  D [label=")" shape=oval];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> end;
+}

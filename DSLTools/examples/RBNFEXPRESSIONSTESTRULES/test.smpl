@@ -1,0 +1,10 @@
+x : 10;
+IF x > 5 THEN {
+    OUTPUT "x more 5";
+} ELSE {
+    OUTPUT "x less or equal 5";
+} END_IF
+
+FOR i FROM 1 TO 5 DO {
+    OUTPUT "Iterations: " + i;
+} END_FOR

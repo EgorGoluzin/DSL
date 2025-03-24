@@ -1,0 +1,18 @@
+digraph ITERATORDECL {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="IteratorDecl" shape=plaintext];
+  end [label="" shape=point];
+  A [label="ITERATOR" shape=oval];
+  B [label="Identifier" shape=box];
+  C [label="(" shape=oval];
+  D [label=")" shape=oval];
+  E [label="Parameters" shape=box];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> E;
+  C -> D;
+  D -> end;
+  E -> D;
+}

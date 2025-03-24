@@ -1,0 +1,30 @@
+digraph FUNCTIONDECL {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="FunctionDecl" shape=plaintext];
+  end [label="" shape=point];
+  A [label="END_FUNC" shape=oval];
+  B [label="Return" shape=box];
+  C [label="Block" shape=box];
+  D [label=")" shape=oval];
+  E [label="Parameters" shape=box];
+  F [label="(" shape=oval];
+  G [label="Identifier" shape=box];
+  H [label="FUNC" shape=oval];
+  start -> H;
+  start -> G;
+  start -> F;
+  start -> E;
+  start -> D;
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+  D -> end;
+  E -> end;
+  F -> end;
+  G -> end;
+  H -> end;
+}

@@ -1,0 +1,15 @@
+digraph NEXTFOR {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="NextFor" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Variable" shape=box];
+  B [label="FOR" shape=oval];
+  C [label="NEXT" shape=oval];
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+}

@@ -1,0 +1,15 @@
+digraph LA {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="LA" shape=plaintext];
+  end [label="" shape=point];
+  A [label="REPEAT" shape=oval];
+  B [label="Block" shape=box];
+  C [label="UNTIL" shape=oval];
+  D [label="Expression" shape=box];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> end;
+}

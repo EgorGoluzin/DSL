@@ -1,0 +1,37 @@
+digraph STATEMENT {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Statement" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Assignment" shape=box];
+  B [label="Conditional" shape=box];
+  C [label="Expression" shape=box];
+  D [label="Loop" shape=box];
+  E [label="FunctionDecl" shape=box];
+  F [label="Input" shape=box];
+  G [label="Output" shape=box];
+  H [label="Comment" shape=box];
+  I [label="Goto" shape=box];
+  J [label="ArrayDecl" shape=box];
+  K [label="StructDecl" shape=box];
+  L [label="Select" shape=box];
+  M [label="Return" shape=box];
+  N [label="Yield" shape=box];
+  O [label="NextFor" shape=box];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> E;
+  E -> F;
+  F -> G;
+  G -> H;
+  H -> I;
+  I -> J;
+  J -> K;
+  K -> L;
+  L -> M;
+  M -> N;
+  N -> O;
+  O -> end;
+}

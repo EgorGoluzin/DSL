@@ -1,0 +1,9 @@
+digraph NUMBER {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Number" shape=plaintext];
+  end [label="" shape=point];
+  A [label="number" shape=diamond];
+  start -> A;
+  A -> end;
+}

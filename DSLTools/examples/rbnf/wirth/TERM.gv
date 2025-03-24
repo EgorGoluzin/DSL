@@ -1,0 +1,12 @@
+digraph TERM {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="TERM" shape=plaintext];
+  end [label="" shape=point];
+  A [label="number" shape=diamond];
+  B [label="*" shape=diamond];
+  start -> A;
+  A -> B;
+  A -> end;
+  B -> A;
+}

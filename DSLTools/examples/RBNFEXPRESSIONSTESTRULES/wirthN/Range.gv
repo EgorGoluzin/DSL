@@ -1,0 +1,18 @@
+digraph RANGE {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Range" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Number" shape=box];
+  B [label="TO" shape=oval];
+  C [label="Number" shape=box];
+  D [label="FROM" shape=oval];
+  start -> D;
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+  D -> end;
+}

@@ -1,0 +1,12 @@
+digraph INPUT {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Input" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Expression" shape=box];
+  B [label="INPUT" shape=oval];
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+}

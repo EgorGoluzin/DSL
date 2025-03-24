@@ -1,0 +1,19 @@
+digraph ARRAYDECL {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="ArrayDecl" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Identifier" shape=box];
+  B [label="OF" shape=oval];
+  C [label="Expression" shape=box];
+  D [label="ARRAY" shape=oval];
+  start -> D;
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+  D -> end;
+}

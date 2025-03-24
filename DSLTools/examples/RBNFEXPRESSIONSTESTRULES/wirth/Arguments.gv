@@ -1,0 +1,12 @@
+digraph ARGUMENTS {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Arguments" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Expression" shape=box];
+  B [label="," shape=oval];
+  start -> A;
+  A -> B [label = "N + 1"];
+  A -> end;
+  B -> A;
+}

@@ -1,0 +1,12 @@
+digraph RETURN {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Return" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Expression" shape=box];
+  B [label="RETURN" shape=oval];
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+}
