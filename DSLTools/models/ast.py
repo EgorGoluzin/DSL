@@ -3,7 +3,7 @@ from enum import Enum
 from collections.abc import Callable
 from typing import Any, TypeVar, NewType
 from abc import ABC, abstractmethod
-from tokens import Token
+from DSLTools.models.tokens import Token
 
 class NodeType(str, Enum):
     """Тип узла в ПОТОКЕ ТОКЕНОВ. Это не тип узла в АСД, для них используется
