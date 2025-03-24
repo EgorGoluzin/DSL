@@ -50,6 +50,18 @@ class IJsonMedia(ABC):
 
 @dataclass
 class ASTNode(IASTNode, IJsonMedia):
+    """Узел абстрактного синтаксического дерева."""
+    class IAttrEval(ABC):
+        """Интерфейс для класса, считающего значение атрибута в узле АСД."""
+        @abstractmethod
+        def calc(self, value: str) -> Any:
+            pass
+
+    class IdentityEval(IAttrEval):
+        """Базовая реализация тождественного вычислителя атрибутов."""
+        def calc(self, value: str) -> Any:
+            return value
+
     class Type(str, Enum):
         """Тип узла АСД. Бинарная классификация узлов на токены и нетерминалы
         унаследована от алгоритма псевдокода прошлого года. Почему именно
@@ -82,7 +94,7 @@ class ASTNode(IASTNode, IJsonMedia):
     нетерминалов - при обсчете дерева."""
     position: tuple = None
     """(line, column)"""
-    evaluation: Callable[[str, list[TASTNode]], Any] = None
+    evaluation: IAttrEval = IdentityEval()
     """собственное значение, список значений дочерних узлов,
     # возвращаемый тип (любой)"""
     SHIFT = 4
