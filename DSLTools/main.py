@@ -27,6 +27,7 @@ def main():
     parser = get_parser(mo)
     # Шаг 3. Парсинг грамматики.
     go = parser.parse(mo)
+    print(go)
     diagrams = convert_rules_to_diagrams(go.rules)
 
     for name, diagram in diagrams.items():
