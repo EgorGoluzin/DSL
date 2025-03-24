@@ -48,8 +48,18 @@ class IJsonMedia(ABC):
         pass
 
 
+YamlString = NewType('YamlString', str)
+
+
+class IYamlMedia(ABC):
+    """Объект, преобразуемый в формат YAML."""
+    @abstractmethod
+    def to_yaml(self, offset: int = 0) -> YamlString:
+        pass
+
+
 @dataclass
-class ASTNode(IASTNode, IJsonMedia):
+class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
     """Узел абстрактного синтаксического дерева."""
     class IAttrEval(ABC):
         """Интерфейс для класса, считающего значение атрибута в узле АСД."""
@@ -136,3 +146,24 @@ class ASTNode(IASTNode, IJsonMedia):
 
     def to_json(self, offset: int = 0) -> JsonString:
         return self.json_no_newline(offset) + '\n'
+
+    def to_yaml(self, offset: int = 0) -> YamlString:
+        blank = self.__blank(offset)
+        yaml = (
+            blank + f"type: '{self.type}'\n"
+            + blank + f"subtype: '{self.subtype}'\n"
+            + blank + f"value: '{self.value}'"
+            + blank + f"attribute: '{'' if self.attribute is None else self.attribute}'\n"
+            + blank + 'children:'
+        )
+        if offset != 0:
+            listed = list(yaml)
+            listed[len(blank) - 2] = '-'
+            yaml = ''.join(listed)
+        if self.children == []:
+            yaml += ' []\n'
+        else:
+            yaml += '\n'
+            for child in self.children:
+                yaml += child.to_yaml(offset + 1)
+        return yaml

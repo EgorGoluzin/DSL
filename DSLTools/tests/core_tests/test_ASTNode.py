@@ -29,15 +29,15 @@ class TestASTNode(unittest.TestCase):
         return ASTNode(
             'nonterminal', 'TERM',
             [
-                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], value='4', evaluation=self.number_eval),
                 ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
-                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], value='4', evaluation=self.number_eval),
                 ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
-                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], value='4', evaluation=self.number_eval),
                 ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
-                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], value='4', evaluation=self.number_eval),
                 ASTNode(NodeType.KEY, value='*', evaluation=self.key_eval),
-                ASTNode(NodeType.TERMINAL, 'number', [], '4', evaluation=self.number_eval),
+                ASTNode(NodeType.TERMINAL, 'number', [], value='4', evaluation=self.number_eval),
             ],
             evaluation=self.term_eval
         )
@@ -123,6 +123,52 @@ class TestASTNode(unittest.TestCase):
 }
 '''
         self.assertEqual(ast.to_json(), expected)
+
+    def test_yaml(self):
+        ast = self.simple_term()
+        expected = '''type: 'nonterminal'
+subtype: 'TERM'
+value: ''attribute: ''
+children:
+  - type: 'terminal'
+    subtype: 'number'
+    value: '4'    attribute: ''
+    children: []
+  - type: 'key'
+    subtype: ''
+    value: '*'    attribute: ''
+    children: []
+  - type: 'terminal'
+    subtype: 'number'
+    value: '4'    attribute: ''
+    children: []
+  - type: 'key'
+    subtype: ''
+    value: '*'    attribute: ''
+    children: []
+  - type: 'terminal'
+    subtype: 'number'
+    value: '4'    attribute: ''
+    children: []
+  - type: 'key'
+    subtype: ''
+    value: '*'    attribute: ''
+    children: []
+  - type: 'terminal'
+    subtype: 'number'
+    value: '4'    attribute: ''
+    children: []
+  - type: 'key'
+    subtype: ''
+    value: '*'    attribute: ''
+    children: []
+  - type: 'terminal'
+    subtype: 'number'
+    value: '4'    attribute: ''
+    children: []
+'''
+        # print(ast.to_yaml())
+        self.assertEqual(expected, ast.to_yaml())
 
 
 if __name__ == "__main__":
