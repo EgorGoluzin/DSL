@@ -36,20 +36,20 @@ def main():
 
     # Шаг 4: Генерация dsl_info.py
     # generate_dsl_info(go=go, dest=directory_to_save)
-    # scanner = DefaultScanner(go)
-    #
-    # with open(directory_to_save/pathlib.Path("test.smpl")) as f:
-    #     input_str = f.read()
-    #
-    # res = scanner.tokenize(input_str)
-    # print("\n".join([item.__repr__() for item in res]))
-    # astGen = GeneralizedParser(go)
-    # ast_head = astGen.parse(res)
-    # # Шаг 5: Динамический импорт dsl_info
-    # dsl_info = import_dsl_info(args.directory)
-    #
-    # # Шаг 6: Основной пайплайн обработки
-    # process_pipeline(config, dsl_info, args.directory)
+    scanner = DefaultScanner(go)
+    
+    with open(directory_to_save/pathlib.Path("test.smpl")) as f:
+        input_str = f.read()
+    
+    res = scanner.tokenize(input_str)
+    print("\n".join([item.__repr__() for item in res]))
+    astGen = GeneralizedParser(go)
+    ast_head = astGen.parse(res)
+    # Шаг 5: Динамический импорт dsl_info
+    dsl_info = import_dsl_info(args.directory)
+    
+    # Шаг 6: Основной пайплайн обработки
+    process_pipeline(config, dsl_info, args.directory)
 
 
 
