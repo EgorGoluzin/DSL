@@ -35,12 +35,49 @@ class ElementType(Enum):
     SEPARATOR = "separator"
     MODIFIER = "modifier"
     SEP_MARKER = "sep_marker"
+    MERGE_FLAG = "merge_flag"
+    ALTERNATIVE_FLAG = "alternative_flag"
 
 
 @dataclass
 class RuleElement:
+    """Класс для представления элементов правил грамматики в EBNF-формате.
+
+    Поля:
+        type (ElementType): Тип элемента (группа, альтернатива, терминал и т.д.).\n
+        value (Union[str, List[RuleElement]]):
+            - Для элементарных типов (KEYWORD, NONTERMINAL, TERMINAL) — строковое значение.
+            - Для составных типов (GROUP, ALTERNATIVE, SEQUENCE) — список вложенных элементов.
+        modifier (str): Модификатор повторяемости(пока не используются):
+            - "" — отсутствует,
+            - "*" — 0 или более повторений,
+            - "+" — 1 или более повторений,
+            - "?" — опциональное вхождение (0 или 1 раз).
+
+        separator (Optional[RuleElement]): Сепаратор для групп с повторениями.
+            Пример:
+            Правило `Arguments ::= { Expression # "," }` будет иметь:
+            - type=GROUP,
+            - value=[RuleElement(value=Expression, type=ElementType.NONTERMINAL, separator=None)],
+            - separator=RuleElement(type=KEYWORD, value=",").
+
+    Примеры использования:
+        1. Терминал:
+            RuleElement(type=ElementType.TERMINAL, value="name")
+        2. Группа с сепаратором "','":
+            RuleElement(
+                type=ElementType.GROUP,
+                value=[...],
+                separator=RuleElement(type=ElementType.KEYWORD, value="','")
+            )
+        3. Опциональный элемент:
+            RuleElement(
+                type=ElementType.OPTIONAL,
+                value=[...],
+            )
+    """
     type: ElementType
-    value: Union[str, List['RuleElement']]  # Для групп и альтернатив. Будет str, если keyword | nonterminal | terminal
+    value: Union[str, List['RuleElement']]  #
     modifier: str = ""  # "*", "+", "?" для повторений и опционалов
     separator: Optional['RuleElement'] = None  # Для групп с сепаратором
 
@@ -82,6 +119,15 @@ class RuleElement:
 
 @dataclass
 class Rule:
+    """Класс правила, который оборачивает прям все правило.
+
+    Поля:
+        lpart(str): Левая часть правила.\n
+        rpart(RuleElement): Правая часть.
+            - Важно что она сейчас обернута в RuleElement(type=ElementType.SEQUENCE, value=[...], separator=None)
+            при этом, этот тип больше пока нигде не используется.
+    """
+
     lpart: str
     rpart: RuleElement  # Основное изменение: список альтернатив
 
@@ -97,7 +143,10 @@ class Rule:
 
 @dataclass
 class GrammarObject:
-    """Замена dsl_info"""
+    """Замена dsl_info + блока правил. Этот объект ключевой в задании dsl он
+    используется для задания пользовательской грамматики,
+    по-сути являясь ее представлением во всей программе."""
+
     terminals: Dict[str, Terminal] = field(default_factory=dict)
     keys: List[Tuple[str, str]] = field(default_factory=list)
     non_terminals: List[str] = field(default_factory=list)
@@ -145,26 +194,3 @@ class GrammarObject:
         res += "\n\tRules:" + "\n\t\t" + "\n\t\t".join([rule.to_string("\n\t\t") for rule in self.rules.values()])
         res += "\n\tAxiom:" + f"\n\t\t{self.axiom}"
         return res
-
-
-"""
-GrammarObject(
-        Terminals:
-                Terminal(name: number, pattern: [1-9]\d*)
-                Terminal(name: operation, pattern: [\+\*])
-                Terminal(name: terminator, pattern: ,);
-        Keys:
-                type: operation, val: +
-                type: operation, val: *
-                type: terminator, val: ,;
-        NonTerminals:
-                EXPRESSIONS
-                EXPRESSION
-                TERM;
-        Rules:
-                Rule(lhs: EXPRESSIONS els: ['EXPRESSION'] sep: ,)
-                Rule(lhs: EXPRESSION els: ['TERM'] sep: +)
-                Rule(lhs: TERM els: ['number'] sep: *);
-        Axiom:
-                EXPRESSIONS
-"""
