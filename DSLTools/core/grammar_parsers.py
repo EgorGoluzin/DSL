@@ -57,20 +57,105 @@ class VirtParser(IGrammarParser):
 
 
 class UMLParser(IGrammarParser):
+    def __init__(self):
+        self.rules: Dict[str, List[Rule]] = {}
+        self.terminals: Dict[str, Terminal] = {}
+        self.non_terminals: Set[str] = set()
+        self.keys: List[Tuple[str, str]] = []
+        self.warnings = []
+        # Фиксированный набор ключевых слов для PlantUML (можно расширить)
+        self.predefined_keys = {'->', '-->', '@startuml', '@enduml', ':'}
+
     def parse(self, meta_object: MetaObject) -> GrammarObject:
         syntax_dir = meta_object.syntax["info"]["syntax_dir"]
-        support_file = meta_object.syntax["info"]["support_file"]
-        rules_of_grammar = self._syntax_parse(syntax_dir)
-        terminals, non_terminals, axiom = self._support_parse(support_file)
-        return GrammarObject(rules=rules_of_grammar, terminals=terminals,
-                             non_terminals=non_terminals, axiom=axiom)
+        syntax_path = syntax_dir / meta_object.syntax["info"]["filenames"][0]
+        self._syntax_parse(syntax_path)
 
-    def _syntax_parse(self, syntax_dir) -> Dict[str, List[str]]:
-        return {"default": [""]}
+        # Заполняем KEYS на основе терминалов и предопределённых слов
+        for terminal_name, terminal in self.terminals.items():
+            if terminal.pattern.strip("'\"") in self.predefined_keys or terminal_name in self.predefined_keys:
+                self.keys.append((terminal_name, terminal.pattern.strip("'\"")))
 
-    def _support_parse(self, support_file: Path):
-        return [""], [""], ""
+        # Устанавливаем аксиому как первый нетерминал или "PROGRAM"
+        axiom = "PROGRAM" if "PROGRAM" in self.non_terminals else (
+            list(self.non_terminals)[0] if self.non_terminals else "")
 
+        return GrammarObject(
+            keys=self.keys,
+            terminals=self.terminals,
+            non_terminals=list(self.non_terminals),
+            axiom=axiom,
+            rules=self.rules
+        )
+
+    def _syntax_parse(self, syntax_path: Path):
+        with open(syntax_path, "r", encoding="utf-8") as f:
+            content = f.read()
+            self._parse_inner(content)
+
+    def _parse_inner(self, content: str):
+        lines = content.split('\n')
+        for line_num, line in enumerate(lines, 1):
+            line = line.strip()
+            if not line or line.startswith("'"):
+                continue
+            if line in ['@startuml', '@enduml']:
+                self.terminals[line] = Terminal(line, f"'{line}'")
+                continue
+            self._parse_line(line, line_num)
+
+    def _parse_line(self, line: str, line_num: int):
+        try:
+            # Парсим два варианта: с терминалом и без
+            match_with_terminal = re.match(r'(\w+)\s*->\s*(\w+)\s*:\s*(\'.*?\'|".*?"|\w+)', line)
+            match_without_terminal = re.match(r'(\w+)\s*-->\s*(\w+)', line)
+
+            if match_with_terminal:
+                lhs, rhs, terminal = match_with_terminal.groups()
+                terminal = terminal.strip("'\"")
+                # Добавляем терминалы
+                self.terminals[terminal] = Terminal(terminal, f"'{terminal}'")
+                self.terminals['->'] = Terminal('->', "'->'")
+                self.terminals[':'] = Terminal(':', "':'")
+                # Добавляем нетерминалы
+                self.non_terminals.add(lhs)
+                self.non_terminals.add(rhs)
+                # Создаём правило
+                rule_elem = RuleElement(
+                    type=ElementType.SEQUENCE,
+                    value=[
+                        RuleElement(type=ElementType.TERMINAL, value=terminal),
+                        RuleElement(type=ElementType.NONTERMINAL, value=rhs)
+                    ]
+                )
+                if lhs not in self.rules:
+                    self.rules[lhs] = []
+                self.rules[lhs].append(Rule(lpart=lhs, rpart=rule_elem))
+
+            elif match_without_terminal:
+                lhs, rhs = match_without_terminal.groups()
+                # Добавляем терминал
+                self.terminals['-->'] = Terminal('-->', "'-->'")
+                # Добавляем нетерминалы
+                self.non_terminals.add(lhs)
+                self.non_terminals.add(rhs)
+                # Создаём правило
+                rule_elem = RuleElement(
+                    type=ElementType.SEQUENCE,
+                    value=[RuleElement(type=ElementType.NONTERMINAL, value=rhs)]
+                )
+                if lhs not in self.rules:
+                    self.rules[lhs] = []
+                self.rules[lhs].append(Rule(lpart=lhs, rpart=rule_elem))
+
+            else:
+                self.warnings.append(f"Line {line_num}: Invalid rule format '{line}'")
+
+        except Exception as e:
+            self.warnings.append(f"Line {line_num}: Error parsing '{line}' - {str(e)}")
+
+    def get_warnings(self) -> List[str]:
+        return self.warnings
 
 class RBNFParser(IGrammarParser):
     def __init__(self):
