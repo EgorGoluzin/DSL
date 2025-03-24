@@ -59,7 +59,7 @@ class IYamlMedia(ABC):
 
 
 @dataclass
-class ASTNode(IASTNode, IJsonMedia):
+class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
     class Type(str, Enum):
         """Тип узла АСД. Бинарная классификация узлов на токены и нетерминалы
         унаследована от алгоритма псевдокода прошлого года. Почему именно
@@ -125,3 +125,6 @@ class ASTNode(IASTNode, IJsonMedia):
 
     def to_json(self, offset: int = 0) -> JsonString:
         return self.json_no_newline(offset) + '\n'
+
+    def to_yaml(self, offset: int = 0) -> YamlString:
+        pass
