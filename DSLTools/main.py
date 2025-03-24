@@ -34,7 +34,6 @@ def main():
         generate_file(generate_dot(diagram), pathlib.Path(cur_path))
         render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpngN")
 
-
     # Шаг 4: Генерация dsl_info.py
     # generate_dsl_info(go=go, dest=directory_to_save)
     # scanner = DefaultScanner(go)

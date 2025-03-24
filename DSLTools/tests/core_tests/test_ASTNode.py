@@ -45,7 +45,7 @@ class TestASTNode(unittest.TestCase):
     def test_term_evaluation(self):
         ast = self.simple_term()
         self.assertEqual(1024, ast.evaluated())
-    
+
     def test_term_to_json(self):
         ast = self.simple_term()
         ast.evaluated()
