@@ -34,7 +34,7 @@ TASTNode = TypeVar('TASTNode', bound='ASTNode')
 class IASTNode(ABC):
     """Элемент абстрактного синтаксического дерева."""
     @abstractmethod
-    def evaluated(self):
+    def evaluated(self) -> Any:
         pass
 
 
@@ -105,6 +105,15 @@ class ASTNode(IASTNode, IJsonMedia):
     def evaluated(self):
         self.attribute = self.evaluation(self.value, self.children)
         return self.attribute
+
+    def attach_evaluators(
+        self, evals: dict[tuple[str, str], IAttrEval]
+    ) -> None:
+        key = (self.type, self.subtype)
+        if key in evals:
+            self.evaluation = evals[key]
+        for child in self.children:
+            child.attach_evaluators(evals)
 
     def json_no_newline(self, offset: int):
         json = (
