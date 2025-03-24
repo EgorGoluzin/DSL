@@ -42,5 +42,9 @@ class Token:
         self.eval = evaln
         """Объект, вычисляющий атрибут токена."""
 
+    def evaluated(self) -> Any:
+        self.attribute = self.eval.calc(self.value)
+        return self.attribute
+
     def __repr__(self):
         return f"Token({self.token_type}, '{self.value}', pos: (l: {self.line}, c: {self.column})"
