@@ -3,7 +3,7 @@ from enum import Enum
 from collections.abc import Callable
 from typing import Any, TypeVar, NewType
 from abc import ABC, abstractmethod
-from tokens import Token
+from DSLTools.models.tokens import Token
 
 
 class NodeType(str, Enum):
@@ -127,4 +127,22 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
         return self.json_no_newline(offset) + '\n'
 
     def to_yaml(self, offset: int = 0) -> YamlString:
-        pass
+        blank = self.__blank(offset)
+        yaml = (
+            blank + f"type: '{self.type}'\n"
+            + blank + f"subtype: '{self.subtype}'\n"
+            + blank + f"value: '{self.value}'"
+            + blank + f"attribute: '{'' if self.attribute is None else self.attribute}'\n"
+            + blank + 'children:'
+        )
+        if offset != 0:
+            listed = list(yaml)
+            listed[len(blank) - 2] = '-'
+            yaml = ''.join(listed)
+        if self.children == []:
+            yaml += ' []\n'
+        else:
+            yaml += '\n'
+            for child in self.children:
+                yaml += child.to_yaml(offset + 1)
+        return yaml
