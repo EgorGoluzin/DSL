@@ -36,5 +36,5 @@ __all__ = {
     "ITokenPostProcessor",
     "ISemanticRule",
     "RuleWirthNode",
-    "Diagram"
+    "Diagram",
 }

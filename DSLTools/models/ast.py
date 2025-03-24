@@ -5,7 +5,6 @@ from typing import Any, TypeVar, NewType
 from abc import ABC, abstractmethod
 from tokens import Token
 
-
 class NodeType(str, Enum):
     """Тип узла в ПОТОКЕ ТОКЕНОВ. Это не тип узла в АСД, для них используется
     тип ASTNode.Type.
@@ -15,7 +14,6 @@ class NodeType(str, Enum):
     TERMINAL = 'terminal'
     KEY = 'key'
     END = 'end'
-
 
 class TreeNode:
     """Дублирует существующий класс Воротникова, но в предыдущей реализации
