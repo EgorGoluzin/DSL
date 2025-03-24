@@ -1,7 +1,7 @@
 # Пока здесь будут располагаться функции, которые впоследствии перекочуют в основной функциональный объект
 from pathlib import Path
 import importlib.util
-from DSLTools import IGrammarParser
+from DSLTools.models import IGrammarParser
 from DSLTools.core.grammar_parsers import RBNFParser
 from DSLTools.models import MetaObject, TypeParse, GrammarObject
 
