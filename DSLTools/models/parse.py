@@ -1,7 +1,87 @@
+from pathlib import Path
 from typing import List, Optional, Dict, Tuple, Union, Any
 from enum import Enum
 from dataclasses import dataclass, field
 
+import pydot
+
+# from DSLTools.core.rule_wirth_converter import convert_rules_to_diagrams
+# from DSLTools.core.wirth_diagram_generation import generate_dot
+from DSLTools.models.legacy_for_wirth import NodeTypeLegacy, NodeLegacy
+# from DSLTools.utils.file_ops import generate_file
+from settings import settings
+
+def __GetType(shape):
+    if shape[0] == '"':
+        shape = shape[1:-1]
+    if "plaintext" == shape:
+        return NodeTypeLegacy.START
+    if "point" == shape:
+        return NodeTypeLegacy.END
+    if "box" == shape:
+        return NodeTypeLegacy.NONTERMINAL
+    if "diamond" == shape:
+        return NodeTypeLegacy.TERMINAL
+    if "oval" == shape:
+        return NodeTypeLegacy.KEY
+    raise Exception(f"Insopported shape - {shape}")
+
+
+def GetSyntaxDesription(diagramsDir, go):
+    files = Path(diagramsDir).glob('**/*.gv')
+    res = dict()
+    for file in files:
+        print(f"Process {file.name}")
+        source = pydot.graph_from_dot_file(file)
+        diagram = source[0]
+        a = diagram.get_type()
+        if ("digraph" != diagram.get_type()):
+            raise Exception("Virt diagram must be digraph")
+        nodes = diagram.get_nodes()
+        edges = diagram.get_edges()
+
+        virtNodes = dict()
+        startArray = []
+        endArray = []
+        for dotNode in nodes:
+            attribs = dotNode.obj_dict["attributes"]
+            value_in_label = "" if "label" not in attribs else attribs["label"]
+            nodeType = __GetType("box" if "shape" not in attribs else attribs["shape"])
+
+            if len(value_in_label) != 0 and value_in_label[0] == '"':
+                value_in_label = value_in_label[1:-1]
+
+            node = NodeLegacy(nodeType, str)
+            virtNodes[dotNode.get_name()] = node
+
+            if NodeTypeLegacy.NONTERMINAL == nodeType:
+                node.nonterminal = value_in_label
+            elif NodeTypeLegacy.TERMINAL == nodeType:
+                node.terminal = value_in_label
+            elif NodeTypeLegacy.START == nodeType:
+                startArray.append(node)
+            elif NodeTypeLegacy.END == nodeType:
+                endArray.append(node)
+
+        if len(startArray) != 1:
+            raise Exception(f"Incorrect number of starts")
+        if len(endArray) != 1:
+            raise Exception(f"Incorrect number of ends")
+        for nodeName, node in virtNodes.items():
+            outgoingEdges = [(edge.obj_dict["points"][1],
+                              "" if "label" not in edge.obj_dict["attributes"] else edge.obj_dict["attributes"][
+                                  "label"])
+                             for edge in edges if edge.obj_dict["points"][0] == nodeName]
+            for edge in outgoingEdges:
+                if len(edge[1]) != 0 and edge[1][0] == '"':
+                    code = edge[1][1:-1]
+                else:
+                    code = edge[1]
+                node.nextNodes.append((virtNodes[edge[0]], code.replace('\\"', '"')))
+
+        res[diagram.get_name()] = startArray[0]
+
+    return res
 
 class VirtNodeType(Enum):
     NONTERMINAL = "box"
@@ -194,3 +274,13 @@ class GrammarObject:
         res += "\n\tRules:" + "\n\t\t" + "\n\t\t".join([rule.to_string("\n\t\t") for rule in self.rules.values()])
         res += "\n\tAxiom:" + f"\n\t\t{self.axiom}"
         return res
+
+    def upload(self, dest: Path) -> None:
+        """Метод для создания syntaxInfoObject"""
+        # result = convert_rules_to_diagrams(rules=self.rules)
+        #
+        # for rule_name, rule in result.items():
+        #     cur_path = Path(dest, fr"wirth\{rule_name}.gv")
+        #     generate_file(generate_dot(rule), cur_path)
+
+        self.syntax_info = GetSyntaxDesription(dest, self)

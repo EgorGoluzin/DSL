@@ -1,0 +1,11 @@
+{
+    "syntax": {
+        "type": "rbnf",
+        "info": {
+            "syntax_dir": "examples\\RBNFEXPRESSIONSTESTRULES",
+            "filenames": ["test_rule_optional.rbnf"],
+            "support_dir": ""
+        }
+    },
+    "debugInfoDir": "_debug"
+}

@@ -1,0 +1,9 @@
+digraph VARIABLE {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Variable" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Identifier" shape=box];
+  start -> A;
+  A -> end;
+}

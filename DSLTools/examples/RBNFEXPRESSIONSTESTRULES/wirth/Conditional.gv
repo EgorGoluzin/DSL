@@ -1,0 +1,31 @@
+digraph CONDITIONAL {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Conditional" shape=plaintext];
+  end [label="" shape=point];
+  A [label="IF" shape=oval];
+  B [label="Expression" shape=box];
+  C [label="THEN" shape=oval];
+  D [label="Block" shape=box];
+  E [label="ELSE" shape=oval];
+  F [label="END_IF" shape=oval];
+  G [label="ELSEIF" shape=oval];
+  H [label="Expression" shape=box];
+  I [label="THEN" shape=oval];
+  J [label="Block" shape=box];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> E;
+  D -> F;
+  D -> G;
+  D -> E;
+  E -> F;
+  E -> end;
+  G -> H;
+  G -> E;
+  H -> I;
+  I -> J;
+  J -> G;
+}

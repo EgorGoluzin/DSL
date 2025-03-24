@@ -1,0 +1,15 @@
+digraph BLOCK {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Block" shape=plaintext];
+  end [label="" shape=point];
+  A [label="}" shape=oval];
+  B [label="Statement" shape=box];
+  C [label="{" shape=oval];
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+}

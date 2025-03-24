@@ -1,0 +1,12 @@
+digraph SET {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Set" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Range" shape=box];
+  B [label="Identifier" shape=box];
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+}

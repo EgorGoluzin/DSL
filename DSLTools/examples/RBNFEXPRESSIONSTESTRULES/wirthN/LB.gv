@@ -1,0 +1,21 @@
+digraph LB {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="LB" shape=plaintext];
+  end [label="" shape=point];
+  A [label="END_WHILE" shape=oval];
+  B [label="Block" shape=box];
+  C [label="DO" shape=oval];
+  D [label="Expression" shape=box];
+  E [label="WHILE" shape=oval];
+  start -> E;
+  start -> D;
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+  D -> end;
+  E -> end;
+}

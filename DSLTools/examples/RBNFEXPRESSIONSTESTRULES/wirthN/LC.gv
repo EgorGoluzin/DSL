@@ -1,0 +1,24 @@
+digraph LC {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="LC" shape=plaintext];
+  end [label="" shape=point];
+  A [label="END_FOR" shape=oval];
+  B [label="Block" shape=box];
+  C [label="DO" shape=oval];
+  D [label="Range" shape=box];
+  E [label="Variable" shape=box];
+  F [label="FOR" shape=oval];
+  start -> F;
+  start -> E;
+  start -> D;
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+  D -> end;
+  E -> end;
+  F -> end;
+}

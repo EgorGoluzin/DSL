@@ -1,0 +1,15 @@
+digraph ASSIGNMENT {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Assignment" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Expression" shape=box];
+  B [label=":" shape=oval];
+  C [label="Variable" shape=box];
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+}

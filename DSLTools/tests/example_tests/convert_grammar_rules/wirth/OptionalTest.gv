@@ -1,0 +1,29 @@
+digraph OPTIONALTEST {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="OptionalTest" shape=plaintext];
+  end [label="" shape=point];
+  A [label="$" shape=oval];
+  B [label="T1" shape=oval];
+  C [label="G" shape=oval];
+  D [label="OP1" shape=oval];
+  E [label="OP2" shape=oval];
+  F [label="OP3" shape=oval];
+  G [label="OP4" shape=oval];
+  H [label="OP1" shape=oval];
+  I [label="OP2" shape=oval];
+  start -> A;
+  A -> H;
+  A -> B;
+  B -> F;
+  B -> C;
+  C -> A;
+  C -> D;
+  C -> end;
+  D -> E;
+  E -> end;
+  F -> G;
+  G -> C;
+  H -> I;
+  I -> B;
+}

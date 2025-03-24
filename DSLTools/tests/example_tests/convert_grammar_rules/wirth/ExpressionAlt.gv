@@ -1,0 +1,15 @@
+digraph EXPRESSIONALT {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="ExpressionAlt" shape=plaintext];
+  end [label="" shape=point];
+  A [label="G" shape=oval];
+  B [label="^" shape=oval];
+  C [label="$" shape=oval];
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+}

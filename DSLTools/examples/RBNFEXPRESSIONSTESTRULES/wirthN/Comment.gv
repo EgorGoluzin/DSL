@@ -1,0 +1,12 @@
+digraph COMMENT {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Comment" shape=plaintext];
+  end [label="" shape=point];
+  A [label="Text" shape=box];
+  B [label="//" shape=oval];
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+}

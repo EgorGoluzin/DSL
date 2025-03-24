@@ -1,0 +1,12 @@
+digraph EXPRESSIONS {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="EXPRESSIONS" shape=plaintext];
+  end [label="" shape=point];
+  A [label="EXPRESSION" shape=box];
+  B [label="," shape=diamond];
+  start -> A;
+  A -> B;
+  A -> end;
+  B -> A;
+}

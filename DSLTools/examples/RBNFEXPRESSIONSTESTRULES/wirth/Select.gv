@@ -1,0 +1,15 @@
+digraph SELECT {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Select" shape=plaintext];
+  end [label="" shape=point];
+  A [label="SELECT" shape=oval];
+  B [label="Variable" shape=box];
+  C [label="IN" shape=oval];
+  D [label="Set" shape=box];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> end;
+}

@@ -1,0 +1,11 @@
+digraph YIELD {
+  rankdir=LR;
+  node [fontname="Arial"];
+  start [label="Yield" shape=plaintext];
+  end [label="" shape=point];
+  A [label="YIELD" shape=oval];
+  B [label="Expression" shape=box];
+  start -> A;
+  A -> B;
+  B -> end;
+}
