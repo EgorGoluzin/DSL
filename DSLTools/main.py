@@ -11,6 +11,7 @@ from DSLTools.core.scanning import DefaultScanner
 from DSLTools.core.rule_wirth_converter import convert_rules_to_diagrams
 from DSLTools.core.astgenerator import GeneralizedParser
 from DSLTools.utils.wirth_render import render_dot_to_png
+from DSLTools.core.astgenerator import DefaultAstBuilder
 from settings import settings
 
 PROJECT_ROOT = settings.PROJECT_ROOT
@@ -36,8 +37,13 @@ def main():
     with open(directory_to_save/pathlib.Path("test.smpl")) as f:
         input_str = f.read()
     #
+
     res = scanner.tokenize(input_str)
-    print("\n".join([item.__repr__() for item in res]))
+
+    dab = DefaultAstBuilder()
+    dab.build(go, res)
+
+    # print("\n".join([item.__repr__() for item in res]))
 
     #
     # # Шаг 6: Основной пайплайн обработки
