@@ -99,7 +99,7 @@ class DefaultAstBuilder(IAstBuilder):
                     )
                 )
                 continue
-            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.type and new_token.terminalType == rule[0].terminal:
+            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.token_type and new_token.terminalType == rule[0].terminal:
                 self.states.append(
                     WalkStep(
                         state.parent_state,
@@ -151,14 +151,14 @@ class DefaultAstBuilder(IAstBuilder):
             if pos >= self.end:
                 raise Exception(f"{pos = } exceeded {self.end = }")
             new_token = self.tokens[pos]
-            if NodeType.KEY == rule[0].type and Token.Type.KEY == new_token.type and new_token.str == rule[0].str:
+            if NodeType.KEY == rule[0].type and Token.Type.KEY == new_token.token_type and new_token.str == rule[0].str:
                 element = ASTNode(ASTNode.Type.TOKEN)
                 element.attribute = new_token.attribute
                 element.token = new_token
                 nodes_stack[-1].children.append(element)
                 nodes_stack[-1].commands.append(rule[1])
                 continue
-            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.type and new_token.terminalType == rule[0].terminal:
+            elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.token_type and new_token.terminalType == rule[0].terminal:
                 element = ASTNode(ASTNode.Type.TOKEN)
                 element.attribute = new_token.attribute
                 element.token = new_token
