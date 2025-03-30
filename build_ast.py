@@ -114,7 +114,7 @@ for key, val in syntaxInfo.items():
 ast = BuildAst(syntaxInfo, dsl_info.axiom, tokenList)
 print('We are here for AST')
 print(ast)
-__RenderAst('ast', ast, debugInfoDir)
+# __RenderAst('ast', ast, debugInfoDir)
 # attributor.SetAttributes(ast, attribute_evaluator.attributesMap)
 # __RenderAst('ast_attributed', ast, debugInfoDir)
 #

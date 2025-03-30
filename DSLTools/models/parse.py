@@ -273,6 +273,10 @@ class GrammarObject:
         res += "\n\tNonTerminals:" + "\n\t\t" + "\n\t\t".join(self.non_terminals) + ";"
         res += "\n\tRules:" + "\n\t\t" + "\n\t\t".join([rule.to_string("\n\t\t") for rule in self.rules.values()])
         res += "\n\tAxiom:" + f"\n\t\t{self.axiom}"
+        res += "\n\tSyntax info:"
+        for key, val in self.syntax_info.items():
+            res += f'\n\t\tLHS: {key, type(key)}'
+            res += f'\n\t\tRHS: {str(val), type(val)}'
         return res
 
     def upload(self, dest: Path) -> None:

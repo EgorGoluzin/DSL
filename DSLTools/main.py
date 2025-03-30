@@ -9,7 +9,7 @@ from DSLTools.models import (MetaObject, TypeParse, IGrammarParser, GrammarObjec
 from DSLTools.utils.file_ops import validate_paths, load_config, generate_file
 from DSLTools.core.scanning import DefaultScanner
 from DSLTools.core.rule_wirth_converter import convert_rules_to_diagrams
-from DSLTools.core.astgenerator import GeneralizedParser
+from DSLTools.core.astgenerator import GeneralizedParser, DefaultAstBuilder
 from DSLTools.utils.wirth_render import render_dot_to_png
 from settings import settings
 
@@ -22,6 +22,7 @@ def main():
     directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
+    # print(config)
     mo = MetaObject(config)
     # Пример использования
     parser = get_parser(mo)
@@ -38,6 +39,11 @@ def main():
     #
     res = scanner.tokenize(input_str)
     print("\n".join([item.__repr__() for item in res]))
+    print(go)
+    builder = DefaultAstBuilder()
+    ast = builder.build(go, res).attach_evaluators({})
+    result = ast.evaluated()
+    print(result)
 
     #
     # # Шаг 6: Основной пайплайн обработки
@@ -53,16 +59,18 @@ def main():
 #     # Инициализация компонентов с использованием dsl_info
 #     from implementations.dsl_scanner import DSLScanner
 #     from implementations.dsl_afterscanner import DSLAfterscanner
-#
+
 #     scanner = DSLScanner(dsl_info)
 #     afterscanner = DSLAfterscanner(dsl_info)
-#
+
 #     # Обработка кода
 #     with open(config["code"]["path"]) as f:
 #         tokens = scanner.tokenize(f.read())
 #         processed_tokens = afterscanner.process(tokens)
-#
-#     # Построение AST
+#     print(f'После послесканера:')
+#     print(tokens)
+# #
+# #     # Построение AST
 #     from syntax import BuildAst
 #     ast = BuildAst(
 #         syntax_info=config["syntax"],

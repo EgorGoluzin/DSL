@@ -118,12 +118,13 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
 
     def attach_evaluators(
         self, evals: dict[tuple[str, str], IAttrEval]
-    ) -> None:
+    ):
         key = (self.type, self.subtype)
         if key in evals:
             self.evaluation = evals[key]
         for child in self.children:
             child.attach_evaluators(evals)
+        return self
 
     def json_no_newline(self, offset: int):
         json = (

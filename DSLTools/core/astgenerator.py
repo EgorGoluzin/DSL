@@ -9,6 +9,8 @@ from DSLTools.models.ast import NodeType
 
 
 TWalkStep = TypeVar('TWalkStep', bound='WalkStep')
+
+
 class WalkStep:
     def __init__(
         self,
