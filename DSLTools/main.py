@@ -13,9 +13,53 @@ from DSLTools.core.rule_wirth_converter import convert_rules_to_diagrams
 from DSLTools.core.astgenerator import GeneralizedParser, DefaultAstBuilder
 from DSLTools.utils.wirth_render import render_dot_to_png
 from DSLTools.core.astgenerator import DefaultAstBuilder
+from DSLTools.models.ast import ASTNode
 from settings import settings
 
 PROJECT_ROOT = settings.PROJECT_ROOT
+
+class ExpressionsEval(ASTNode.IAttrEval):
+    def __call__(self, value: str, children: list[ASTNode]):
+        return '[' + ', '.join(str(children[i].evaluated()) for i in range(0, len(children), 2)) + ']'
+
+class ExpressionEval(ASTNode.IAttrEval):
+    def __call__(self, value: str, children: list[ASTNode]):
+        _sum = 0
+        for i in range(0, len(children), 2):
+            _sum += children[i].evaluated()
+        return _sum
+
+class TermEval(ASTNode.IAttrEval):
+        def __call__(self, value: str, children: list[ASTNode]):
+            cum = 1
+            for i in range(0, len(children), 2):
+                cum *= children[i].evaluated()
+            return cum
+
+class NumberEval(ASTNode.IAttrEval):
+    def __call__(self, value: str, children: list[ASTNode]):
+        return int(value)
+
+class KeyEval(ASTNode.IAttrEval):
+    def __call__(self, value: str, children: list[ASTNode]):
+        return value
+
+
+expressions_eval = ExpressionsEval()
+expression_eval = ExpressionEval()
+term_eval = TermEval()
+number_eval = NumberEval()
+key_eval = KeyEval()
+
+evaluators = {
+    (ASTNode.Type.TOKEN, 'number'): number_eval,
+    (ASTNode.Type.TOKEN, '+'): key_eval,
+    (ASTNode.Type.TOKEN, '*'): key_eval,
+    (ASTNode.Type.TOKEN, ','): key_eval,
+    (ASTNode.Type.NONTERMINAL, 'TERM'): term_eval,
+    (ASTNode.Type.NONTERMINAL, 'EXPRESSION'): expression_eval,
+    (ASTNode.Type.NONTERMINAL, 'EXPRESSIONS'): expressions_eval,
+}
 
 # py -m DSLTools.main -j "(ABS/REL)PATHFORMETAOBJ" -d "(ABS/REL)PATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
 def main():
@@ -48,7 +92,7 @@ def main():
     print("\n".join([item.__repr__() for item in res]))
     print(go)
     builder = DefaultAstBuilder()
-    ast = builder.build(go, res).attach_evaluators({})
+    ast = builder.build(go, res).attach_evaluators(evaluators)
     result = ast.evaluated()
     
     with open('ast.yaml', 'w') as file:

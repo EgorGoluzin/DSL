@@ -1,22 +1,22 @@
 type: 'NONTERMINAL'
 subtype: 'EXPRESSIONS'
 value: ''
-attribute: ''
+attribute: '[20, 8, 24]'
 children:
   - type: 'NONTERMINAL'
     subtype: 'EXPRESSION'
     value: ''
-    attribute: ''
+    attribute: '20'
     children:
       - type: 'NONTERMINAL'
         subtype: 'TERM'
         value: ''
-        attribute: ''
+        attribute: '10'
         children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '2'
-            attribute: ''
+            attribute: '2'
             children: []
           - type: 'TOKEN'
             subtype: '*'
@@ -26,7 +26,7 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '5'
-            attribute: ''
+            attribute: '5'
             children: []
       - type: 'TOKEN'
         subtype: '+'
@@ -36,12 +36,12 @@ children:
       - type: 'NONTERMINAL'
         subtype: 'TERM'
         value: ''
-        attribute: ''
+        attribute: '3'
         children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '3'
-            attribute: ''
+            attribute: '3'
             children: []
       - type: 'TOKEN'
         subtype: '+'
@@ -51,12 +51,12 @@ children:
       - type: 'NONTERMINAL'
         subtype: 'TERM'
         value: ''
-        attribute: ''
+        attribute: '7'
         children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '7'
-            attribute: ''
+            attribute: '7'
             children: []
   - type: 'TOKEN'
     subtype: ','
@@ -66,17 +66,17 @@ children:
   - type: 'NONTERMINAL'
     subtype: 'EXPRESSION'
     value: ''
-    attribute: ''
+    attribute: '8'
     children:
       - type: 'NONTERMINAL'
         subtype: 'TERM'
         value: ''
-        attribute: ''
+        attribute: '8'
         children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '8'
-            attribute: ''
+            attribute: '8'
             children: []
   - type: 'TOKEN'
     subtype: ','
@@ -86,17 +86,17 @@ children:
   - type: 'NONTERMINAL'
     subtype: 'EXPRESSION'
     value: ''
-    attribute: ''
+    attribute: '24'
     children:
       - type: 'NONTERMINAL'
         subtype: 'TERM'
         value: ''
-        attribute: ''
+        attribute: '6'
         children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '6'
-            attribute: ''
+            attribute: '6'
             children: []
           - type: 'TOKEN'
             subtype: '*'
@@ -106,7 +106,7 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '1'
-            attribute: ''
+            attribute: '1'
             children: []
       - type: 'TOKEN'
         subtype: '+'
@@ -116,12 +116,12 @@ children:
       - type: 'NONTERMINAL'
         subtype: 'TERM'
         value: ''
-        attribute: ''
+        attribute: '18'
         children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '9'
-            attribute: ''
+            attribute: '9'
             children: []
           - type: 'TOKEN'
             subtype: '*'
@@ -131,5 +131,5 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '2'
-            attribute: ''
+            attribute: '2'
             children: []

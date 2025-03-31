@@ -4,6 +4,7 @@ from collections.abc import Callable
 from typing import Any, TypeVar, NewType
 from abc import ABC, abstractmethod
 from DSLTools.models.tokens import Token
+from DSLTools.models.IYamlMedia import IYamlMedia, YamlString
 
 
 class NodeType(str, Enum):
@@ -45,16 +46,6 @@ class IJsonMedia(ABC):
     """Объект, преобразуемый в формат JSON."""
     @abstractmethod
     def to_json(self, offset: int = 0) -> JsonString:
-        pass
-
-
-YamlString = NewType('YamlString', str)
-
-
-class IYamlMedia(ABC):
-    """Объект, преобразуемый в формат YAML."""
-    @abstractmethod
-    def to_yaml(self, offset: int = 0) -> YamlString:
         pass
 
 
@@ -117,10 +108,11 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
         return self.attribute
 
     def attach_evaluators(
-        self, evals: dict[tuple[str, str], IAttrEval]
-    ):
+        self, evals: dict[tuple[Type, str], IAttrEval]
+    ) -> TASTNode:
         key = (self.type, self.subtype)
         if key in evals:
+            # print(f'Found {key}')
             self.evaluation = evals[key]
         for child in self.children:
             child.attach_evaluators(evals)
