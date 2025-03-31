@@ -16,7 +16,7 @@ keys = [('+', Terminal.operation),
 	(',', Terminal.terminator)]
 
 
-class Nonterminal(Enum):
+class Nonterminal(str, Enum):
 	EXPRESSIONS = 'EXPRESSIONS'
 	EXPRESSION = 'EXPRESSION'
 	TERM = 'TERM'

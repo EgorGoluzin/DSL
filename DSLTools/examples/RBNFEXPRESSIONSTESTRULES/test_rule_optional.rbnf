@@ -54,12 +54,13 @@ NONTERMINALS:
     Program; Statement; Block; Expression; FunctionCall; Arguments; Parameters;
     Range; Set; Variable; Identifier; Number; Text; Assignment; Conditional;
     Loop; LC; LA; LB; LS; FunctionDecl; ProcDecl; IteratorDecl; Input; Output;
-    Comment; Goto; ArrayDecl; StructDecl; FieldDecl; Select; Yield; Return; NextFor;
+    Comment; Goto; ArrayDecl; StructDecl; FieldDecl; Select; Yield; Return; NextFor; LT; LE;
 
 AXIOM:
     Program
 
 RULES:
+    Loop             ::= LT LC | LA | LB | LS LE;
     Conditional      ::= 'IF' Expression 'THEN' Block [ { 'ELSEIF' Expression 'THEN' Block } ] [ 'ELSE' Block ] 'END_IF';
     Arguments        ::= { Expression # ',' };
     Expression       ::= '$' ['^'] '$';

@@ -1,8 +1,5 @@
-digraph STATEMENT {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph Statement {
   start [label="Statement" shape=plaintext];
-  end [label="" shape=point];
   A [label="NextFor" shape=box];
   B [label="Yield" shape=box];
   C [label="Return" shape=box];
@@ -18,6 +15,7 @@ digraph STATEMENT {
   M [label="Expression" shape=box];
   N [label="Conditional" shape=box];
   O [label="Assignment" shape=box];
+  end [label="" shape=point];
   start -> O;
   start -> N;
   start -> M;

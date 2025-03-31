@@ -31,6 +31,10 @@ class Token:
                  line: int = None,
                  column: int = None,
                  evaln: IAttrEval = IdentityEval()):
+
+        self.terminalType: str = None
+        self.str: str = None
+
         self.token_type = token_type
         """Тип токена берем из грамматики."""
         self.value = value

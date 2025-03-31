@@ -1,8 +1,5 @@
 digraph LS {
-  rankdir=LR;
-  node [fontname="Arial"];
   start [label="LS" shape=plaintext];
-  end [label="" shape=point];
   A [label="FOR" shape=oval];
   B [label="Variable" shape=box];
   C [label="IN" shape=oval];
@@ -10,6 +7,7 @@ digraph LS {
   E [label="DO" shape=oval];
   F [label="Block" shape=box];
   G [label="END_FOR" shape=oval];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> C;

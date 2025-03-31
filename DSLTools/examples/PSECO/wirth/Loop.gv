@@ -1,12 +1,10 @@
 digraph LOOP {
-  rankdir=LR;
-  node [fontname="Arial"];
   start [label="Loop" shape=plaintext];
-  end [label="" shape=point];
   A [label="LS" shape=box];
   B [label="LB" shape=box];
   C [label="LA" shape=box];
   D [label="LC" shape=box];
+  end [label="" shape=point];
   start -> D;
   start -> C;
   start -> B;
