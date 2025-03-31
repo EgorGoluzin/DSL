@@ -13,6 +13,7 @@ from DSLTools.core.astgenerator import GeneralizedParser
 from DSLTools.utils.wirth_render import render_dot_to_png
 from DSLTools.core.astgenerator import DefaultAstBuilder
 from settings import settings
+from DSLTools.core.retranslator import ReToExpression
 
 PROJECT_ROOT = settings.PROJECT_ROOT
 
@@ -20,11 +21,11 @@ PROJECT_ROOT = settings.PROJECT_ROOT
 def main():
     # Шаг 1: Парсинг аргументов
     ## Пример с экспрешеном. Просто эти строчки можно закоментить
-    json_path = fr"{PROJECT_ROOT}\examples\expressions\metainfo.json"
-    directory_to_save = fr"{PROJECT_ROOT}\examples\expressions"
+    # json_path = fr"{PROJECT_ROOT}\examples\expressions\metainfo.json"
+    # directory_to_save = fr"{PROJECT_ROOT}\examples\expressions"
     ## Пример с псевдокодом. Просто эти строчки можно раскоментить
-    # json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
-    # directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
+    json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
+    directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     mo = MetaObject(config)
@@ -45,9 +46,12 @@ def main():
     res = scanner.tokenize(input_str)
     print("\n".join([item.__repr__() for item in res]))
     dab = DefaultAstBuilder()
-    dab.build(go, res)
 
+    res = dab.build(go, res)
 
+    rte = ReToExpression()
+
+    print(f"Translated output: {rte.translate(res)}")
 
     #
     # # Шаг 6: Основной пайплайн обработки
