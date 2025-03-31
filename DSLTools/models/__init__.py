@@ -6,7 +6,7 @@ from .diagraph import Node, Edge, Digraph
 from .interface import IGrammarParser, IGrammarConverter, IVisualRepresentation, IScanner, IAfterscanner, IAstRender,\
     IAstBuilder, IRetranslator, ITokenPostProcessor, ISemanticRule
 from .rule_wirth_converter import RuleWirthNode, Diagram
-from .tokens import Token
+from .tokens import Token, GrammarToken
 
 __all__ = {
     'MetaObject',
@@ -37,4 +37,5 @@ __all__ = {
     "ISemanticRule",
     "RuleWirthNode",
     "Diagram",
+    "GrammarToken"
 }

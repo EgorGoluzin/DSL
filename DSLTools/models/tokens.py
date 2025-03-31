@@ -6,8 +6,10 @@ from typing import Any
 class Token:
     """Объект токена в потоке токенов. Посмотри класс Token.Type для
     уточнения."""
+
     class IAttrEval(ABC):
         """Интерфейс для класса, считающего значение атрибута в токене."""
+
         @abstractmethod
         def calc(self, value: str) -> Any:
             pass
@@ -48,3 +50,10 @@ class Token:
 
     def __repr__(self):
         return f"Token({self.token_type}, '{self.value}', pos: (l: {self.line}, c: {self.column})"
+
+
+class GrammarToken:
+    def __init__(self, value: str, token_type: str):
+        self.value = value
+        self.type = token_type
+        self.attribute_type = None

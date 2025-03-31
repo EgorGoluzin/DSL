@@ -10,7 +10,14 @@ class NodeTypeLegacy(Enum):
 
 
 class NodeLegacy:
-    def __init__(self, type, str):
+    """Это старый объект узла правила, который нужно переработать."""
+    def __init__(self, type, str_):
+
         self.type = type
-        self.str = str
+        self.str = str_
         self.nextNodes = []
+
+        self.nonterminal = str | None
+        """Было динамически появляющимся полем, явно его здесь объявил. В случае если нетерминал будет не null."""
+        self.terminal = str | None
+        """Было динамически появляющимся полем, явно его здесь объявил. В случае если терминал будет не null"""
