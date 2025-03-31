@@ -1,6 +1,5 @@
-digraph CONDITIONAL {
+digraph Conditional {
   start [label="Conditional" shape=plaintext];
-  end [label="" shape=point];
   A [label="IF" shape=oval];
   B [label="Expression" shape=box];
   C [label="THEN" shape=oval];
@@ -12,6 +11,7 @@ digraph CONDITIONAL {
   J [label="Expression" shape=box];
   K [label="THEN" shape=oval];
   L [label="Block" shape=box];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> C;
