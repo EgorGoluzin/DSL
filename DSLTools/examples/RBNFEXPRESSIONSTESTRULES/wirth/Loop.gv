@@ -1,4 +1,4 @@
-digraph LOOP {
+digraph Loop {
   start [label="Loop" shape=plaintext];
   A [label="LS" shape=box];
   B [label="LB" shape=box];
