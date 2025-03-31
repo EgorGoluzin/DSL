@@ -1,8 +1,8 @@
 digraph Comment {
   start [label="Comment" shape=plaintext];
-  end [label="" shape=point];
   A [label="//" shape=oval];
   B [label="Text" shape=box];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> end;

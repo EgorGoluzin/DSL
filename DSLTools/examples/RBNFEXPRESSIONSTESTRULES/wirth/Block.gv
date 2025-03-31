@@ -1,4 +1,4 @@
-digraph BLOCK {
+digraph Block {
   start [label="Block" shape=plaintext];
   A [label="{" shape=oval];
   B [label="Statement" shape=box];
