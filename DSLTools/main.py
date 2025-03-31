@@ -43,11 +43,11 @@ def main():
     #
 
     res = scanner.tokenize(input_str)
-
+    print("\n".join([item.__repr__() for item in res]))
     dab = DefaultAstBuilder()
     dab.build(go, res)
 
-    # print("\n".join([item.__repr__() for item in res]))
+
 
     #
     # # Шаг 6: Основной пайплайн обработки

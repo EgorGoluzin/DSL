@@ -1,13 +1,11 @@
 digraph LB {
-  rankdir=LR;
-  node [fontname="Arial"];
   start [label="LB" shape=plaintext];
-  end [label="" shape=point];
   A [label="WHILE" shape=oval];
   B [label="Expression" shape=box];
   C [label="DO" shape=oval];
   D [label="Block" shape=box];
   E [label="END_WHILE" shape=oval];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> C;

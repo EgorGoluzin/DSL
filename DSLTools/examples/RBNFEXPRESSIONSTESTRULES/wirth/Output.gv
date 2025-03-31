@@ -1,10 +1,8 @@
 digraph OUTPUT {
-  rankdir=LR;
-  node [fontname="Arial"];
   start [label="Output" shape=plaintext];
-  end [label="" shape=point];
   A [label="OUTPUT" shape=oval];
   B [label="Expression" shape=box];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> end;

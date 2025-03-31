@@ -1,6 +1,4 @@
-digraph COMMENT {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph Comment {
   start [label="Comment" shape=plaintext];
   end [label="" shape=point];
   A [label="//" shape=oval];

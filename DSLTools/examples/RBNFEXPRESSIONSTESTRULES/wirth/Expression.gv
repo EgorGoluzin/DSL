@@ -1,11 +1,9 @@
-digraph EXPRESSION {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph Expression {
   start [label="Expression" shape=plaintext];
-  end [label="" shape=point];
   A [label="$" shape=oval];
   B [label="$" shape=oval];
   C [label="^" shape=oval];
+  end [label="" shape=point];
   start -> A;
   A -> C;
   A -> B;

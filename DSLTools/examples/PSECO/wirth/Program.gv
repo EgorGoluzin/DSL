@@ -1,9 +1,7 @@
-digraph PROGRAM {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph Program {
   start [label="Program" shape=plaintext];
-  end [label="" shape=point];
   A [label="Statement" shape=box];
+  end [label="" shape=point];
   start -> A;
   A -> A;
   A -> end;

@@ -1,6 +1,4 @@
-digraph ASSIGNMENT {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph Assignment {
   start [label="Assignment" shape=plaintext];
   end [label="" shape=point];
   A [label="Variable" shape=box];

@@ -2,7 +2,7 @@ import shutil
 import os
 from pathlib import Path
 import json
-def load_config(json_path):
+def load_config(json_path: object) -> object:
     with open(json_path) as f:
         return json.load(f)
 def copy_template(src_dir, dest_dir, filename):

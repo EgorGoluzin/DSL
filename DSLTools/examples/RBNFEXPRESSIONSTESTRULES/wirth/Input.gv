@@ -1,6 +1,4 @@
-digraph INPUT {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph Input {
   start [label="Input" shape=plaintext];
   end [label="" shape=point];
   A [label="INPUT" shape=oval];

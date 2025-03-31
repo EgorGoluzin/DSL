@@ -1,11 +1,9 @@
-digraph NEXTFOR {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph NextFor {
   start [label="NextFor" shape=plaintext];
-  end [label="" shape=point];
   A [label="NEXT" shape=oval];
   B [label="FOR" shape=oval];
   C [label="Variable" shape=box];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> C;

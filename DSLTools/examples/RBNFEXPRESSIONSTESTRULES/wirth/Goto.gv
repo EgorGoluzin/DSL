@@ -1,10 +1,8 @@
-digraph GOTO {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph Goto {
   start [label="Goto" shape=plaintext];
-  end [label="" shape=point];
   A [label="GOTO" shape=oval];
   B [label="Identifier" shape=box];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> end;
