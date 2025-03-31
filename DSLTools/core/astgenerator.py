@@ -119,7 +119,7 @@ class DefaultAstBuilder(IAstBuilder):
         self.go = go
         self.tokens = tokens
         self.end = len(self.tokens)
-        self.axiom = self.go.axiom
+        self.axiom = self.go.axiom.upper()
 
         ast = ASTNode(ASTNode.Type.NONTERMINAL)
         ast.nonterminalType = self.axiom
