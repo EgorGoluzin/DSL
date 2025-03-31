@@ -1,9 +1,10 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 from typing import Any
+from DSLTools.models.IYamlMedia import IYamlMedia, YamlString
 
 
-class Token:
+class Token(IYamlMedia):
     """Объект токена в потоке токенов. Посмотри класс Token.Type для
     уточнения."""
 
@@ -48,12 +49,27 @@ class Token:
         self.eval = evaln
         """Объект, вычисляющий атрибут токена."""
 
+    SHIFT = 4
+
+    def __blank(self, offset: int):
+        return ' ' * self.SHIFT * offset
+
     def evaluated(self) -> Any:
         self.attribute = self.eval.calc(self.value)
         return self.attribute
 
     def __repr__(self):
         return f"Token({self.terminalType = }, {self.str = }, {self.token_type = }, '{self.value = }', pos: (l: {self.line}, c: {self.column}), {self.attribute = }"
+
+    def to_yaml(self, offset: int = 0) -> YamlString:
+        blank = self.__blank(offset)
+        yaml = (
+            blank + f"terminalType: '{self.terminalType or ''}'\n"
+            + blank + f"token_type: '{self.token_type}'\n"
+            + blank + f"value: '{self.value}'\n"
+            + blank + f"attribute: '{self.attribute or ''}'\n"
+        )
+        return yaml
 
 
 class GrammarToken:
