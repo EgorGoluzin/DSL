@@ -19,8 +19,12 @@ PROJECT_ROOT = settings.PROJECT_ROOT
 # py -m DSLTools.main -j "(ABS/REL)PATHFORMETAOBJ" -d "(ABS/REL)PATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
 def main():
     # Шаг 1: Парсинг аргументов
-    json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
-    directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
+    ## Пример с экспрешеном. Просто эти строчки можно закоментить
+    json_path = fr"{PROJECT_ROOT}\examples\expressions\metainfo.json"
+    directory_to_save = fr"{PROJECT_ROOT}\examples\expressions"
+    ## Пример с псевдокодом. Просто эти строчки можно раскоментить
+    # json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
+    # directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     mo = MetaObject(config)
@@ -29,7 +33,7 @@ def main():
     # Шаг 3. Парсинг грамматики.
     go = parser.parse(mo)
     go.upload(pathlib.Path(fr"{directory_to_save}\wirth"))
-
+    print(go)
     # Шаг 4: Генерация dsl_info.py
     # generate_dsl_info(go=go, dest=directory_to_save)
     scanner = DefaultScanner(go)

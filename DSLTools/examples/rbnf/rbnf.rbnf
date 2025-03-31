@@ -1,11 +1,12 @@
 TERMINALS:
-    name          ::= '[A-Za-z_][A-Za-z0-9_]*';
-    string        ::= '\'(\\.|[^\\\'])*\'';
-    symbol        ::= '[:=#;(){}\[\]|.]';
+    nonterminal_name ::= '\''[A-Za-z_][A-Za-z0-9_]*\'';
+    terminal_name ::= '[A-Za-z_][A-Za-z0-9_]*';
+    regular_expression   ::= '\'(\\.|[^\\\'])*\'';
+    ebnf_symbol        ::= '[::=#;(){}\[\]|.]';
     whitespace    ::= '\s+'.
 
 KEYS:
-    'TERMINALS'; 'KEYS'; 'NONTERMINALS'; 'AXIOM'; 'RULES'; 'ERRORS'.
+    'TERMINALS'; 'KEYS'; 'NONTERMINALS'; 'AXIOM'; 'RULES'; 'ERRORS'; ':'.
 
 NONTERMINALS:
     Grammar; TerminalsBlock; KeysBlock; NonterminalsBlock;
@@ -15,14 +16,20 @@ AXIOM: Grammar.
 
 RULES:
     Grammar          ::= TerminalsBlock KeysBlock NonterminalsBlock AxiomBlock RulesBlock;
-    TerminalsBlock   ::= 'TERMINALS' ':' (name '::=' string ';')+;
-    KeysBlock        ::= 'KEYS' ':' ('\'' symbol '\'' ';')+;
-    NonterminalsBlock::= 'NONTERMINALS' ':' (name ';')+;
-    AxiomBlock       ::= 'AXIOM' ':' name ';';
+    TerminalsBlock   ::= 'TERMINALS' ':' (Terminal)+;
+    KeysBlock        ::= 'KEYS' ':' ('\'' ebnf_symbol '\'' ';')+;
+    NonterminalsBlock::= 'NONTERMINALS' ':' (NonTerminalName ';')+;
+    AxiomBlock       ::= 'AXIOM' ':' NonTerminalName ';';
+    Terminal         ::= TerminalName '::=' RegularExpression ';'
+    TerminalName    ::= terminal_name;
+    NonTerminalName    ::= nonterminal_name;
+    RegularExpression  ::= regular_expression;
     RulesBlock       ::= 'RULES' ':' (Rule ';')+;
-    Rule             ::= name '::=' Rhs;
-    Rhs              ::= Element ('|' Element)*;
-    Element          ::= name | string | Group | Optional | Iteration;
-    Group            ::= '(' Rhs ')';
-    Optional         ::= '[' Rhs ']';
-    Iteration        ::= '{' Rhs ['#' name] '}';
+    Rule             ::= NonTerminalName '::=' Rhs;
+    Rhs              ::= Sequence;
+    Sequence         ::= (RuleElement)+;
+    RuleElement      ::= NonTerminalName | TerminalName | Group | Optional | Iteration | Alternative;
+    Group            ::= '(' Sequence | RuleElement ')';
+    Optional         ::= '[' Sequence | RuleElement ']';
+    Iteration        ::= '{' Sequence | RuleElement ['#' name] '}';
+    Alternative      ::= (Sequence | RuleElement) '|' (Sequence | RuleElement) {'|' (Sequence | RuleElement)};
