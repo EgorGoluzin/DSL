@@ -53,7 +53,7 @@ class Token:
         return self.attribute
 
     def __repr__(self):
-        return f"Token({self.token_type}, '{self.value}', pos: (l: {self.line}, c: {self.column})"
+        return f"Token({self.terminalType = }, {self.str = }, {self.token_type = }, '{self.value = }', pos: (l: {self.line}, c: {self.column}), {self.attribute = }"
 
 
 class GrammarToken:

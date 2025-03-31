@@ -121,7 +121,7 @@ class DefaultAstBuilder(IAstBuilder):
         self.end = len(self.tokens)
         self.axiom = self.go.axiom.upper()
 
-        ast = ASTNode(ASTNode.Type.NONTERMINAL)
+        ast = ASTNode(ASTNode.Type.NONTERMINAL, self.axiom)
         ast.nonterminalType = self.axiom
         nodes_stack = [ast]
         self.__walk()
@@ -143,7 +143,7 @@ class DefaultAstBuilder(IAstBuilder):
             elif NodeType.NONTERMINAL == rule[0].type:
                 if rule[0].nonterminal not in self.go.syntax_info:
                     raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info = }")
-                new_nonterm = ASTNode(ASTNode.Type.NONTERMINAL)
+                new_nonterm = ASTNode(ASTNode.Type.NONTERMINAL, rule[0].nonterminal)
                 new_nonterm.nonterminalType = rule[0].nonterminal
                 nodes_stack[-1].children.append(new_nonterm)
                 nodes_stack[-1].commands.append(rule[1])
@@ -154,15 +154,17 @@ class DefaultAstBuilder(IAstBuilder):
                 raise Exception(f"{pos = } exceeded {self.end = }")
             new_token = self.tokens[pos]
             if NodeType.KEY == rule[0].type and Token.Type.KEY == new_token.token_type and new_token.str == rule[0].str:
-                element = ASTNode(ASTNode.Type.TOKEN)
+                element = ASTNode(ASTNode.Type.TOKEN, new_token.str)
                 element.attribute = new_token.attribute
+                element.value = new_token.str
                 element.token = new_token
                 nodes_stack[-1].children.append(element)
                 nodes_stack[-1].commands.append(rule[1])
                 continue
             elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.token_type and new_token.terminalType == rule[0].terminal:
-                element = ASTNode(ASTNode.Type.TOKEN)
+                element = ASTNode(ASTNode.Type.TOKEN, new_token.terminalType)
                 element.attribute = new_token.attribute
+                element.value = new_token.value
                 element.token = new_token
                 nodes_stack[-1].children.append(element)
                 nodes_stack[-1].commands.append(rule[1])

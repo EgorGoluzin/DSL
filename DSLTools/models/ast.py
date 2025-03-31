@@ -64,12 +64,12 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
     class IAttrEval(ABC):
         """Интерфейс для класса, считающего значение атрибута в узле АСД."""
         @abstractmethod
-        def calc(self, value: str) -> Any:
+        def __call__(self, value: str, children: list[TASTNode]) -> Any:
             pass
 
     class IdentityEval(IAttrEval):
         """Базовая реализация тождественного вычислителя атрибутов."""
-        def calc(self, value: str) -> Any:
+        def __call__(self, value: str, children: list[TASTNode]) -> Any:
             return value
 
     class Type(str, Enum):
@@ -153,7 +153,7 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
         yaml = (
             blank + f"type: '{self.type}'\n"
             + blank + f"subtype: '{self.subtype}'\n"
-            + blank + f"value: '{self.value}'"
+            + blank + f"value: '{self.value}'\n"
             + blank + f"attribute: '{'' if self.attribute is None else self.attribute}'\n"
             + blank + 'children:'
         )

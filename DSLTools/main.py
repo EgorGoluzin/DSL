@@ -2,6 +2,7 @@
 import re
 import sys
 import pathlib
+import time
 
 from DSLTools.core.tools import get_parser
 from DSLTools.core.wirth_diagram_generation import generate_dot
@@ -49,6 +50,10 @@ def main():
     builder = DefaultAstBuilder()
     ast = builder.build(go, res).attach_evaluators({})
     result = ast.evaluated()
+    
+    with open('ast.yaml', 'w') as file:
+    # with open(f'ast_{time.time_ns()}.yaml', 'w') as file:
+        file.write(ast.to_yaml())
     print(result)
 
     #
