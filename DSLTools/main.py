@@ -14,6 +14,7 @@ from DSLTools.core.astgenerator import GeneralizedParser, DefaultAstBuilder
 from DSLTools.utils.wirth_render import render_dot_to_png
 from DSLTools.core.astgenerator import DefaultAstBuilder
 from DSLTools.models.ast import ASTNode
+from DSLTools.models.tokens import Tokens
 from settings import settings
 
 PROJECT_ROOT = settings.PROJECT_ROOT
@@ -61,6 +62,7 @@ evaluators = {
     (ASTNode.Type.NONTERMINAL, 'EXPRESSIONS'): expressions_eval,
 }
 
+
 # py -m DSLTools.main -j "(ABS/REL)PATHFORMETAOBJ" -d "(ABS/REL)PATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
 def main():
     # Шаг 1: Парсинг аргументов
@@ -89,6 +91,8 @@ def main():
     #
 
     res = scanner.tokenize(input_str)
+    with open('tokens.yaml', 'w') as file:
+        file.write(Tokens(res).to_yaml())
     print("\n".join([item.__repr__() for item in res]))
     print(go)
     builder = DefaultAstBuilder()

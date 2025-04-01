@@ -77,7 +77,7 @@ class Tokens(IYamlMedia):
         self.__tokens = tokens
 
     def to_yaml(self, offset: int = 0) -> YamlString:
-        yaml = 'tokens:'
+        yaml = 'tokens:\n'
         for token in self.__tokens:
             append = list(token.to_yaml(1))
             append[2] = '-'
