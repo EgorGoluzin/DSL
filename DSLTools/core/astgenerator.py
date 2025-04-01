@@ -6,6 +6,7 @@ from _elementtree import ParseError
 
 from DSLTools.models import (GrammarObject, Token, ASTNode, Rule, IAstBuilder, IAstRender)
 from DSLTools.models.ast import NodeType
+from DSLTools.models.legacy_for_wirth import NodeLegacy, NodeTypeLegacy
 
 
 TWalkStep = TypeVar('TWalkStep', bound='WalkStep')
@@ -16,7 +17,7 @@ class WalkStep:
         self,
         parent_state: TWalkStep = None,
         pos: int = 0,
-        node: list = [],
+        node: NodeLegacy = [],
         rule_index: int = 0,
         nonterm: str = ''
     ):
@@ -36,10 +37,13 @@ class DefaultAstBuilder(IAstBuilder):
         self.axiom: str = ''
 
     def __ret(self):
+        # print('States:')
+        # print(self.states)
         self.states[-1].rule_index += 1
         while self.states[-1].rule_index >= len(self.states[-1].node.nextNodes):
             self.states.pop()
             if len(self.states) == 0:
+                print(self.__ast)
                 raise Exception("Ran out of states")
             self.states[-1].rule_index += 1
 
@@ -122,6 +126,7 @@ class DefaultAstBuilder(IAstBuilder):
         self.axiom = self.go.axiom
 
         ast = ASTNode(ASTNode.Type.NONTERMINAL, self.axiom)
+        self.__ast = ast
         ast.nonterminalType = self.axiom
         nodes_stack = [ast]
         self.__walk()

@@ -23,9 +23,17 @@ from DSLTools.core.tokenpostprocessing import TokenPostProcessingManager
 
 PROJECT_ROOT = settings.PROJECT_ROOT
 
+
 class ExpressionsEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode]):
-        return '[' + ', '.join(str(children[i].evaluated()) for i in range(0, len(children), 2)) + ']'
+        return ('[' +
+                ', '.join(
+                    str(children[i].evaluated())
+                    for i in range(0, len(children), 2)
+                )
+                + ']'
+                )
+
 
 class ExpressionEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode]):
@@ -34,16 +42,19 @@ class ExpressionEval(ASTNode.IAttrEval):
             _sum += children[i].evaluated()
         return _sum
 
+
 class TermEval(ASTNode.IAttrEval):
-        def __call__(self, value: str, children: list[ASTNode]):
-            cum = 1
-            for i in range(0, len(children), 2):
-                cum *= children[i].evaluated()
-            return cum
+    def __call__(self, value: str, children: list[ASTNode]):
+        cum = 1
+        for i in range(0, len(children), 2):
+            cum *= children[i].evaluated()
+        return cum
+
 
 class NumberEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode]):
         return int(value)
+
 
 class KeyEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode]):
@@ -100,10 +111,12 @@ def main():
     afterscanner = TokenPostProcessingManager([
         ExprEvalMatch(), ExprEvalAttrs()
     ])
+
     res = afterscanner.execute(res)
+
     with open('post_token.yaml', 'w') as file:
         file.write(Tokens(res).to_yaml())
-    
+
     print("\n".join([item.__repr__() for item in res]))
     print(go)
     builder = DefaultAstBuilder()
@@ -111,9 +124,8 @@ def main():
     with open('ast_before.yaml', 'w') as file:
         file.write(ast.to_yaml())
     result = ast.evaluated()
-    
+
     with open('ast_after.yaml', 'w') as file:
-    # with open(f'ast_{time.time_ns()}.yaml', 'w') as file:
         file.write(ast.to_yaml())
     print(result)
 
