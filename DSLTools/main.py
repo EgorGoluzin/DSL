@@ -97,9 +97,11 @@ def main():
     print(go)
     builder = DefaultAstBuilder()
     ast = builder.build(go, res).attach_evaluators(evaluators)
+    with open('ast_before.yaml', 'w') as file:
+        file.write(ast.to_yaml())
     result = ast.evaluated()
     
-    with open('ast.yaml', 'w') as file:
+    with open('ast_after.yaml', 'w') as file:
     # with open(f'ast_{time.time_ns()}.yaml', 'w') as file:
         file.write(ast.to_yaml())
     print(result)
