@@ -72,6 +72,19 @@ class Token(IYamlMedia):
         return yaml
 
 
+class Tokens(IYamlMedia):
+    def __init__(self, tokens: list[Token]):
+        self.__tokens = tokens
+
+    def to_yaml(self, offset: int = 0) -> YamlString:
+        yaml = 'tokens:'
+        for token in self.__tokens:
+            append = list(token.to_yaml(1))
+            append[2] = '-'
+            yaml += ''.join(append)
+        return yaml
+
+
 class GrammarToken:
     def __init__(self, value: str, token_type: str):
         self.value = value
