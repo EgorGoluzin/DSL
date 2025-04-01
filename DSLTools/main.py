@@ -116,9 +116,6 @@ def main():
     # with open(f'ast_{time.time_ns()}.yaml', 'w') as file:
         file.write(ast.to_yaml())
     print(result)
-    dab = DefaultAstBuilder()
-
-    res = dab.build(go, res)
 
     rte = ReToExpression()
     print(f"Translated output: {rte.translate(ast)}")
