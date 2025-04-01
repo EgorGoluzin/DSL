@@ -9,7 +9,7 @@ class ReToExpression(IRetranslator):
             return head.value
 
         # Обработка ключей (игнорируем запятые)
-        if head.type == NodeType.KEY:
+        if head.value == head.type:
             return head.value if head.value != ',' else None
 
         # Обработка нетерминалов
