@@ -25,3 +25,10 @@ class ExprEvalMatch(ITokenPostProcessor):
                 copied.eval = key_eval
             retokened.append(copied)
         return retokened
+
+
+class ExprEvalAttrs(ITokenPostProcessor):
+    def process(self, tokens: List[Token]) -> List[Token]:
+        for token in tokens:
+            token.evaluated()
+        return tokens
