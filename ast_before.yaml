@@ -16,22 +16,22 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '2'
-            attribute: ''
+            attribute: '2'
             children: []
           - type: 'TOKEN'
             subtype: '*'
             value: '*'
-            attribute: ''
+            attribute: '*'
             children: []
           - type: 'TOKEN'
             subtype: 'number'
             value: '5'
-            attribute: ''
+            attribute: '5'
             children: []
       - type: 'TOKEN'
         subtype: '+'
         value: '+'
-        attribute: ''
+        attribute: '+'
         children: []
       - type: 'NONTERMINAL'
         subtype: 'TERM'
@@ -41,12 +41,12 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '3'
-            attribute: ''
+            attribute: '3'
             children: []
       - type: 'TOKEN'
         subtype: '+'
         value: '+'
-        attribute: ''
+        attribute: '+'
         children: []
       - type: 'NONTERMINAL'
         subtype: 'TERM'
@@ -56,12 +56,12 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '7'
-            attribute: ''
+            attribute: '7'
             children: []
   - type: 'TOKEN'
     subtype: ','
     value: ','
-    attribute: ''
+    attribute: ','
     children: []
   - type: 'NONTERMINAL'
     subtype: 'EXPRESSION'
@@ -76,12 +76,12 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '8'
-            attribute: ''
+            attribute: '8'
             children: []
   - type: 'TOKEN'
     subtype: ','
     value: ','
-    attribute: ''
+    attribute: ','
     children: []
   - type: 'NONTERMINAL'
     subtype: 'EXPRESSION'
@@ -96,22 +96,22 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '6'
-            attribute: ''
+            attribute: '6'
             children: []
           - type: 'TOKEN'
             subtype: '*'
             value: '*'
-            attribute: ''
+            attribute: '*'
             children: []
           - type: 'TOKEN'
             subtype: 'number'
             value: '1'
-            attribute: ''
+            attribute: '1'
             children: []
       - type: 'TOKEN'
         subtype: '+'
         value: '+'
-        attribute: ''
+        attribute: '+'
         children: []
       - type: 'NONTERMINAL'
         subtype: 'TERM'
@@ -121,15 +121,15 @@ children:
           - type: 'TOKEN'
             subtype: 'number'
             value: '9'
-            attribute: ''
+            attribute: '9'
             children: []
           - type: 'TOKEN'
             subtype: '*'
             value: '*'
-            attribute: ''
+            attribute: '*'
             children: []
           - type: 'TOKEN'
             subtype: 'number'
             value: '2'
-            attribute: ''
+            attribute: '2'
             children: []

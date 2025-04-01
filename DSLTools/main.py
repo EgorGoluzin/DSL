@@ -17,6 +17,9 @@ from DSLTools.models.ast import ASTNode
 from DSLTools.models.tokens import Tokens
 from settings import settings
 from DSLTools.core.retranslator import ReToExpression
+from DSLTools.implementations.token_post_processor import ExprEvalMatch, ExprEvalAttrs
+from DSLTools.core.tokenpostprocessing import TokenPostProcessingManager
+
 
 PROJECT_ROOT = settings.PROJECT_ROOT
 
@@ -94,6 +97,13 @@ def main():
     res = scanner.tokenize(input_str)
     with open('tokens.yaml', 'w') as file:
         file.write(Tokens(res).to_yaml())
+    afterscanner = TokenPostProcessingManager([
+        ExprEvalMatch(), ExprEvalAttrs()
+    ])
+    res = afterscanner.execute(res)
+    with open('post_token.yaml', 'w') as file:
+        file.write(Tokens(res).to_yaml())
+    
     print("\n".join([item.__repr__() for item in res]))
     print(go)
     builder = DefaultAstBuilder()

@@ -21,7 +21,7 @@ children:
           - type: 'TOKEN'
             subtype: '*'
             value: '*'
-            attribute: ''
+            attribute: '*'
             children: []
           - type: 'TOKEN'
             subtype: 'number'
@@ -31,7 +31,7 @@ children:
       - type: 'TOKEN'
         subtype: '+'
         value: '+'
-        attribute: ''
+        attribute: '+'
         children: []
       - type: 'NONTERMINAL'
         subtype: 'TERM'
@@ -46,7 +46,7 @@ children:
       - type: 'TOKEN'
         subtype: '+'
         value: '+'
-        attribute: ''
+        attribute: '+'
         children: []
       - type: 'NONTERMINAL'
         subtype: 'TERM'
@@ -61,7 +61,7 @@ children:
   - type: 'TOKEN'
     subtype: ','
     value: ','
-    attribute: ''
+    attribute: ','
     children: []
   - type: 'NONTERMINAL'
     subtype: 'EXPRESSION'
@@ -81,7 +81,7 @@ children:
   - type: 'TOKEN'
     subtype: ','
     value: ','
-    attribute: ''
+    attribute: ','
     children: []
   - type: 'NONTERMINAL'
     subtype: 'EXPRESSION'
@@ -101,7 +101,7 @@ children:
           - type: 'TOKEN'
             subtype: '*'
             value: '*'
-            attribute: ''
+            attribute: '*'
             children: []
           - type: 'TOKEN'
             subtype: 'number'
@@ -111,7 +111,7 @@ children:
       - type: 'TOKEN'
         subtype: '+'
         value: '+'
-        attribute: ''
+        attribute: '+'
         children: []
       - type: 'NONTERMINAL'
         subtype: 'TERM'
@@ -126,7 +126,7 @@ children:
           - type: 'TOKEN'
             subtype: '*'
             value: '*'
-            attribute: ''
+            attribute: '*'
             children: []
           - type: 'TOKEN'
             subtype: 'number'
