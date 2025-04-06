@@ -1,0 +1,11 @@
+SELECT v IN V
+$V_1 \gets {v}$
+$V_2 \gets \varnothing$
+FOR $u$ IN $V \ {v}$ DO
+IF $d(v, u) mod 2 = 0$ THEN
+$V_2 \gets V_1 \cup {u}$
+ELSE
+$V_2 \gets V_2 \cup {u}$
+END_IF
+END_FOR
+RETURN $(V_1, V_2)$

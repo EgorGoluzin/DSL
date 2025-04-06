@@ -1,12 +1,7 @@
 digraph Expression {
   start [label="Expression" shape=plaintext];
-  A [label="$" shape=oval];
-  B [label="$" shape=oval];
-  C [label="^" shape=oval];
+  A [label="exprtext" shape=diamond];
   end [label="" shape=point];
   start -> A;
-  A -> C;
-  A -> B;
-  B -> end;
-  C -> B;
+  A -> end;
 }

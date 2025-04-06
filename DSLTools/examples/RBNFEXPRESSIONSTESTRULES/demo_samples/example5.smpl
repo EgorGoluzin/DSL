@@ -1,0 +1,6 @@
+WHILE $b \neq 0$ DO
+$temp \gets b$
+$b \gets a \bmod b$
+$a \gets temp$
+END_WHILE
+RETURN $a$

@@ -19,12 +19,15 @@ digraph Conditional {
   D -> I;
   D -> G;
   D -> F;
-  F -> end;
+  D -> D;
   G -> H;
   H -> F;
+  H -> H;
   I -> J;
   J -> K;
   K -> L;
   L -> I;
   L -> G;
+  L -> L;
+  F -> end;
 }

@@ -1,0 +1,245 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: ''
+children:
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Select'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'SELECT'
+            value: 'SELECT'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Variable'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'v'
+                    attribute: ''
+                    children: []
+          - type: 'TOKEN'
+            subtype: 'IN'
+            value: 'IN'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Set'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'V'
+                    attribute: ''
+                    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Expression'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'exprtext'
+            value: '$V_1 \gets {v}$'
+            attribute: ''
+            children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Expression'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'exprtext'
+            value: '$V_2 \gets \varnothing$'
+            attribute: ''
+            children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Loop'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'LS'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'FOR'
+                value: 'FOR'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Variable'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'exprtext'
+                        value: '$u$'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'IN'
+                value: 'IN'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Set'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'exprtext'
+                        value: '$V \ {v}$'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'DO'
+                value: 'DO'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Conditional'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'IF'
+                        value: 'IF'
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Expression'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'TOKEN'
+                            subtype: 'exprtext'
+                            value: '$d(v, u) mod 2 = 0$'
+                            attribute: ''
+                            children: []
+                      - type: 'TOKEN'
+                        subtype: 'THEN'
+                        value: 'THEN'
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Block'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'NONTERMINAL'
+                            subtype: 'Expression'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'TOKEN'
+                                subtype: 'exprtext'
+                                value: '$V_2 \gets V_1 \cup {u}$'
+                                attribute: ''
+                                children: []
+                      - type: 'TOKEN'
+                        subtype: 'ELSE'
+                        value: 'ELSE'
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Block'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'NONTERMINAL'
+                            subtype: 'Expression'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'TOKEN'
+                                subtype: 'exprtext'
+                                value: '$V_2 \gets V_2 \cup {u}$'
+                                attribute: ''
+                                children: []
+                      - type: 'TOKEN'
+                        subtype: 'END_IF'
+                        value: 'END_IF'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'END_FOR'
+                value: 'END_FOR'
+                attribute: ''
+                children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Return'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'RETURN'
+            value: 'RETURN'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Expression'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'exprtext'
+                value: '$(V_1, V_2)$'
+                attribute: ''
+                children: []

@@ -11,5 +11,6 @@ digraph LB {
   B -> C;
   C -> D;
   D -> E;
+  D -> D;
   E -> end;
 }

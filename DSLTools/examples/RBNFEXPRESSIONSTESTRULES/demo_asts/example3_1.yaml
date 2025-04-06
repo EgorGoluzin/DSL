@@ -1,0 +1,340 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: ''
+children:
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Comment'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'commenttext'
+            value: '// Внешний цикл: перебираем каждый элемент x из множества X'
+            attribute: ''
+            children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Loop'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'LS'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'FOR'
+                value: 'FOR'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Variable'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'name'
+                        value: 'x'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'IN'
+                value: 'IN'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Set'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'name'
+                        value: 'X'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'DO'
+                value: 'DO'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Comment'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'commenttext'
+                        value: '// Внутренний цикл: перебираем каждый элемент y из множества Y'
+                        attribute: ''
+                        children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Loop'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'NONTERMINAL'
+                        subtype: 'LS'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'TOKEN'
+                            subtype: 'FOR'
+                            value: 'FOR'
+                            attribute: ''
+                            children: []
+                          - type: 'NONTERMINAL'
+                            subtype: 'Variable'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'NONTERMINAL'
+                                subtype: 'Identifier'
+                                value: ''
+                                attribute: ''
+                                children:
+                                  - type: 'TOKEN'
+                                    subtype: 'name'
+                                    value: 'y'
+                                    attribute: ''
+                                    children: []
+                          - type: 'TOKEN'
+                            subtype: 'IN'
+                            value: 'IN'
+                            attribute: ''
+                            children: []
+                          - type: 'NONTERMINAL'
+                            subtype: 'Set'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'NONTERMINAL'
+                                subtype: 'Identifier'
+                                value: ''
+                                attribute: ''
+                                children:
+                                  - type: 'TOKEN'
+                                    subtype: 'name'
+                                    value: 'Y'
+                                    attribute: ''
+                                    children: []
+                          - type: 'TOKEN'
+                            subtype: 'DO'
+                            value: 'DO'
+                            attribute: ''
+                            children: []
+                          - type: 'NONTERMINAL'
+                            subtype: 'Block'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'NONTERMINAL'
+                                subtype: 'Comment'
+                                value: ''
+                                attribute: ''
+                                children:
+                                  - type: 'TOKEN'
+                                    subtype: 'commenttext'
+                                    value: '// Условие: если элемент x из X равен элементу y из Y'
+                                    attribute: ''
+                                    children: []
+                          - type: 'NONTERMINAL'
+                            subtype: 'Block'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'NONTERMINAL'
+                                subtype: 'Conditional'
+                                value: ''
+                                attribute: ''
+                                children:
+                                  - type: 'TOKEN'
+                                    subtype: 'IF'
+                                    value: 'IF'
+                                    attribute: ''
+                                    children: []
+                                  - type: 'NONTERMINAL'
+                                    subtype: 'Expression'
+                                    value: ''
+                                    attribute: ''
+                                    children:
+                                      - type: 'TOKEN'
+                                        subtype: 'exprtext'
+                                        value: '$x = y$'
+                                        attribute: ''
+                                        children: []
+                                  - type: 'TOKEN'
+                                    subtype: 'THEN'
+                                    value: 'THEN'
+                                    attribute: ''
+                                    children: []
+                                  - type: 'NONTERMINAL'
+                                    subtype: 'Block'
+                                    value: ''
+                                    attribute: ''
+                                    children:
+                                      - type: 'NONTERMINAL'
+                                        subtype: 'Comment'
+                                        value: ''
+                                        attribute: ''
+                                        children:
+                                          - type: 'TOKEN'
+                                            subtype: 'commenttext'
+                                            value: '// Выполняем операцию S с найденным общим элементом x'
+                                            attribute: ''
+                                            children: []
+                                  - type: 'NONTERMINAL'
+                                    subtype: 'Block'
+                                    value: ''
+                                    attribute: ''
+                                    children:
+                                      - type: 'NONTERMINAL'
+                                        subtype: 'Expression'
+                                        value: ''
+                                        attribute: ''
+                                        children:
+                                          - type: 'TOKEN'
+                                            subtype: 'exprtext'
+                                            value: '$S(x)$'
+                                            attribute: ''
+                                            children: []
+                                  - type: 'NONTERMINAL'
+                                    subtype: 'Block'
+                                    value: ''
+                                    attribute: ''
+                                    children:
+                                      - type: 'NONTERMINAL'
+                                        subtype: 'Comment'
+                                        value: ''
+                                        attribute: ''
+                                        children:
+                                          - type: 'TOKEN'
+                                            subtype: 'commenttext'
+                                            value: '// Прерываем внутренний цикл (по y), так как элемент x найден,'
+                                            attribute: ''
+                                            children: []
+                                  - type: 'NONTERMINAL'
+                                    subtype: 'Block'
+                                    value: ''
+                                    attribute: ''
+                                    children:
+                                      - type: 'NONTERMINAL'
+                                        subtype: 'Comment'
+                                        value: ''
+                                        attribute: ''
+                                        children:
+                                          - type: 'TOKEN'
+                                            subtype: 'commenttext'
+                                            value: '// и переходим к следующей итерации внешнего цикла (по x).'
+                                            attribute: ''
+                                            children: []
+                                  - type: 'NONTERMINAL'
+                                    subtype: 'Block'
+                                    value: ''
+                                    attribute: ''
+                                    children:
+                                      - type: 'NONTERMINAL'
+                                        subtype: 'NextFor'
+                                        value: ''
+                                        attribute: ''
+                                        children:
+                                          - type: 'TOKEN'
+                                            subtype: 'NEXT'
+                                            value: 'NEXT'
+                                            attribute: ''
+                                            children: []
+                                          - type: 'TOKEN'
+                                            subtype: 'FOR'
+                                            value: 'FOR'
+                                            attribute: ''
+                                            children: []
+                                          - type: 'NONTERMINAL'
+                                            subtype: 'Variable'
+                                            value: ''
+                                            attribute: ''
+                                            children:
+                                              - type: 'NONTERMINAL'
+                                                subtype: 'Identifier'
+                                                value: ''
+                                                attribute: ''
+                                                children:
+                                                  - type: 'TOKEN'
+                                                    subtype: 'name'
+                                                    value: 'x'
+                                                    attribute: ''
+                                                    children: []
+                                  - type: 'TOKEN'
+                                    subtype: 'END_IF'
+                                    value: 'END_IF'
+                                    attribute: ''
+                                    children: []
+                          - type: 'TOKEN'
+                            subtype: 'END_FOR'
+                            value: 'END_FOR'
+                            attribute: ''
+                            children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Comment'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'commenttext'
+                        value: '// Конец внутреннего цикла по y'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'END_FOR'
+                value: 'END_FOR'
+                attribute: ''
+                children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Comment'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'commenttext'
+            value: '// Конец внешнего цикла по x'
+            attribute: ''
+            children: []
