@@ -31,10 +31,12 @@ class Token(IYamlMedia):
                  value: str = None,
                  line: int = None,
                  column: int = None,
-                 evaln: IAttrEval = IdentityEval()):
+                 evaln: IAttrEval = IdentityEval(),
+                 terminalType: str = None,
+                 str_value: str = None):
 
-        self.terminalType: str = None
-        self.str: str = None
+        self.terminalType: str = terminalType
+        self.str: str = str_value
 
         self.token_type = token_type
         """Тип токена берем из грамматики."""
