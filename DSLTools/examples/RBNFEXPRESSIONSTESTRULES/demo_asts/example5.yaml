@@ -1,0 +1,115 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: ''
+children:
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Loop'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'LB'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'WHILE'
+                value: 'WHILE'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Expression'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'exprtext'
+                    value: '$b \neq 0$'
+                    attribute: ''
+                    children: []
+              - type: 'TOKEN'
+                subtype: 'DO'
+                value: 'DO'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Expression'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'exprtext'
+                        value: '$temp \gets b$'
+                        attribute: ''
+                        children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Expression'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'exprtext'
+                        value: '$b \gets a \bmod b$'
+                        attribute: ''
+                        children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Expression'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'exprtext'
+                        value: '$a \gets temp$'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'END_WHILE'
+                value: 'END_WHILE'
+                attribute: ''
+                children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Return'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'RETURN'
+            value: 'RETURN'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Expression'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'exprtext'
+                value: '$a$'
+                attribute: ''
+                children: []

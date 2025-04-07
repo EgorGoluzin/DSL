@@ -87,6 +87,7 @@ def main():
     ## Пример с псевдокодом. Просто эти строчки можно раскоментить
     json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
     directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
+    file_name = "example4"
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     # print(config)
@@ -100,37 +101,42 @@ def main():
     # Шаг 4: Генерация dsl_info.py
     # generate_dsl_info(go=go, dest=directory_to_save)
     scanner = DefaultScanner(go)
-    #
-    with open(directory_to_save/pathlib.Path("test.smpl")) as f:
+    # test.smpl
+    with open(directory_to_save/pathlib.Path(f"demo_samples/{file_name}.smpl")) as f:
         input_str = f.read()
     #
 
     res = scanner.tokenize(input_str)
     with open('tokens.yaml', 'w') as file:
         file.write(Tokens(res).to_yaml())
-    afterscanner = TokenPostProcessingManager([
-        ExprEvalMatch(), ExprEvalAttrs()
-    ])
-
+    # afterscanner = TokenPostProcessingManager([
+    #     ExprEvalMatch(), ExprEvalAttrs()
+    # ])
+    #
     # res = afterscanner.execute(res)
 
-    with open('post_token.yaml', 'w') as file:
+    with open('post_token_pseco.yaml', 'w') as file:
         file.write(Tokens(res).to_yaml())
 
     print("\n".join([item.__repr__() for item in res]))
-    print(go)
     builder = DefaultAstBuilder()
-    ast = builder.build(go, res).attach_evaluators(evaluators)
-    with open('ast_before.yaml', 'w') as file:
+    ast = builder.build(go, res)
+    with open(directory_to_save/pathlib.Path(f"demo_asts/{file_name}.yaml"), 'w') as file:
         file.write(ast.to_yaml())
-    result = ast.evaluated()
-
-    with open('ast_after.yaml', 'w') as file:
-        file.write(ast.to_yaml())
-    print(result)
-
-    rte = ReToExpression()
-    print(f"Translated output: {rte.translate(ast)}")
+    # LD               ::= 'FOR' Expression 'DO' Block 'END_FOR';
+    # print(ast)
+    # ast = ast.attach_evaluators(evaluators)
+    #
+    # with open('ast_before.yaml', 'w') as file:
+    #     file.write(ast.to_yaml())
+    # result = ast.evaluated()
+    #
+    # with open('ast_after.yaml', 'w') as file:
+    #     file.write(ast.to_yaml())
+    # print(result)
+    #
+    # rte = ReToExpression()
+    # print(f"Translated output: {rte.translate(ast)}")
 
     #
     # # Шаг 6: Основной пайплайн обработки
