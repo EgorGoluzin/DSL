@@ -82,11 +82,11 @@ evaluators = {
 def main():
     # Шаг 1: Парсинг аргументов
     ## Пример с экспрешеном. Просто эти строчки можно закоментить
-    json_path = fr"{PROJECT_ROOT}\examples\expressions\metainfo.json"
-    directory_to_save = fr"{PROJECT_ROOT}\examples\expressions"
+    # json_path = fr"{PROJECT_ROOT}\examples\expressions\metainfo.json"
+    # directory_to_save = fr"{PROJECT_ROOT}\examples\expressions"
     ## Пример с псевдокодом. Просто эти строчки можно раскоментить
-    # json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
-    # directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
+    json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
+    directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     # print(config)
@@ -112,7 +112,7 @@ def main():
         ExprEvalMatch(), ExprEvalAttrs()
     ])
 
-    res = afterscanner.execute(res)
+    # res = afterscanner.execute(res)
 
     with open('post_token.yaml', 'w') as file:
         file.write(Tokens(res).to_yaml())
