@@ -1,0 +1,4 @@
+PROGRAM
+INPUT $x$
+x : $x * 2$
+OUTPUT $x$

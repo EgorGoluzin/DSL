@@ -1,0 +1,3 @@
+PROGRAM
+z : $5$
+YIELD $z$

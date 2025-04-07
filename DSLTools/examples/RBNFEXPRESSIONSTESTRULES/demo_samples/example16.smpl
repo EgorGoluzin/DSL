@@ -1,0 +1,8 @@
+// Loop with NEXT FOR
+PROGRAM
+FOR i IN A DO
+IF $i = 0$ THEN
+NEXT FOR $i$
+END_IF
+OUTPUT $i$
+END_FOR

@@ -1,0 +1,3 @@
+PROGRAM
+CALL(x, y)
+z : $x + y$

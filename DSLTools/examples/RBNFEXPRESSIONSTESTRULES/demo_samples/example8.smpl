@@ -1,0 +1,8 @@
+// Simple iterator
+PROGRAM
+ITER I(n)
+n : $n + 1$
+YIELD $n$
+END_ITER
+
+I(2)

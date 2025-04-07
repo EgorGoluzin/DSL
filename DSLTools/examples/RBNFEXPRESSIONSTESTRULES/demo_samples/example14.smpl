@@ -1,0 +1,5 @@
+// Return sum of two vars
+PROGRAM
+x : $3$
+y : $4$
+RETURN $x + y$

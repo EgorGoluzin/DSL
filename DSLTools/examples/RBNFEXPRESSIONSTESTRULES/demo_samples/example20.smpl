@@ -1,0 +1,5 @@
+PROGRAM
+REPEAT
+x : $x - 1$
+OUTPUT $x$
+UNTIL $x = 0$
