@@ -61,10 +61,10 @@ AXIOM:
 
 RULES:
     Program          ::= { Block };
-    Block       ::=  Assignment | Conditional | Expression | Loop | FuncDecl | ProcDecl | IterDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor;
+    Block       ::=  Assignment | Conditional | Expression | Loop | FunctionDecl | ProcDecl | IteratorDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor;
     Expression       ::= exprtext;
     FunctionCall     ::= Identifier '(' [ Arguments ] ')';
-    Arguments        ::= { Expression # ',' };
+    Arguments        ::= { Variable # ',' };
     Parameters       ::= { Variable # ','};
     Range            ::= 'FROM' Number 'TO' Number;
     Set              ::= Identifier | Range;

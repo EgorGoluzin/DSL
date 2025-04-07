@@ -1,6 +1,6 @@
 digraph Arguments {
   start [label="Arguments" shape=plaintext];
-  A [label="Expression" shape=box];
+  A [label="Variable" shape=box];
   B [label="," shape=oval];
   end [label="" shape=point];
   start -> A;

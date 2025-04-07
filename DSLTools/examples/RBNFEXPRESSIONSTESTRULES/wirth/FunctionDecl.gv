@@ -5,12 +5,18 @@ digraph FunctionDecl {
   C [label="(" shape=oval];
   D [label=")" shape=oval];
   E [label="Parameters" shape=box];
+  F [label="Block" shape=box];
+  G [label="Return" shape=box];
+  H [label="END_FUNC" shape=oval];
   end [label="" shape=point];
   start -> A;
   A -> B;
   B -> C;
   C -> E;
   C -> D;
-  D -> end;
+  D -> F;
   E -> D;
+  F -> G;
+  G -> H;
+  H -> end;
 }

@@ -79,6 +79,8 @@ class DefaultAstBuilder(IAstBuilder):
                 )
                 continue
             elif NodeType.NONTERMINAL == rule[0].type:
+                # if pos < self.end:
+                #     self._log(f'Pos: {pos}, Ruletype: {rule[0].type}, nonterminal: {rule[0].nonterminal}, token: {self.tokens[pos]}')
                 if rule[0].nonterminal not in self.go.syntax_info:
                     raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info}")
                 self.states.append(

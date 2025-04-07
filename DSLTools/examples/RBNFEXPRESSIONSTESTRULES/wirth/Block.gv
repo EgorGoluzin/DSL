@@ -15,7 +15,9 @@ digraph Block {
   M [label="Expression" shape=box];
   N [label="Conditional" shape=box];
   O [label="Assignment" shape=box];
+  P [label="FunctionCall" shape=box];
   end [label="" shape=point];
+  start -> P;
   start -> O;
   start -> N;
   start -> M;
@@ -46,4 +48,5 @@ digraph Block {
   M -> end;
   N -> end;
   O -> end;
+  P -> end;
 }
