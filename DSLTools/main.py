@@ -61,6 +61,15 @@ class KeyEval(ASTNode.IAttrEval):
         return value
 
 
+class ProgramEval(ASTNode.IAttrEval):
+    def __init__(self, name: str):
+        self.name = name
+
+    def __call__(self, value, children):
+        print(f'ProgramEval name: {self.name = }')
+        return self.name
+
+
 expressions_eval = ExpressionsEval()
 expression_eval = ExpressionEval()
 term_eval = TermEval()
@@ -87,7 +96,8 @@ def main():
     ## Пример с псевдокодом. Просто эти строчки можно раскоментить
     json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
     directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
-    file_name = "example6"
+    unhappy_files = []
+    
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     # print(config)
@@ -98,31 +108,47 @@ def main():
     go = parser.parse(mo)
     go.upload(pathlib.Path(fr"{directory_to_save}\wirth"))
     print(go)
-    # Шаг 4: Генерация dsl_info.py
-    # generate_dsl_info(go=go, dest=directory_to_save)
-    scanner = DefaultScanner(go)
-    # test.smpl
-    with open(directory_to_save/pathlib.Path(f"demo_samples/{file_name}.smpl")) as f:
-        input_str = f.read()
-    #
+    for i in range(6, 21):
+        file_name = f"example{i}"
+        # Шаг 4: Генерация dsl_info.py
+        # generate_dsl_info(go=go, dest=directory_to_save)
+        scanner = DefaultScanner(go)
+        # test.smpl
+        with open(directory_to_save/pathlib.Path(f"demo_samples/{file_name}.smpl")) as f:
+            input_str = f.read()
+        #
 
-    res = scanner.tokenize(input_str)
-    with open('tokens.yaml', 'w') as file:
-        file.write(Tokens(res).to_yaml())
-    # afterscanner = TokenPostProcessingManager([
-    #     ExprEvalMatch(), ExprEvalAttrs()
-    # ])
-    #
-    # res = afterscanner.execute(res)
+        res = scanner.tokenize(input_str)
+        with open('tokens.yaml', 'w') as file:
+            file.write(Tokens(res).to_yaml())
+        # afterscanner = TokenPostProcessingManager([
+        #     ExprEvalMatch(), ExprEvalAttrs()
+        # ])
+        #
+        # res = afterscanner.execute(res)
 
-    with open('post_token_pseco.yaml', 'w') as file:
-        file.write(Tokens(res).to_yaml())
+        with open('post_token_pseco.yaml', 'w') as file:
+            file.write(Tokens(res).to_yaml())
 
-    print("\n".join([item.__repr__() for item in res]))
-    builder = DefaultAstBuilder()
-    ast = builder.build(go, res)
-    with open(directory_to_save/pathlib.Path(f"demo_asts/{file_name}.yaml"), 'w') as file:
-        file.write(ast.to_yaml())
+        print("\n".join([item.__repr__() for item in res]))
+        builder = DefaultAstBuilder()
+        try:
+            ast = builder.build(go, res).attach_evaluators({
+                (ASTNode.Type.NONTERMINAL, 'Program'): ProgramEval(file_name)
+            })
+            _ = ast.evaluated()
+            with open(directory_to_save/pathlib.Path(f"demo_asts/{file_name}.yaml"), 'w') as file:
+                file.write(ast.to_yaml())
+            print(f'Finished for {i = }')
+        except Exception as e:
+            unhappy_files.append({
+                'File': file_name,
+                'Message': str(e)
+            })
+    for info in unhappy_files:
+        print(f"File: {info['File']}")
+        print(f"Message: {info['Message']}")
+        print('-' * 20)
     # LD               ::= 'FOR' Expression 'DO' Block 'END_FOR';
     # print(ast)
     # ast = ast.attach_evaluators(evaluators)

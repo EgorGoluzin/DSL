@@ -1,4 +1,3 @@
-PROGRAM
 ARRAY $10$ OF T
 a : $5$
 OUTPUT $a$

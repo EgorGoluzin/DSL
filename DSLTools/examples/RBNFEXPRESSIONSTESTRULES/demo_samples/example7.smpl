@@ -1,4 +1,3 @@
-PROGRAM
 PROC p(x)
 x : $x * 2$
 OUTPUT $x$

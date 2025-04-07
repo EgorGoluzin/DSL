@@ -1,5 +1,4 @@
 // Function with return
-PROGRAM
 FUNC f(a, b)
 c : $a + b$
 RETURN $c$

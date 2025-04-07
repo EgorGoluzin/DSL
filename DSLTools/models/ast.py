@@ -111,6 +111,7 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
         self, evals: dict[tuple[Type, str], IAttrEval]
     ) -> TASTNode:
         key = (self.type, self.subtype)
+        # print(f'{key = }, {key in evals}, {evals = }')
         if key in evals:
             # print(f'Found {key}')
             self.evaluation = evals[key]

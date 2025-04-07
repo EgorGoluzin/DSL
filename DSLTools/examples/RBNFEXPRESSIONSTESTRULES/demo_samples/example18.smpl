@@ -1,4 +1,3 @@
 // Apply function
-PROGRAM
 f(a, b)
 RETURN $a * b$

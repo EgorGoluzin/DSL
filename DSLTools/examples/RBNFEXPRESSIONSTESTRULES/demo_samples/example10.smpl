@@ -1,5 +1,4 @@
 // Example with GOTO
-PROGRAM
 x : $1$
 GOTO L1
 x : $0$ // skipped

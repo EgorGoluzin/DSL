@@ -1,0 +1,180 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: 'example16'
+children:
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Comment'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'commenttext'
+            value: '// Loop with NEXT FOR'
+            attribute: ''
+            children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Loop'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'LS'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'FOR'
+                value: 'FOR'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Variable'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'name'
+                        value: 'i'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'IN'
+                value: 'IN'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Set'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'name'
+                        value: 'A'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'DO'
+                value: 'DO'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Conditional'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'IF'
+                        value: 'IF'
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Expression'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'TOKEN'
+                            subtype: 'exprtext'
+                            value: '$i = 0$'
+                            attribute: ''
+                            children: []
+                      - type: 'TOKEN'
+                        subtype: 'THEN'
+                        value: 'THEN'
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Block'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'NONTERMINAL'
+                            subtype: 'NextFor'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'TOKEN'
+                                subtype: 'NEXT'
+                                value: 'NEXT'
+                                attribute: ''
+                                children: []
+                              - type: 'TOKEN'
+                                subtype: 'FOR'
+                                value: 'FOR'
+                                attribute: ''
+                                children: []
+                              - type: 'NONTERMINAL'
+                                subtype: 'Variable'
+                                value: ''
+                                attribute: ''
+                                children:
+                                  - type: 'NONTERMINAL'
+                                    subtype: 'Identifier'
+                                    value: ''
+                                    attribute: ''
+                                    children:
+                                      - type: 'TOKEN'
+                                        subtype: 'exprtext'
+                                        value: '$i$'
+                                        attribute: ''
+                                        children: []
+                      - type: 'TOKEN'
+                        subtype: 'END_IF'
+                        value: 'END_IF'
+                        attribute: ''
+                        children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Output'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'OUTPUT'
+                        value: 'OUTPUT'
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Expression'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'TOKEN'
+                            subtype: 'exprtext'
+                            value: '$i$'
+                            attribute: ''
+                            children: []
+              - type: 'TOKEN'
+                subtype: 'END_FOR'
+                value: 'END_FOR'
+                attribute: ''
+                children: []

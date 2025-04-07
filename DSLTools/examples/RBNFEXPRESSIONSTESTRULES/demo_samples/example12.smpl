@@ -1,5 +1,4 @@
 // Structure with fields
-PROGRAM
 STRUCT Point {
 x : A
 y : B
