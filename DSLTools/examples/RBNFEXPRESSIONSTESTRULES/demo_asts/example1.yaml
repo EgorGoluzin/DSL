@@ -1,7 +1,7 @@
 type: 'NONTERMINAL'
 subtype: 'Program'
 value: ''
-attribute: ''
+attribute: 'example1'
 children:
   - type: 'NONTERMINAL'
     subtype: 'Block'
