@@ -87,7 +87,7 @@ def main():
     ## Пример с псевдокодом. Просто эти строчки можно раскоментить
     json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
     directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
-    file_name = "example4"
+    file_name = "example6"
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     # print(config)

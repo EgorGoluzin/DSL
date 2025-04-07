@@ -35,6 +35,7 @@ class DefaultAstBuilder(IAstBuilder):
         self.tokens: list[Token] = []
         self.end: int = 0
         self.axiom: str = ''
+        self._debug = True
 
     def __ret(self):
         # print('States:')
