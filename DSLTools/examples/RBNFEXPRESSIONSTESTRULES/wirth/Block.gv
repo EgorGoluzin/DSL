@@ -16,7 +16,9 @@ digraph Block {
   N [label="Conditional" shape=box];
   O [label="Assignment" shape=box];
   P [label="FunctionCall" shape=box];
+  Q [label="ProcDecl" shape=box];
   end [label="" shape=point];
+  start -> Q;
   start -> P;
   start -> O;
   start -> N;
@@ -49,4 +51,5 @@ digraph Block {
   N -> end;
   O -> end;
   P -> end;
+  Q -> end;
 }

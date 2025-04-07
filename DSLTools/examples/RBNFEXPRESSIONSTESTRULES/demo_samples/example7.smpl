@@ -3,4 +3,4 @@ x : $x * 2$
 OUTPUT $x$
 END_PROC
 
-p(5)
+p($5$)

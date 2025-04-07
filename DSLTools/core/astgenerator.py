@@ -181,9 +181,9 @@ class DefaultAstBuilder(IAstBuilder):
         return ast
 
     def _log(self, message: str):
-        """Логирование процесса парсинга"""
+        """Логирование процесса построения"""
         if self._debug:
-            print(f"[Parser] {message}")
+            print(f"[Builder] {message}")
 
 
 class DefaultAstRenderer(IAstRender):
