@@ -1,0 +1,11 @@
+diagraph Rule {
+    start [label = "Rule" shape = plaintext];
+    end [label = "" shape = point];
+    A [label = "name" shape = box];
+    B [label = "::=" shape = oval];
+    C [label = "sequence" shape = box];
+    start -> A;
+    A -> B;
+    B -> C;
+    C -> end;
+}

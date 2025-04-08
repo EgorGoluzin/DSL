@@ -1,0 +1,15 @@
+diagraph Iteration {
+    start [label = "Iteration" shape = plaintext];
+    end [label = "" shape = point];
+    A [label = "{" shape = oval];
+    B [label = "Sequence" shape = box];
+    C [label = "#" shape = oval];
+    D [label = "key_name" shape = box];
+    E [label = "}" shape = oval];
+    start -> A;
+    A -> B;
+    B -> C;
+    C -> D;
+    D -> E;
+    E -> end;
+}
