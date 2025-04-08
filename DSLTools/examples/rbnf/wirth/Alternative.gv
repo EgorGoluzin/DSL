@@ -1,17 +1,13 @@
 digraph Alternative {
     start [label="Alternative" shape=plaintext];
     A [label="RuleElement" shape=box];
-    B [label="{" shape=oval];
-    C [label="|" shape=oval];
-    D [label="#" shape=oval];
-    E [label="RuleElement" shape=box];
-    F [label="}" shape=oval];
+    B [label="|" shape=oval];
+    D [label="RuleElement" shape=box];
     end [label="" shape=point];
     start -> A;
+    A -> end;
     A -> B;
-    B -> C;
-    C -> D;
-    D -> E;
-    E -> F;
-    F -> end;
+    B -> D;
+    D -> B;
+    D -> end;
 }

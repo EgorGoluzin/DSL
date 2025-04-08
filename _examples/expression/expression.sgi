@@ -3,7 +3,7 @@ TERMINALS:
     operation ::= '[\+\*]';
     terminator ::= ','.
 
-KEYS: '+'; '*'; ','.
+KEYS: '+'; '*'; ','; '='.
 
 NONTERMINALS:
     EXPRESSIONS;

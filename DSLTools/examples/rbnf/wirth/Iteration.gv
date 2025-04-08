@@ -1,15 +1,17 @@
 digraph Iteration {
     start [label = "Iteration" shape = plaintext];
     end [label = "" shape = point];
-    A [label = "{" shape = oval];
-    B [label = "Sequence" shape = box];
-    C [label = "#" shape = oval];
-    D [label = "key_name" shape = box];
-    E [label = "}" shape = oval];
-    start -> A;
+    A [label = "Sequence" shape = box];
+    B [label = "#" shape = oval];
+    C [label = "key_name" shape = box];
+    E [label = "{" shape = oval];
+    F [label = "}" shape = oval];
+    start -> E;
+    start -> end;
+    E -> A;
     A -> B;
     B -> C;
-    C -> D;
-    D -> E;
-    E -> end;
+    C -> F;
+    C -> A;
+    F -> end;
 }

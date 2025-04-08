@@ -2,16 +2,7 @@ digraph Sequence {
     start [label = "Sequence" shape = plaintext];
     end [label = "" shape = point];
     A [label = "RuleElement" shape = box];
-    AA [label = "RuleElement" shape = box];
-    B [label = "{" shape = oval];
-    C [label = "[" shape = oval];
-    D [label = "]" shape = oval];
-    E [label = "}" shape = oval];
     start -> A;
-    A -> B;
-    B -> C;
-    C -> AA;
-    AA -> D;
-    D -> E;
-    E -> end;
+    A -> A;
+    A -> end;
 }

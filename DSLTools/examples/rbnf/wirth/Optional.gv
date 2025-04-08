@@ -1,11 +1,12 @@
 digraph Optional {
     start [label = "Group" shape = plaintext];
     end [label = "" shape = point];
-    A [label = "[" shape = oval];
-    B [label = "Sequence" shape = box];
+    A [label = "Sequence" shape = box];
+    B [label = "[" shape = oval];
     C [label = "]" shape = oval];
-    start -> A;
-    A -> B;
-    B -> C;
+    start -> B;
+    start -> end;
+    B -> A;
+    A -> C
     C -> end;
 }
