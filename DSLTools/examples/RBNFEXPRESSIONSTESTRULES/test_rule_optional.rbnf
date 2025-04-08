@@ -24,8 +24,8 @@ KEYS:
     'END_FUNC';
     'PROC';
     'END_PROC';
-    'ITERATOR';
-    'END_ITERATOR';
+    'ITER';
+    'END_ITER';
     'INPUT';
     'OUTPUT';
     'GOTO';

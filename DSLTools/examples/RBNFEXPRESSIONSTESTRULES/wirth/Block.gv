@@ -17,7 +17,9 @@ digraph Block {
   O [label="Assignment" shape=box];
   P [label="FunctionCall" shape=box];
   Q [label="ProcDecl" shape=box];
+  R [label="IteratorDecl" shape=box];
   end [label="" shape=point];
+  start -> R;
   start -> Q;
   start -> P;
   start -> O;
@@ -52,4 +54,5 @@ digraph Block {
   O -> end;
   P -> end;
   Q -> end;
+  R -> end;
 }
