@@ -1,4 +1,4 @@
-diagraph Sequence {
+digraph Sequence {
     start [label = "Sequence" shape = plaintext];
     end [label = "" shape = point];
     A [label = "RuleElement" shape = box];

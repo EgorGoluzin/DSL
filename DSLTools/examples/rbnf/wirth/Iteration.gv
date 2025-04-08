@@ -1,4 +1,4 @@
-diagraph Iteration {
+digraph Iteration {
     start [label = "Iteration" shape = plaintext];
     end [label = "" shape = point];
     A [label = "{" shape = oval];

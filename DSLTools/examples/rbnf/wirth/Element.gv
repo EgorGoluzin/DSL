@@ -1,4 +1,4 @@
-diagraph Element {
+digraph Element {
     start [label = "Element" shape = plaintext];
     end [label = "" shape = point];
     A [label = "name" shape = box];

@@ -203,10 +203,7 @@ def main():
 
     # diagrams = convert_rules_to_diagrams(go.rules)
 
-    # for name, diagram in diagrams.items():
-    #     cur_path = fr"{directory_to_save}\wirthN\{name}.gv"
-    #     generate_file(generate_dot(diagram), pathlib.Path(cur_path))
-    #     render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpngN")
+
 
 
 if __name__ == "__main__":

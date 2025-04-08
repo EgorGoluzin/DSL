@@ -1,4 +1,4 @@
-diagraph RuleElement {
+digraph RuleElement {
     start [label = "RuleElement" shape = plaintext];
     end [label = "" shape = point];
     A [label = "Element" shape = box];

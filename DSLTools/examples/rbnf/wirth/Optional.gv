@@ -1,4 +1,4 @@
-diagraph Optional {
+digraph Optional {
     start [label = "Group" shape = plaintext];
     end [label = "" shape = point];
     A [label = "[" shape = oval];
