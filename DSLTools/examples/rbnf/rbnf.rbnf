@@ -7,7 +7,7 @@ TERMINALS:
 
 KEYS:
     'TERMINALS'; 'KEYS'; 'NONTERMINALS'; 'AXIOM'; 'RULES'; 'ERRORS';
-    ':'; ';'; '::='; '#'; '('; ')' '[' ; ']'; '{' ; '}'; '|'.
+    ':'; ';'; '::='; '#'; '('; ')' '[' ; ']'; '{' ; '}'; '|'; '.'.
 
 NONTERMINALS:
     Grammar; TerminalsBlock; KeysBlock; NonterminalsBlock;
@@ -17,17 +17,17 @@ AXIOM: Grammar.
 
 RULES:
     Grammar          ::= TerminalsBlock KeysBlock NonterminalsBlock AxiomBlock RulesBlock;
-    TerminalsBlock   ::= 'TERMINALS' ':' {Terminal ';'};
-    KeysBlock        ::= 'KEYS' ':' {key_name ';'};
-    NonterminalsBlock::= 'NONTERMINALS' ':' {name ';'};
-    AxiomBlock       ::= 'AXIOM' ':' name ';';
-    Terminal         ::= name '::=' regular_expression ';';
-    RulesBlock       ::= 'RULES' ':' {Rule ';'};
+    TerminalsBlock   ::= 'TERMINALS' ':' {Terminal # ';'} '.';
+    KeysBlock        ::= 'KEYS' ':' {key_name # ';'} '.';
+    NonterminalsBlock::= 'NONTERMINALS' ':' {name # ';'} '.';
+    AxiomBlock       ::= 'AXIOM' ':' name '.';
+    Terminal         ::= name '::=' regular_expression;
+    RulesBlock       ::= 'RULES' ':' {Rule # ';'} '.';
     Rule             ::= name '::=' Sequence;
     Sequence         ::= RuleElement { [ RuleElement ] };
     RuleElement      ::= Element | Group | Optional | Iteration | Alternative;
-    Element          ::= name | key_name
+    Element          ::= name | key_name;
     Group            ::= '(' Sequence ')';
     Optional         ::= '[' Sequence ']';
-    Iteration        ::= '{' Sequence '#' key_name'}';
-    Alternative      ::= RuleElement {'|' # RuleElement}.
+    Iteration        ::= '{' Sequence ['#' key_name'] }';
+    Alternative      ::= {RuleElement # '|'}.
