@@ -7,11 +7,11 @@ digraph Iteration {
     E [label = "{" shape = oval];
     F [label = "}" shape = oval];
     start -> E;
-    start -> end;
     E -> A;
     A -> B;
     B -> C;
     C -> F;
     C -> A;
+    A -> F;
     F -> end;
 }

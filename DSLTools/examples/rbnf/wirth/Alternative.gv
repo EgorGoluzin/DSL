@@ -2,12 +2,10 @@ digraph Alternative {
     start [label="Alternative" shape=plaintext];
     A [label="RuleElement" shape=box];
     B [label="|" shape=oval];
-    D [label="RuleElement" shape=box];
     end [label="" shape=point];
     start -> A;
-    A -> end;
     A -> B;
-    B -> D;
-    D -> B;
-    D -> end;
+    A -> end;
+    B -> A;
+    B -> end;
 }
