@@ -61,10 +61,14 @@ class DefaultAstBuilder(IAstBuilder):
             # print(f'Depleted depth by 1 in RET, now {self.depth = }')
             if len(self.states) == 0:
                 print(self.__ast)
-                self._log_ret(f'Current token: {self.tokens[snap[-1].pos].repr()}')
+                error = f'Current token: {self.tokens[snap[-1].pos].repr()}\r\n'
+                self._log_ret(error)
+                error += 'States to crash:\r\n'
                 for step in snap:
-                    self._log_ret(str(step))
-                raise Exception("Ran out of states")
+                    info = str(step)
+                    error += f'{info}\r\n'
+                    self._log_ret(info)
+                raise Exception(f"Ran out of states: \r\n{error}")
             self.states[-1].rule_index += 1
 
     def __walk(self):
@@ -116,7 +120,7 @@ class DefaultAstBuilder(IAstBuilder):
                 self._print_last_log()
                     # self._log_walk(f'Pos: {pos}, {rule[0].type} branch, Rule for: {rule[0].nonterminal}, token: {self.tokens[pos].repr()}')
                 if rule[0].nonterminal not in self.go.syntax_info:
-                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info}")
+                    raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info}\r\nCurrent token: {self.tokens[pos].repr()}")
                 self.states.append(
                     WalkStep(
                         state,
