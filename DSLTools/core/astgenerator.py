@@ -20,13 +20,15 @@ class WalkStep:
         pos: int = 0,
         node: NodeLegacy = [],
         rule_index: int = 0,
-        nonterm: str = ''
+        nonterm: str = '',
+        depth: int = -1,
     ):
         self.parent_state = parent_state
         self.pos = pos
         self.node = node
         self.rule_index = rule_index
         self.nonterm = nonterm
+        self.depth = depth
 
     def __str__(self):
         return self.__repr__()
@@ -44,14 +46,19 @@ class DefaultAstBuilder(IAstBuilder):
         self.axiom: str = ''
         self._debug = True
         self.__logs: list[str] = []
+        self.depth: int = 0
 
     def __ret(self):
         # print('States:')
         # print(self.states)
         snap = deepcopy(self.states)
         self.states[-1].rule_index += 1
+        # print(f'Init last state: {self.states[-1].nonterm}')
         while self.states[-1].rule_index >= len(self.states[-1].node.nextNodes):
             self.states.pop()
+            # print(f'New last state: {self.states[-1].nonterm}')
+            self.depth -= 1
+            # print(f'Depleted depth by 1 in RET, now {self.depth = }')
             if len(self.states) == 0:
                 print(self.__ast)
                 self._log_ret(f'Current token: {self.tokens[snap[-1].pos].repr()}')
@@ -63,36 +70,51 @@ class DefaultAstBuilder(IAstBuilder):
     def __walk(self):
         self.states = [
             WalkStep(
-                node=self.go.syntax_info[self.axiom], nonterm=self.axiom
+                node=self.go.syntax_info[self.axiom], nonterm=self.axiom,
+                depth=0
             )
         ]
         while True:
             state = self.states[-1]
             pos = state.pos
             node = state.node
+            depth = state.depth
             rule = node.nextNodes[state.rule_index]
+            # print(f'{state.nonterm = }, {rule[0].type.value}, {rule[0].nonterminal = }, {rule[0].terminal = }, {rule[0].str = }')
 
             if NodeType.END == rule[0].type:
+                self._walk_details(pos, depth, rule[0].type.value, rule[0].nonterminal)
+                self._print_last_log()
                 parent_state = state.parent_state
+                self.depth -= 1
+                # print(f'Depleted depth by 1 in END, now {self.depth = }')
                 if parent_state is None:
                     if pos == self.end:
                         return
                     else:
+                        # print(f'{parent_state.nonterm = }')
                         self.__ret()
                         continue
+                # print(f'{parent_state.nonterm = }')
+                if parent_state.parent_state is not None:
+                    None
+                    # print(f'{parent_state.parent_state.nonterm = }')
+                # self.depth -= 1
                 self.states.append(
                     WalkStep(
                         parent_state.parent_state,
                         pos,
                         parent_state.node.nextNodes[parent_state.rule_index][0],
                         0,
-                        parent_state.nonterm
+                        parent_state.nonterm,
+                        parent_state.parent_state.depth if parent_state.parent_state else 0
                     )
                 )
                 continue
             elif NodeType.NONTERMINAL == rule[0].type:
-                if pos < self.end:
-                    self._log(f'Pos: {pos}, Rule for: {rule[0].nonterminal}, token: {self.tokens[pos]}')
+                self._walk_details(pos, depth, rule[0].type.value, rule[0].nonterminal)
+                self._print_last_log()
+                    # self._log_walk(f'Pos: {pos}, {rule[0].type} branch, Rule for: {rule[0].nonterminal}, token: {self.tokens[pos].repr()}')
                 if rule[0].nonterminal not in self.go.syntax_info:
                     raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info}")
                 self.states.append(
@@ -101,36 +123,49 @@ class DefaultAstBuilder(IAstBuilder):
                         pos,
                         self.go.syntax_info[rule[0].nonterminal],
                         0,
-                        rule[0].nonterminal
+                        rule[0].nonterminal,
+                        depth + 1
                     )
                 )
+                self.depth += 1
                 continue
             if pos >= self.end:
                 self.__ret()
                 continue
             new_token = self.tokens[pos]
             if NodeType.KEY == rule[0].type and Token.Type.KEY == new_token.token_type and new_token.str == rule[0].str:
+                self._walk_details(pos, depth, rule[0].type.value, rule[0].str)
+                # print(f'Current nonterm for this terminal: {state.nonterm}')
+                self._print_last_log()
                 self.states.append(
                     WalkStep(
                         state.parent_state,
                         pos + 1,
                         rule[0],
                         0,
-                        state.nonterm
+                        state.nonterm,
+                        state.depth
                     )
                 )
+                # self.depth -= 1
                 continue
             elif NodeType.TERMINAL == rule[0].type and Token.Type.TERMINAL == new_token.token_type and new_token.terminalType == rule[0].terminal:
+                self._walk_details(pos, depth, rule[0].type.value, rule[0].terminal)
+                self._print_last_log()
+                # print(f'Current nonterm for this terminal: {state.nonterm}')
                 self.states.append(
                     WalkStep(
                         state.parent_state,
                         pos + 1,
                         rule[0],
                         0,
-                        state.nonterm
+                        state.nonterm,
+                        state.depth
                     )
                 )
+                self.depth -= 1
                 continue
+            # print(f'Reached type mismatch on {pos = }, {state.nonterm = }')
             self.__ret()
             continue
 
@@ -203,10 +238,18 @@ class DefaultAstBuilder(IAstBuilder):
         if self._debug:
             built = f'[Builder.{method}] {msg}'
             self.__logs.append(built)
-            print(built)
+            # print(built)
+
+    def _print_last_log(self):
+        if self.__logs:
+            print(self.__logs[-1])
 
     def _log_walk(self, msg: str):
         self._log_method('walk', msg)
+
+    def _walk_details(self, pos: int, depth: int, branch: str, val: str):
+        if pos < self.end:
+            self._log_walk(f'{pos = }, {depth = }, {branch = }, rule for: {val}, token: {self.tokens[pos].repr()}')
 
     def _log_build(self, msg: str):
         self._log_method('build', msg)

@@ -65,7 +65,7 @@ class Token(IYamlMedia):
 
     def repr(self) -> str:
         res = 'Token: '
-        res += f'terminal = {self.terminalType}' if self.token_type == self.Type.TERMINAL else f'key = {self.value}'
+        res += f'terminal = {self.terminalType}, value = {self.value}' if self.token_type == self.Type.TERMINAL else f'key = {self.value}'
         res += '; '
         return res + f'pos = (l: {self.line}, c: {self.column})'
 
