@@ -1,6 +1,7 @@
 import re
 from typing import List, TypeVar
 import graphviz
+from copy import deepcopy
 
 from _elementtree import ParseError
 
@@ -27,6 +28,12 @@ class WalkStep:
         self.rule_index = rule_index
         self.nonterm = nonterm
 
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return f'Step: pos = {self.pos}, nonterminal: {self.nonterm}'
+
 
 class DefaultAstBuilder(IAstBuilder):
     def __init__(self):
@@ -36,15 +43,20 @@ class DefaultAstBuilder(IAstBuilder):
         self.end: int = 0
         self.axiom: str = ''
         self._debug = True
+        self.__logs: list[str] = []
 
     def __ret(self):
         # print('States:')
         # print(self.states)
+        snap = deepcopy(self.states)
         self.states[-1].rule_index += 1
         while self.states[-1].rule_index >= len(self.states[-1].node.nextNodes):
             self.states.pop()
             if len(self.states) == 0:
                 print(self.__ast)
+                self._log_ret(f'Current token: {self.tokens[snap[-1].pos].repr()}')
+                for step in snap:
+                    self._log_ret(str(step))
                 raise Exception("Ran out of states")
             self.states[-1].rule_index += 1
 
@@ -80,7 +92,7 @@ class DefaultAstBuilder(IAstBuilder):
                 continue
             elif NodeType.NONTERMINAL == rule[0].type:
                 if pos < self.end:
-                    self._log(f'Pos: {pos}, Ruletype: {rule[0].type}, nonterminal: {rule[0].nonterminal}, token: {self.tokens[pos]}')
+                    self._log(f'Pos: {pos}, Rule for: {rule[0].nonterminal}, token: {self.tokens[pos]}')
                 if rule[0].nonterminal not in self.go.syntax_info:
                     raise Exception(f"Failed to find '{rule[0].nonterminal}' description in {self.go.syntax_info}")
                 self.states.append(
@@ -183,7 +195,27 @@ class DefaultAstBuilder(IAstBuilder):
     def _log(self, message: str):
         """Логирование процесса построения"""
         if self._debug:
-            print(f"[Builder] {message}")
+            built = f"[Builder] {message}"
+            self.__logs.append(built)
+            print(built)
+
+    def _log_method(self, method: str, msg: str):
+        if self._debug:
+            built = f'[Builder.{method}] {msg}'
+            self.__logs.append(built)
+            print(built)
+
+    def _log_walk(self, msg: str):
+        self._log_method('walk', msg)
+
+    def _log_build(self, msg: str):
+        self._log_method('build', msg)
+
+    def _log_ret(self, msg: str):
+        self._log_method('ret', msg)
+
+    def logs(self) -> list[str]:
+        return self.__logs
 
 
 class DefaultAstRenderer(IAstRender):

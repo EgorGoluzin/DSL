@@ -1,6 +1,6 @@
 // Simple iterator
 ITER I(n)
-n : $n + 1$
+n ITER: $n + 1$
 YIELD $n$
 END_ITER
 

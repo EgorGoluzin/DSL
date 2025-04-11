@@ -63,6 +63,12 @@ class Token(IYamlMedia):
     def __repr__(self):
         return f"Token({self.terminalType = }, {self.str = }, {self.token_type = }, '{self.value = }', pos: (l: {self.line}, c: {self.column}), {self.attribute = }"
 
+    def repr(self) -> str:
+        res = 'Token: '
+        res += f'terminal = {self.terminalType}' if self.token_type == self.Type.TERMINAL else f'key = {self.value}'
+        res += '; '
+        return res + f'pos = (l: {self.line}, c: {self.column})'
+
     def to_yaml(self, offset: int = 0) -> YamlString:
         blank = self.__blank(offset)
         yaml = (
