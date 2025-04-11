@@ -11,37 +11,39 @@ class NodeTypeLegacy(str, Enum):
 
 class NodeLegacy:
     """Это старый объект узла правила, который нужно переработать."""
-    def __init__(self, type, str_):
+    def __init__(self, type, str_, nextNodes=None):
 
         self.type = type
         self.str = str_
-        self.nextNodes = []
+        self.nextNodes: list | None = (nextNodes, [])[nextNodes is None]
 
-        self.nonterminal = str | None
+        self.nonterminal: str | None = None
         """Было динамически появляющимся полем, явно его здесь объявил. В случае если нетерминал будет не null."""
-        self.terminal = str | None
+        self.terminal: str | None = None
         """Было динамически появляющимся полем, явно его здесь объявил. В случае если терминал будет не null"""
     
     def __str__(self):
         res = (
-            f"type: {self.type}; " +
-            f'str: {self.str}; ' +
-            f'nonterminal: {self.nonterminal}; ' +
-            f'terminal: {self.terminal}; '
+            "NodeLegacy("
+            f"type= '{self.type}', " +
+            f"str_= '{self.str}', " +
+            f"nonterminal='{self.nonterminal}', " +
+            f"terminal='{self.terminal}', "
         )
-        res += 'nextNodes: ['
+        res += 'nextNodes=['
         for node in self.nextNodes:
             res += f'{node}'
-        return res + ']'
+        return res + '])'
     
     def __repr__(self):
         res = (
-            f"type: {self.type}; " +
-            f'str: {self.str}; ' +
-            f'nonterminal: {self.nonterminal}; ' +
-            f'terminal: {self.terminal}; '
+            "NodeLegacy("
+            f"type= '{self.type}', " +
+            f"str_= '{self.str}', " +
+            f"nonterminal= '{self.nonterminal}', " +
+            f"terminal= '{self.terminal}', "
         )
-        res += 'nextNodes: ['
+        res += 'nextNodes= ['
         for node in self.nextNodes:
             res += f'{node}'
-        return res + ']'
+        return res + '])'
