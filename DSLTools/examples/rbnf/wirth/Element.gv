@@ -1,8 +1,8 @@
 digraph Element {
     start [label = "Element" shape = plaintext];
     end [label = "" shape = point];
-    A [label = "name" shape = box];
-    B [label = "key_name" shape = box];
+    A [label = "name" shape = diamond];
+    B [label = "key_name" shape = diamond];
     start -> A;
     start -> B;
     A -> end;

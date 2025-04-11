@@ -1,7 +1,7 @@
 digraph Rule {
     start [label = "Rule" shape = plaintext];
     end [label = "" shape = point];
-    A [label = "name" shape = box];
+    A [label = "name" shape = diamond];
     B [label = "::=" shape = oval];
     C [label = "sequence" shape = box];
     start -> A;

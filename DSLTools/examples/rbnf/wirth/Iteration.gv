@@ -3,7 +3,7 @@ digraph Iteration {
     end [label = "" shape = point];
     A [label = "Sequence" shape = box];
     B [label = "#" shape = oval];
-    C [label = "key_name" shape = box];
+    C [label = "Sequence" shape = box];
     E [label = "{" shape = oval];
     F [label = "}" shape = oval];
     start -> E;
@@ -11,7 +11,6 @@ digraph Iteration {
     A -> B;
     B -> C;
     C -> F;
-    C -> A;
     A -> F;
     F -> end;
 }

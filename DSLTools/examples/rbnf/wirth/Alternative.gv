@@ -7,5 +7,4 @@ digraph Alternative {
     A -> B;
     A -> end;
     B -> A;
-    B -> end;
 }

@@ -29,5 +29,5 @@ RULES:
     Element          ::= name | key_name;
     Group            ::= '(' Sequence ')';
     Optional         ::= '[' Sequence ']';
-    Iteration        ::= '{' Sequence ['#' key_name'] }';
+    Iteration        ::= '{' Sequence [ '#' Sequence ] '}';
     Alternative      ::= {RuleElement # '|'}.
