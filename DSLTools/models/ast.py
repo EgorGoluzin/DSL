@@ -170,3 +170,17 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
             for child in self.children:
                 yaml += child.to_yaml(offset + 1)
         return yaml
+
+
+class EvaluationRegistry:
+    _evaluators: dict[tuple[ASTNode.Type, str], ASTNode.IAttrEval] = {}
+
+    @classmethod
+    def register(
+        cls, type: ASTNode.Type, subtype: str, evaluation: ASTNode.IAttrEval
+    ):
+        cls._evaluators[(type, subtype)] = evaluation
+
+    @classmethod
+    def evaluation(cls, type: ASTNode.Type, subtype: str) -> ASTNode.IAttrEval:
+        return cls._evaluators.get((type, subtype), ASTNode.IdentityEval())

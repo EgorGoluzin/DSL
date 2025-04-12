@@ -77,6 +77,8 @@ go = GrammarObject(terminals={
 
 scanner = DefaultScanner(go)
 
+# with open(fr'{directory_to_save}\rbnf.rbnf', 'r') as file:
+#     input_str = file.read()
 input_str = "Conditional ::= [ { 'ELSEIF' Expression 'THEN' Block } ];"
 file_name = "ast_conditional"
 res = scanner.tokenize(input_str)
