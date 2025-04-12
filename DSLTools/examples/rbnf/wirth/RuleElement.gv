@@ -5,15 +5,12 @@ digraph RuleElement {
     B [label = "Group" shape = box];
     C [label = "Optional" shape = box];
     D [label = "Iteration" shape = box];
-    E [label = "Alternative" shape = box];
     start -> A;
     start -> B;
     start -> C;
     start -> D;
-    start -> E;
     A -> end;
     B -> end;
     C -> end;
     D -> end;
-    E -> end;
 }

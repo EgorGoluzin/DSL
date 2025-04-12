@@ -77,7 +77,7 @@ go = GrammarObject(terminals={
 
 scanner = DefaultScanner(go)
 
-input_str = "Conditional      ::= 'IF' Expression 'THEN' Block [ { 'ELSEIF' Expression 'THEN' Block } ] [ 'ELSE' Block ] 'END_IF';"
+input_str = "Conditional ::= [ { 'ELSEIF' Expression 'THEN' Block } ];"
 file_name = "ast_conditional"
 res = scanner.tokenize(input_str)
 # res_tmp = []
@@ -87,7 +87,7 @@ res = scanner.tokenize(input_str)
 
 for name in names:
     cur_path = fr"{directory_to_save}\wirth\{name}.gv"
-    # render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpng")
+    render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpng")
 with open(fr'{directory_to_save}\tokens.yaml', 'w') as file:
     file.write(Tokens(res).to_yaml())
 

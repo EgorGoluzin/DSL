@@ -79,7 +79,7 @@ class DefaultAstBuilder(IAstBuilder):
             )
         ]
         counter = 0
-        limit = 50
+        limit = 100
         while True:
             counter += 1
             print(f'Iteration {counter}')

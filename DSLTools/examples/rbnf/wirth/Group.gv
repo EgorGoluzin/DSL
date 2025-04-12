@@ -2,7 +2,7 @@ digraph Group {
     start [label = "Group" shape = plaintext];
     end [label = "" shape = point];
     A [label = "(" shape = oval];
-    B [label = "Sequence" shape = box];
+    B [label = "Alternative" shape = box];
     C [label = ")" shape = oval];
     start -> A;
     A -> B;

@@ -3,7 +3,7 @@ digraph Rule {
     end [label = "" shape = point];
     A [label = "name" shape = diamond];
     B [label = "::=" shape = oval];
-    C [label = "Sequence" shape = box];
+    C [label = "Alternative" shape = box];
     start -> A;
     A -> B;
     B -> C;

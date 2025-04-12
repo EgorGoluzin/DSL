@@ -1,9 +1,9 @@
 digraph Iteration {
     start [label = "Iteration" shape = plaintext];
     end [label = "" shape = point];
-    A [label = "Sequence" shape = box];
+    A [label = "Alternative" shape = box];
     B [label = "#" shape = oval];
-    C [label = "Sequence" shape = box];
+    C [label = "Alternative" shape = box];
     E [label = "{" shape = oval];
     F [label = "}" shape = oval];
     start -> E;

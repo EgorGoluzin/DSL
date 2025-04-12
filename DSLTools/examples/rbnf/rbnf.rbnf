@@ -23,11 +23,11 @@ RULES:
     AxiomBlock       ::= 'AXIOM' ':' name '.';
     Terminal         ::= name '::=' regular_expression;
     RulesBlock       ::= 'RULES' ':' {Rule # ';'} '.';
-    Rule             ::= name '::=' Sequence;
-    Sequence         ::= RuleElement { [ RuleElement ] };
-    RuleElement      ::= Element | Group | Optional | Iteration | Alternative;
+    Rule             ::= name '::=' Alternative;
+    Alternative      ::= { Sequence # '|' };
+    Sequence         ::= { RuleElement };
+    RuleElement      ::= Element | Group | Optional | Iteration;
     Element          ::= name | key_name;
-    Group            ::= '(' Sequence ')';
-    Optional         ::= '[' Sequence ']';
-    Iteration        ::= '{' Sequence [ '#' Sequence ] '}';
-    Alternative      ::= {RuleElement # '|'}.
+    Group            ::= '(' Alternative ')';
+    Optional         ::= '[' Alternative ']';
+    Iteration        ::= '{' Alternative [ '#' Alternative ] '}'.
