@@ -50,6 +50,15 @@ class IJsonMedia(ABC):
 
 
 @dataclass
+class EvaluationContext:
+    symbol_table: dict = field(default_factory=dict)
+    errors:       list = field(default_factory=list)
+    warnings:     list = field(default_factory=list)
+    current_scope: Any = None
+    data_types:   dict = field(default_factory=dict)
+
+
+@dataclass
 class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
     """Узел абстрактного синтаксического дерева."""
     class IAttrEval(ABC):
@@ -73,7 +82,7 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
         правил."""
         TOKEN = 'TOKEN'
         NONTERMINAL = 'NONTERMINAL'
-    type: NodeType | Type
+    type: Type
     """Тип узла: терминал-нетерминал-ключ"""
     subtype: 'str' = ''
     """Подтип нетерминала или терминала - используемые в вашем коде"""
