@@ -86,12 +86,12 @@ res = scanner.tokenize(input_str)
 for name in names:
     cur_path = fr"{directory_to_save}\wirth\{name}.gv"
     # render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpng")
-    with open(fr'{directory_to_save}\tokens.yaml', 'w') as file:
-        file.write(Tokens(res).to_yaml())
+with open(fr'{directory_to_save}\tokens.yaml', 'w') as file:
+    file.write(Tokens(res).to_yaml())
 
-    builder = DefaultAstBuilder()
+builder = DefaultAstBuilder()
 
-    ast = builder.build(go, res)
-    with open(fr"{directory_to_save}\{file_name}.yaml", 'w') as file:
-        file.write(ast.to_yaml())
+ast = builder.build(go, res)
+with open(fr"{directory_to_save}\{file_name}.yaml", 'w') as file:
+    file.write(ast.to_yaml())
 
