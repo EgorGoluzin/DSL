@@ -32,10 +32,19 @@ class TreeNode:
 TASTNode = TypeVar('TASTNode', bound='ASTNode')
 
 
+@dataclass
+class EvaluationContext:
+    symbol_table: dict = field(default_factory=dict)
+    errors:       list = field(default_factory=list)
+    warnings:     list = field(default_factory=list)
+    current_scope: Any = None
+    data_types:   dict = field(default_factory=dict)
+
+
 class IASTNode(ABC):
     """Элемент абстрактного синтаксического дерева."""
     @abstractmethod
-    def evaluated(self) -> Any:
+    def evaluated(self, context: EvaluationContext) -> Any:
         pass
 
 
@@ -50,26 +59,27 @@ class IJsonMedia(ABC):
 
 
 @dataclass
-class EvaluationContext:
-    symbol_table: dict = field(default_factory=dict)
-    errors:       list = field(default_factory=list)
-    warnings:     list = field(default_factory=list)
-    current_scope: Any = None
-    data_types:   dict = field(default_factory=dict)
-
-
-@dataclass
 class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
     """Узел абстрактного синтаксического дерева."""
     class IAttrEval(ABC):
         """Интерфейс для класса, считающего значение атрибута в узле АСД."""
         @abstractmethod
-        def __call__(self, value: str, children: list[TASTNode]) -> Any:
+        def __call__(
+            self,
+            value: str,
+            children: list[TASTNode],
+            context: EvaluationContext
+        ) -> Any:
             pass
 
     class IdentityEval(IAttrEval):
         """Базовая реализация тождественного вычислителя атрибутов."""
-        def __call__(self, value: str, children: list[TASTNode]) -> Any:
+        def __call__(
+            self,
+            value: str,
+            children: list[TASTNode],
+            context: EvaluationContext
+        ) -> Any:
             return value
 
     class Type(str, Enum):
@@ -112,8 +122,10 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
     def __blank(self, offset: int):
         return ' ' * self.SHIFT * offset
 
-    def evaluated(self):
-        self.attribute = self.evaluation(self.value, self.children)
+    def evaluated(self, context: EvaluationContext) -> Any:
+        # self.attribute = self.evaluation(self.value, self.children)
+        evaluation = EvaluationRegistry.evaluation(self.type, self.subtype)
+        self.attribute = evaluation(self.value, self.children, context)
         return self.attribute
 
     def attach_evaluators(
