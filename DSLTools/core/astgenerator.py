@@ -38,13 +38,13 @@ class WalkStep:
 
 
 class DefaultAstBuilder(IAstBuilder):
-    def __init__(self):
+    def __init__(self, debug: bool = False):
         self.states: list[WalkStep] = []
         self.go: GrammarObject = None
         self.tokens: list[Token] = []
         self.end: int = 0
         self.axiom: str = ''
-        self._debug = True
+        self._debug = debug
         self.__logs: list[str] = []
         self.depth: int = 0
 
