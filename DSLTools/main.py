@@ -13,7 +13,7 @@ from DSLTools.core.rule_wirth_converter import convert_rules_to_diagrams
 from DSLTools.core.astgenerator import GeneralizedParser, DefaultAstBuilder
 from DSLTools.utils.wirth_render import render_dot_to_png
 from DSLTools.core.astgenerator import DefaultAstBuilder
-from DSLTools.models.ast import ASTNode
+from DSLTools.models.ast import ASTNode, EvalContext, EvalRegistry
 from DSLTools.models.tokens import Tokens
 from settings import settings
 from DSLTools.core.retranslator import ReToExpression
@@ -25,10 +25,11 @@ PROJECT_ROOT = settings.PROJECT_ROOT
 
 
 class ExpressionsEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode]):
+    def __call__(self, value: str, children: list[ASTNode], context):
+        context.warnings.append('Calculating Expressions')
         return ('[' +
                 ', '.join(
-                    str(children[i].evaluated())
+                    str(children[i].evaluated(context))
                     for i in range(0, len(children), 2)
                 )
                 + ']'
@@ -36,28 +37,28 @@ class ExpressionsEval(ASTNode.IAttrEval):
 
 
 class ExpressionEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode]):
+    def __call__(self, value: str, children: list[ASTNode], context):
         _sum = 0
         for i in range(0, len(children), 2):
-            _sum += children[i].evaluated()
+            _sum += children[i].evaluated(context)
         return _sum
 
 
 class TermEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode]):
+    def __call__(self, value: str, children: list[ASTNode], context):
         cum = 1
         for i in range(0, len(children), 2):
-            cum *= children[i].evaluated()
+            cum *= children[i].evaluated(context)
         return cum
 
 
 class NumberEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode]):
+    def __call__(self, value: str, children: list[ASTNode], context):
         return int(value)
 
 
 class KeyEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode]):
+    def __call__(self, value: str, children: list[ASTNode], context):
         return value
 
 
@@ -65,7 +66,7 @@ class ProgramEval(ASTNode.IAttrEval):
     def __init__(self, name: str):
         self.name = name
 
-    def __call__(self, value, children):
+    def __call__(self, value, children, context):
         print(f'ProgramEval name: {self.name = }')
         return self.name
 
@@ -86,6 +87,14 @@ evaluators = {
     (ASTNode.Type.NONTERMINAL, 'EXPRESSIONS'): expressions_eval,
 }
 
+EvalRegistry.register(ASTNode.Type.TOKEN, 'number', number_eval)
+EvalRegistry.register(ASTNode.Type.TOKEN, '+', key_eval)
+EvalRegistry.register(ASTNode.Type.TOKEN, '*', key_eval)
+EvalRegistry.register(ASTNode.Type.TOKEN, ',', key_eval)
+EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'TERM', term_eval)
+EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'EXPRESSION', expression_eval)
+EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'EXPRESSIONS', expressions_eval)
+
 
 # py -m DSLTools.main -j "(ABS/REL)PATHFORMETAOBJ" -d "(ABS/REL)PATHFORDIRTOSAVE(Нужен для запуска но пока ен используется)"
 def main():
@@ -97,7 +106,6 @@ def main():
     json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
     directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
     unhappy_files = []
-    
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
     # print(config)
@@ -117,6 +125,7 @@ def main():
         with open(directory_to_save/pathlib.Path(f"demo_samples/{file_name}.smpl")) as f:
             input_str = f.read()
         #
+        # input_str = "2 * 5 + 3 + 7, 8, 6 * 1 + 9 * 2"
 
         res = scanner.tokenize(input_str)
         with open('tokens.yaml', 'w') as file:
@@ -136,7 +145,9 @@ def main():
             ast = builder.build(go, res).attach_evaluators({
                 (ASTNode.Type.NONTERMINAL, 'Program'): ProgramEval(file_name)
             })
-            _ = ast.evaluated()
+            context = EvalContext()
+            evaluated = ast.evaluated(context)
+            print(f'Result: {evaluated}, {context}')
             with open(directory_to_save/pathlib.Path(f"demo_asts/{file_name}.yaml"), 'w') as file:
                 file.write(ast.to_yaml())
             print(f'Finished for {i = }')

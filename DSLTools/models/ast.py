@@ -33,7 +33,7 @@ TASTNode = TypeVar('TASTNode', bound='ASTNode')
 
 
 @dataclass
-class EvaluationContext:
+class EvalContext:
     symbol_table: dict = field(default_factory=dict)
     errors:       list = field(default_factory=list)
     warnings:     list = field(default_factory=list)
@@ -44,7 +44,7 @@ class EvaluationContext:
 class IASTNode(ABC):
     """Элемент абстрактного синтаксического дерева."""
     @abstractmethod
-    def evaluated(self, context: EvaluationContext) -> Any:
+    def evaluated(self, context: EvalContext) -> Any:
         pass
 
 
@@ -68,7 +68,7 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
             self,
             value: str,
             children: list[TASTNode],
-            context: EvaluationContext
+            context: EvalContext
         ) -> Any:
             pass
 
@@ -78,7 +78,7 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
             self,
             value: str,
             children: list[TASTNode],
-            context: EvaluationContext
+            context: EvalContext
         ) -> Any:
             return value
 
@@ -122,9 +122,9 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
     def __blank(self, offset: int):
         return ' ' * self.SHIFT * offset
 
-    def evaluated(self, context: EvaluationContext) -> Any:
+    def evaluated(self, context: EvalContext) -> Any:
         # self.attribute = self.evaluation(self.value, self.children)
-        evaluation = EvaluationRegistry.evaluation(self.type, self.subtype)
+        evaluation = EvalRegistry.evaluation(self.type, self.subtype)
         self.attribute = evaluation(self.value, self.children, context)
         return self.attribute
 
@@ -184,7 +184,7 @@ class ASTNode(IASTNode, IJsonMedia, IYamlMedia):
         return yaml
 
 
-class EvaluationRegistry:
+class EvalRegistry:
     _evaluators: dict[tuple[ASTNode.Type, str], ASTNode.IAttrEval] = {}
 
     @classmethod
