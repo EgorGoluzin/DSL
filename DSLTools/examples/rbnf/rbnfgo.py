@@ -4,9 +4,11 @@ from DSLTools.core.wirth_diagram_generation import generate_dot
 from DSLTools.models.tokens import Tokens
 from DSLTools.utils.wirth_render import render_dot_to_png
 from DSLTools.models import GetSyntaxDesription, GrammarObject, Terminal
+from settings import settings
+
 
 names = ["Alternative", "Element", "Group", "Iteration", "Optional", "Rule", "RuleElement", "Sequence"]
-directory_to_save = r"C:\Users\Hp\PycharmProjects\DSL\DSLTools\examples\rbnf"
+directory_to_save = fr"{settings.PROJECT_ROOT}\examples\rbnf"
 # print(GetSyntaxDesription(fr"{directory_to_save}\wirth", None))
 """
 syntaxInfo = {'Sequence': NodeLegacy(type= 'start', 
@@ -89,7 +91,7 @@ for name in names:
 with open(fr'{directory_to_save}\tokens.yaml', 'w') as file:
     file.write(Tokens(res).to_yaml())
 
-builder = DefaultAstBuilder()
+builder = DefaultAstBuilder(debug=True)
 
 ast = builder.build(go, res)
 with open(fr"{directory_to_save}\{file_name}.yaml", 'w') as file:
