@@ -73,4 +73,4 @@ GrammarObject(terminals={"name": Terminal(name="name", pattern='[A-Za-z_][A-Za-z
 
 for name in names:
     cur_path = fr"{directory_to_save}\wirth\{name}.gv"
-    render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpng")
+    # render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpng")

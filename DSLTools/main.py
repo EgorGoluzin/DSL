@@ -131,7 +131,7 @@ def main():
             file.write(Tokens(res).to_yaml())
 
         print("\n".join([item.__repr__() for item in res]))
-        builder = DefaultAstBuilder()
+        builder = DefaultAstBuilder(debug=True)
         try:
             ast = builder.build(go, res).attach_evaluators({
                 (ASTNode.Type.NONTERMINAL, 'Program'): ProgramEval(file_name)
