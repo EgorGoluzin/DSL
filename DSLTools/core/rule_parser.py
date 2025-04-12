@@ -71,7 +71,7 @@ class Parser:
         self.tokens = self._post_token_process()
         rhs = self._parse_rhs()
 
-        return Rule(lpart=rule_name, rpart=RuleElement(type=ElementType.SEQUENCE, value=rhs))
+        return Rule(lpart=rule_name, rpart=RuleElement(type=ElementType.SEQUENCE, value=[rhs]))
 
     def _determine_token_attribute_type(self, token_value: str) -> ElementType:
         if token_value in self.keys_dict:
@@ -176,9 +176,6 @@ class Parser:
             else:
                 raise SyntaxError("Expected separator name after '#' in iteration")
         self.consume(expected_value='}')
-        return RuleElement(type=ElementType.ITERATION, value={
-            'body': sequence,
-            'separator': separator
-        }, separator=separator)
+        return RuleElement(type=ElementType.ITERATION, value=sequence, separator=separator)
 
 
