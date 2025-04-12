@@ -4,8 +4,13 @@ digraph Rule {
     A [label = "name" shape = diamond];
     B [label = "::=" shape = oval];
     C [label = "Alternative" shape = box];
+    D [label="." shape=oval];
+    E [label=";" shape=oval];
     start -> A;
     A -> B;
     B -> C;
-    C -> end;
+    C -> D;
+    C -> E;
+    D -> end;
+    E -> end;
 }
