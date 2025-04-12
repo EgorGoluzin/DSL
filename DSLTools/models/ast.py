@@ -196,3 +196,7 @@ class EvalRegistry:
     @classmethod
     def evaluation(cls, type: ASTNode.Type, subtype: str) -> ASTNode.IAttrEval:
         return cls._evaluators.get((type, subtype), ASTNode.IdentityEval())
+
+    @classmethod
+    def clear(cls) -> None:
+        cls._evaluators = {}
