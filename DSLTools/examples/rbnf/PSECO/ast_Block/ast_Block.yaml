@@ -1,0 +1,470 @@
+type: 'NONTERMINAL'
+subtype: 'Rule'
+value: ''
+attribute: ''
+children:
+  - type: 'TOKEN'
+    subtype: 'name'
+    value: 'Block'
+    attribute: ''
+    children: []
+  - type: 'TOKEN'
+    subtype: '::='
+    value: '::='
+    attribute: ''
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Alternative'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Assignment'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Conditional'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Expression'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Loop'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'FunctionDecl'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'FunctionCall'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'ProcDecl'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'IteratorDecl'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Input'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Output'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Comment'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Goto'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'ArrayDecl'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'StructDecl'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Select'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Return'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Yield'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'NextFor'
+                    attribute: ''
+                    children: []
+  - type: 'TOKEN'
+    subtype: ';'
+    value: ';'
+    attribute: ''
+    children: []

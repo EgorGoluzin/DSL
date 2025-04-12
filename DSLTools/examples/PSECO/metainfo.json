@@ -3,7 +3,7 @@
         "type": "rbnf",
         "info": {
             "syntax_dir": "examples\\PSECO",
-            "filenames": ["pseco.rbnf", "pseco_for_lexer.rbnf"],
+            "filenames": ["PSECO.rbnf"],
             "support_dir": ""
         }
     },

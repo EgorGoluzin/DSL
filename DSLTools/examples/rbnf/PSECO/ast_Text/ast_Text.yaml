@@ -1,0 +1,45 @@
+type: 'NONTERMINAL'
+subtype: 'Rule'
+value: ''
+attribute: ''
+children:
+  - type: 'TOKEN'
+    subtype: 'name'
+    value: 'Text'
+    attribute: ''
+    children: []
+  - type: 'TOKEN'
+    subtype: '::='
+    value: '::='
+    attribute: ''
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Alternative'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'text'
+                    attribute: ''
+                    children: []
+  - type: 'TOKEN'
+    subtype: ';'
+    value: ';'
+    attribute: ''
+    children: []
