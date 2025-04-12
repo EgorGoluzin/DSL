@@ -84,6 +84,7 @@ class RBNFParser(IGrammarParser):
         self.non_terminals_opt = None
         self.terminals_opt = None
         self.keywords_opt = None
+        self.store_for_rules = []
 
     def parse(self, meta_object: MetaObject) -> GrammarObject:
         syntax_dir = meta_object.syntax["info"]["syntax_dir"]
@@ -122,7 +123,8 @@ class RBNFParser(IGrammarParser):
             elif self.current_section == 'AXIOM':
                 self._parse_axiom(line)
             elif self.current_section == 'RULES':
-                self._parse_rule(line)
+                # self._parse_rule(line)
+                self._save_rule_line(line)
         except Exception as e:
             self.warnings.append(f"Line {line_num}: Error parsing '{line}' - {str(e)}")
 
@@ -165,6 +167,10 @@ class RBNFParser(IGrammarParser):
     def _parse_axiom(self, line: str):
         self.axiom = line.strip()
 
+    def _save_rule_line(self, line: str):
+        match = re.match(r'(\w+)\s*::=\s*(.+)', line)
+        lhs = match.group(1)
+        self.store_for_rules.append((lhs, f"{line};"))
     def _parse_rule(self, line: str):
         # Извлекаем LHS и RHS
 

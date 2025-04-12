@@ -1,48 +1,22 @@
+import os
+import pathlib
+
 from DSLTools.core.astgenerator import DefaultAstBuilder
+from DSLTools.core.grammar_parsers import RBNFParser
 from DSLTools.core.scanning import DefaultScanner
+from DSLTools.core.tools import render_tree, get_parser
 from DSLTools.core.wirth_diagram_generation import generate_dot
 from DSLTools.models.tokens import Tokens
+from DSLTools.utils.file_ops import load_config
 from DSLTools.utils.wirth_render import render_dot_to_png
-from DSLTools.models import GetSyntaxDesription, GrammarObject, Terminal
+from DSLTools.models import GetSyntaxDesription, GrammarObject, Terminal, MetaObject
 from settings import settings
 
 
 names = ["Alternative", "Element", "Group", "Iteration", "Optional", "Rule", "RuleElement", "Sequence"]
-directory_to_save = fr"{settings.PROJECT_ROOT}\examples\rbnf"
+directory_to_save_base = fr"{settings.PROJECT_ROOT}\examples"
+directory_to_save = fr"{directory_to_save_base}\rbnf"
 # print(GetSyntaxDesription(fr"{directory_to_save}\wirth", None))
-"""
-syntaxInfo = {'Sequence': NodeLegacy(type= 'start', 
-                                    str_= 'Sequence', 
-                                    nonterminal='None', 
-                                    terminal='None', 
-                                    nextNodes=[
-                                    (NodeLegacy(
-                                        type= 'nonterminal', 
-                                        str_= 'RuleElement', 
-                                        nonterminal= '
-                                        RuleElement', 
-                                        terminal= 'None', 
-                                        nextNodes= [
-                                        (NodeLegacy(
-                                            type= 'nonterminal', 
-                                            str_= 'RuleElement', 
-                                            nonterminal= 'RuleElement', 
-                                            terminal= 'None', 
-                                            nextNodes= [(...)
-                                                (NodeLegacy(type= 'end', 
-                                                str_= '', 
-                                                nonterminal= 'None', 
-                                                terminal= 'None', 
-                                                nextNodes= []), '')]), '')
-                                                (NodeLegacy(type= 'end', 
-                                                str_= '', 
-                                                nonterminal= 'None', 
-                                                terminal= 'None', 
-                                                nextNodes= []), 
-                                                '')]), '')])
-"""
-
-# TODO: Если пытаться писать сериализацию в Py нужно написать перевод
 # в эту структуру используя матрицу инцидентности и
 # Узлы заранее определенные. Пока вполне достаточно использовать GetSyntaxDescription.
 
@@ -51,7 +25,7 @@ OurRules = GetSyntaxDesription(fr"{directory_to_save}\wirth", None)
 #     print(f"{lhs=}", f"rhs = {OurRules[lhs]}")
 
 go = GrammarObject(terminals={
-    "key_name": Terminal(name="key_name", pattern=r'\'[A-Za-z_][A-Za-z0-9_]*\''),
+    "key_name": Terminal(name="key_name", pattern=r'\'[^\']*\''),
     "name": Terminal(name="name", pattern='[A-Za-z_][A-Za-z0-9_]*'),
     "ebnf_symbol": Terminal(name="ebnf_symbol", pattern="[::=#;(){}\[\]|.]"),
     "whitespace": Terminal(name="whitespace", pattern="\s+")},
@@ -75,27 +49,34 @@ go = GrammarObject(terminals={
     axiom="Rule",
     syntax_info=OurRules)
 
-scanner = DefaultScanner(go)
+# grammar_names = ["PSECO", "ISDSL", "GRAPHS", "PUML", "CHAO"]
+grammar_names = ["PSECO"]
+rule_scanner = DefaultScanner(go)
+builder = DefaultAstBuilder(debug=False)
+for grammar in grammar_names:
 
-# with open(fr'{directory_to_save}\rbnf.rbnf', 'r') as file:
-#     input_str = file.read()
-input_str = "Conditional ::= [ { 'ELSEIF' Expression 'THEN' Block } ];"
-file_name = "ast_conditional"
-res = scanner.tokenize(input_str)
-# res_tmp = []
-# for it in res:
-#     if it.terminalType != "regular_expression":
-#         res_tmp.
+    path_to_save_grammar = fr"{directory_to_save}\{grammar}"
+    os.makedirs(path_to_save_grammar, exist_ok=True)
 
-for name in names:
-    cur_path = fr"{directory_to_save}\wirth\{name}.gv"
-    render_dot_to_png(cur_path, fr"{directory_to_save}\wirthpng")
-with open(fr'{directory_to_save}\tokens.yaml', 'w') as file:
-    file.write(Tokens(res).to_yaml())
+    json_path = fr"{directory_to_save_base}\{grammar}\metainfo.json"
+    config = load_config(json_path)
+    mo_cur = MetaObject(config)
+    parser = RBNFParser()
+    go_cur: GrammarObject = parser.parse(mo_cur)
 
-builder = DefaultAstBuilder(debug=True)
+    for rule_name, rule_in_cur_grammar in parser.store_for_rules:
+        print(rule_in_cur_grammar)
+        rule_dir = fr"{path_to_save_grammar}\ast_{rule_name}"
 
-ast = builder.build(go, res)
-with open(fr"{directory_to_save}\{file_name}.yaml", 'w') as file:
-    file.write(ast.to_yaml())
+        os.makedirs(rule_dir, exist_ok=True)
+        res = rule_scanner.tokenize(rule_in_cur_grammar)
 
+        # with open(fr'{rule_dir}\tokens_{rule_name}.yaml', 'w') as file:
+        #     file.write(Tokens(res).to_yaml())
+
+        ast = builder.build(go, res)
+
+        # with open(fr"{rule_dir}\ast_{rule_name}.yaml", 'w') as file:
+        #     file.write(ast.to_yaml())
+
+        # render_tree(f"ast_{rule_name}", ast, pathlib.Path(rule_dir))
