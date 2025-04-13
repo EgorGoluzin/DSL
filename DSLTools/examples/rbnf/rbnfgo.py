@@ -27,6 +27,7 @@ class RuleAxiomEval(ASTNode.IAttrEval):
 
 class GroupEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode], context):
+        # Группа. Пока не оч ясной какая у нее должна быть семантика с точки зрения графа
         return
 
 
@@ -37,12 +38,16 @@ class RuleElementEval(ASTNode.IAttrEval):
 
 class OptionalEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode], context):
+        # Ему нужно знать текущую позицию привязки для того чтобы конец связать с началом!
         return
 
 
 class IterationEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode], context):
         """ Блок итерации."""
+        # Этот парень относительно проблемный. Если в нем есть цейтин - особенно.
+        # Ему нужно знать - начало, конец и в случае если есть тот самый, не забыть сделать смещение узла,
+        # к которому будет происходить привязка
         pass
 
 
@@ -58,18 +63,37 @@ class ElementEval(ASTNode.IAttrEval):
 class AlternativeEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode], context):
         """Правило для альтернативы."""
+        if len(children) == 1:
+            children[0].evaluated(context)
+            return
+
+        corent_pos = context.current_scope["CURRENT_MERGE_POSITION"]
+        # Вот тут возможно стоит изменять координату на 1
+        for el in children:
+            el.evaluated(context)
+
         return value
 
 
 class SequenceEval(ASTNode.IAttrEval):
     def __call__(self, value, children, context):
         """Правило для последовательности."""
+        if len(children) == 1:
+            children[0].evaluated(context)
+            return
+
+        # Вот тут сто проц меняем координату текущую
+
+        for el in children:
+            el.evaluated(context)
         pass
 
 
 class KeyWordEval(ASTNode.IAttrEval):
     def __call__(self, value, children, context):
         """Правило для терминала - Ключевого слова в пользовательской грамматике."""
+        # Вот тут проверка на то если листочек в массиве ключиков пользователя.
+        # Если нас нету то бай бай бай и можем фигачить пустой моковый узел!...
         pass
 
 
@@ -78,6 +102,9 @@ class TerminalOrNonTerminalEval(ASTNode.IAttrEval):
         """Правило для терминала - По своей сути это либо
         имя терминала в пользовательской грамматике, либо
         нетерминал в пользовательской грамматике"""
+        # Тут выясняем хто мы?
+        # Если нас нету то бай бай бай и можем фигачить пустой моковый узел!...
+        # И пишем в ERROR список контекста
         pass
 
 
