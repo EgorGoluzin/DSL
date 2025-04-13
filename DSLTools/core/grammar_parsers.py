@@ -90,10 +90,14 @@ class RBNFParser(IGrammarParser):
         syntax_dir = meta_object.syntax["info"]["syntax_dir"]
         syntax_path = rf"{PROJECT_ROOT}\{syntax_dir}\{meta_object.syntax['info']['filenames'][0]}"
         self._syntax_parse(syntax_path)
-        return GrammarObject(keys=self.keys,
+        go = GrammarObject(keys=self.keys,
                              terminals=self.terminals,
                              non_terminals=self.non_terminals,
                              axiom=self.axiom, rules=self.rules)
+        go.symbol_table = {"KEYWORD_SET": {f"'{k[1]}'" for k in self.keys},
+                           "TERMINALS_NAME_SET": set(self.terminals.keys()),
+                           "NON_TERMINAL_SET": set(self.non_terminals)}
+        return go
 
     def _syntax_parse(self, syntax_dir):
         with open(syntax_dir, "r") as r:
