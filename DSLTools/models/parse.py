@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import List, Optional, Dict, Tuple, Union, Any
 from enum import Enum
 from dataclasses import dataclass, field
+import os
 
 import pydot
 
@@ -379,9 +380,13 @@ class GrammarObject:
             res += f'\n\t\tRHS: {str(val), type(val)}'
         return res
 
-    def rules_to_dot_files(dest: Path) -> None:
+    def rules_to_dot_files(self, dest: Path) -> None:
+        os.mkdir(dest)
         for rulename, rule in self.rules.items():
-            continue
+            with open(dest / f'{rulename}.gv', 'w') as file:
+                file.write(
+                    generate_wirth_by_rule(rule.definition, rule.node_matrix)
+                )
 
     def upload(self, dest: Path) -> None:
         """Метод для создания syntaxInfoObject"""

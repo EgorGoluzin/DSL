@@ -7,7 +7,7 @@ DSLINFOTEMPLATENAME = Path(__file__).parent.parent.resolve() / Path(r"templates\
 
 
 class GrammarObjectSerializer:
-    def serialize(self, go: GrammarObject, dest: Path):
+    def serialize(self, go: GrammarObject, dest: Path, wirth_dest: Path):
         filename = Path("grammar_object_ser.py")
         with open(DSLINFOTEMPLATENAME, 'r') as templateFile:
             templateText = templateFile.read()
@@ -18,11 +18,14 @@ class GrammarObjectSerializer:
                 nonterminals=go.serialized_nonterminals(),
                 keywords=go.serialized_keys(),
                 axiom=go.serialized_axiom(),
-                syntax_rules=go.serialized_rules()
+                syntax_rules=go.serialized_rules(),
+                wirth_dest=fr"r'{str(wirth_dest)}'",
             ))
 
 
 if __name__ == '__main__':
+    dest = Path(__file__).resolve().parent
+    wirth_dest = dest / 'wirth_dest'
     go = GrammarObject(terminals={
         "key_name": Terminal(name="key_name", pattern=r'\'[^\']*\''),
         "name": Terminal(name="name", pattern='[A-Za-z_][A-Za-z0-9_]*'),
@@ -85,5 +88,4 @@ if __name__ == '__main__':
         })
     # print(f'Path: {__file__}')
     serializer = GrammarObjectSerializer()
-    dest = Path(__file__).resolve().parent
-    serializer.serialize(go, dest)
+    serializer.serialize(go, dest, wirth_dest)

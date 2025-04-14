@@ -22,8 +22,8 @@ stored_go = GrammarObject(terminals=grammar_terminals,
               axiom=grammar_axiom,
               rules=grammar_syntax_rules)
 
-dest = {destination}
+wirth_dest = {wirth_dest}
 
+stored_go.rules_to_dot_files(wirth_dest)
 
-
-stored_go.upload()
+stored_go.upload(wirth_dest)
