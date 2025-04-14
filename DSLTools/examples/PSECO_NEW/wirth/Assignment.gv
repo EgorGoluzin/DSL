@@ -1,7 +1,7 @@
 digraph Assignment {
   start [label="Assignment" shape=plaintext];
   A [label="Variable" shape=box];
-  B [label=":" shape=oval];
+  B [label="=" shape=oval];
   C [label="Expression" shape=box];
   end [label="" shape=point];
   start -> A;

@@ -8,7 +8,6 @@ digraph ProcDecl {
   F [label="Block" shape=box];
   G [label="END_PROC" shape=oval];
   end [label="" shape=point];
-
   start -> A;
   A -> B;
   B -> C;

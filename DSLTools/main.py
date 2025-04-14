@@ -100,11 +100,11 @@ EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'EXPRESSIONS', expressions_eval)
 def main():
     # Шаг 1: Парсинг аргументов
     ## Пример с экспрешеном. Просто эти строчки можно закоментить
-    # json_path = fr"{PROJECT_ROOT}\examples\expressions\metainfo.json"
-    # directory_to_save = fr"{PROJECT_ROOT}\examples\expressions"
+    json_path = fr"{PROJECT_ROOT}\examples\expressions\metainfo.json"
+    directory_to_save = fr"{PROJECT_ROOT}\examples\expressions"
     ## Пример с псевдокодом. Просто эти строчки можно раскоментить
-    json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
-    directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
+    # json_path = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES\metainfo.json"
+    # directory_to_save = fr"{PROJECT_ROOT}\examples\RBNFEXPRESSIONSTESTRULES"
     unhappy_files = []
     # Шаг 2: Загрузка конфигурации
     config = load_config(json_path)
