@@ -1,12 +1,40 @@
-digraph BLOCK {
+digraph Block {
   start [label="Block" shape=plaintext];
-  A [label="{" shape=oval];
-  B [label="Statement" shape=box];
-  C [label="}" shape=oval];
   end [label="" shape=point];
-  start -> A;
-  A -> B;
-  B -> B;
-  B -> C;
-  C -> end;
+
+  A [label="Assignment" shape=box];
+  B [label="Conditional" shape=box];
+  C [label="Expression" shape=box];
+  D [label="Loop" shape=box];
+  E [label="FuncDecl" shape=box];
+  F [label="ProcDecl" shape=box];
+  G [label="IterDecl" shape=box];
+  H [label="Input" shape=box];
+  I [label="Output" shape=box];
+  J [label="Comment" shape=box];
+  K [label="Goto" shape=box];
+  L [label="ArrayDecl" shape=box];
+  M [label="StructDecl" shape=box];
+  N [label="Select" shape=box];
+  O [label="Return" shape=box];
+  P [label="Yield" shape=box];
+  Q [label="NextFor" shape=box];
+
+  start -> A; A -> end;
+  start -> B; B -> end;
+  start -> C; C -> end;
+  start -> D; D -> end;
+  start -> E; E -> end;
+  start -> F; F -> end;
+  start -> G; G -> end;
+  start -> H; H -> end;
+  start -> I; I -> end;
+  start -> J; J -> end;
+  start -> K; K -> end;
+  start -> L; L -> end;
+  start -> M; M -> end;
+  start -> N; N -> end;
+  start -> O; O -> end;
+  start -> P; P -> end;
+  start -> Q; Q -> end;
 }
