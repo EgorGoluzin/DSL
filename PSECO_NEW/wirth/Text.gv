@@ -1,0 +1,7 @@
+digraph Text {
+  start [label="Text" shape=plaintext];
+  A [label="text" shape=diamond];
+  end [label="" shape=point];
+  start -> A;
+  A -> end;
+}

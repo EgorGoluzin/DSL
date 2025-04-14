@@ -1,0 +1,7 @@
+digraph Variable {
+  start [label="Variable" shape=plaintext];
+  A [label="Identifier" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> end;
+}

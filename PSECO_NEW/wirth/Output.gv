@@ -1,0 +1,9 @@
+digraph OUTPUT {
+  start [label="Output" shape=plaintext];
+  A [label="OUTPUT" shape=oval];
+  B [label="Expression" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> end;
+}

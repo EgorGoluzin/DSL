@@ -1,0 +1,10 @@
+digraph Set {
+  start [label="Set" shape=plaintext];
+  A [label="Range" shape=box];
+  B [label="Identifier" shape=box];
+  end [label="" shape=point];
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+}

@@ -1,0 +1,7 @@
+digraph Identifier {
+  start [label="Identifier" shape=plaintext];
+  A [label="name" shape=diamond];
+  end [label="" shape=point];
+  start -> A;
+  A -> end;
+}

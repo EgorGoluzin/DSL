@@ -1,0 +1,16 @@
+digraph LOOP {
+  start [label="Loop" shape=plaintext];
+  A [label="LS" shape=box];
+  B [label="LB" shape=box];
+  C [label="LA" shape=box];
+  D [label="LC" shape=box];
+  end [label="" shape=point];
+  start -> D;
+  start -> C;
+  start -> B;
+  start -> A;
+  A -> end;
+  B -> end;
+  C -> end;
+  D -> end;
+}

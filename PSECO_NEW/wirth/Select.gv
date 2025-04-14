@@ -1,0 +1,13 @@
+digraph Select {
+  start [label="Select" shape=plaintext];
+  A [label="SELECT" shape=oval];
+  B [label="Variable" shape=box];
+  C [label="IN" shape=oval];
+  D [label="Set" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> end;
+}

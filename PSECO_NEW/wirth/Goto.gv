@@ -1,0 +1,9 @@
+digraph Goto {
+  start [label="Goto" shape=plaintext];
+  A [label="GOTO" shape=oval];
+  B [label="Identifier" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> end;
+}

@@ -1,0 +1,14 @@
+digraph FunctionCall {
+  start [label="FunctionCall" shape=plaintext];
+  A [label="Identifier" shape=box];
+  B [label="(" shape=oval];
+  C [label=")" shape=oval];
+  D [label="Arguments" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> D;
+  B -> C;
+  C -> end;
+  D -> C;
+}

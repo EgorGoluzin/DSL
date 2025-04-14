@@ -1,0 +1,9 @@
+digraph Return {
+  start [label="Return" shape=plaintext];
+  A [label="RETURN" shape=oval];
+  B [label="Expression" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> end;
+}

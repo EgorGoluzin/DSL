@@ -1,0 +1,19 @@
+digraph LS {
+  start [label="LS" shape=plaintext];
+  A [label="FOR" shape=oval];
+  B [label="Variable" shape=box];
+  C [label="IN" shape=oval];
+  D [label="Set" shape=box];
+  E [label="DO" shape=oval];
+  F [label="Block" shape=box];
+  G [label="END_FOR" shape=oval];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> E;
+  E -> F;
+  F -> G;
+  G -> end;
+}

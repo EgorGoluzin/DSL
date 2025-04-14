@@ -1,0 +1,10 @@
+digraph PARAMETERS {
+  start [label="Parameters" shape=plaintext];
+  A [label="Variable" shape=box];
+  B [label="," shape=oval];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  A -> end;
+  B -> A;
+}

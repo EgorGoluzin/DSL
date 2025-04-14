@@ -1,0 +1,9 @@
+digraph Yield {
+  start [label="Yield" shape=plaintext];
+  A [label="YIELD" shape=oval];
+  B [label="Expression" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> end;
+}

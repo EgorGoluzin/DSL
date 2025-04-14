@@ -1,0 +1,15 @@
+digraph LB {
+  start [label="LB" shape=plaintext];
+  A [label="WHILE" shape=oval];
+  B [label="Expression" shape=box];
+  C [label="DO" shape=oval];
+  D [label="Block" shape=box];
+  E [label="END_WHILE" shape=oval];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> E;
+  E -> end;
+}
