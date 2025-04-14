@@ -287,7 +287,7 @@ class Rule:
         row_strs = []
         for row in self.node_matrix:
             row_strs.append('[' + ','.join(str(v) for v in row) + ']')
-        matrix_str = '[\n\t\t' + '\n\t\t'.join(row_strs) + '\n\t\t]'
+        matrix_str = '[\n\t\t' + ',\n\t\t'.join(row_strs) + '\n\t\t]'
         return f"Rule(definition=[{nodes}],\n\tnode_matrix={matrix_str})"
 
     def __str__(self):
@@ -338,7 +338,7 @@ class GrammarObject:
             terminal.serialized() for terminal in self.terminals.values())
 
     def serialized_nonterminals(self) -> str:
-        return ',.\n\t'.join(f"'{nt}'" for nt in self.non_terminals)
+        return ',\n\t'.join(f"'{nt}'" for nt in self.non_terminals)
 
     def serialized_keys(self) -> str:
         return ",\n\t".join([f"('{item[1]}', Terminal.{item[0]})" for item in self.keys])
@@ -347,7 +347,10 @@ class GrammarObject:
         return f"'{self.axiom}'"
 
     def serialized_rules(self) -> str:
-        pass
+        return ',\n\t'.join(
+            f"'{rule_name}': {rule.serialized()}"
+            for rule_name, rule in self.rules.items()
+        )
 
     def get_terminals_for_template(self) -> str:
         return "\n\t" + "\n\t".join([f"{item} = '{item}'" for item in self.terminals.keys()])

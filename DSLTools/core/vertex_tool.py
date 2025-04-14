@@ -21,6 +21,7 @@ def transform_to_wirth_diag_type(node_type: NodeTypeLegacy):
         res = "plaintext"
     return res
 
+
 def generate_wirth_by_rule(vertex: list[NodeLegacy], matrix: list[list]) -> str:
     """Здесь будет перевод правила в диаграмму Вирта."""
     dot_lines = [
