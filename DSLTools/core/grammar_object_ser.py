@@ -1,4 +1,5 @@
 from DSLTools.models import GrammarObject, Terminal, Rule
+from DSLTools.models.legacy_for_wirth import NodeTypeLegacy, NodeLegacy
 
 # Block with lexis
 grammar_terminals = {
@@ -20,19 +21,19 @@ grammar_nonterminals = [
 ]
 
 grammar_keywords = [
-    ("::=", Terminal.ebnf_symbol),
-    (":", Terminal.ebnf_symbol),
-    (";", Terminal.ebnf_symbol),
-    ("#", Terminal.ebnf_symbol),
-    ("(", Terminal.ebnf_symbol),
-    (")", Terminal.ebnf_symbol),
-    ("[", Terminal.ebnf_symbol),
-    ("]", Terminal.ebnf_symbol),
-    ("{", Terminal.ebnf_symbol),
-    ("}", Terminal.ebnf_symbol),
-    ("|", Terminal.ebnf_symbol),
-    (".", Terminal.ebnf_symbol),
-    ("RULES", Terminal.name),
+    ("::=", "ebnf_symbol"),
+    (":", "ebnf_symbol"),
+    (";", "ebnf_symbol"),
+    ("#", "ebnf_symbol"),
+    ("(", "ebnf_symbol"),
+    (")", "ebnf_symbol"),
+    ("[", "ebnf_symbol"),
+    ("]", "ebnf_symbol"),
+    ("{", "ebnf_symbol"),
+    ("}", "ebnf_symbol"),
+    ("|", "ebnf_symbol"),
+    (".", "ebnf_symbol"),
+    ("RULES", "name"),
 ]
 
 grammar_axiom = "Rule"

@@ -172,7 +172,7 @@ class Terminal:
 
     def __str__(self) -> str:
         return f"Terminal(name: {self.name}, pattern: {self.pattern})"
-    
+
     def serialized(self) -> str:
         return f"Terminal(name='{self.name}', pattern=r'{self.pattern}')"
 
@@ -341,7 +341,7 @@ class GrammarObject:
         return ',\n\t'.join(f"'{nt}'" for nt in self.non_terminals)
 
     def serialized_keys(self) -> str:
-        return ",\n\t".join([f"('{item[1]}', Terminal.{item[0]})" for item in self.keys])
+        return ",\n\t".join([f"('{item[1]}', '{item[0]}')" for item in self.keys])
 
     def serialized_axiom(self) -> str:
         return f"'{self.axiom}'"
