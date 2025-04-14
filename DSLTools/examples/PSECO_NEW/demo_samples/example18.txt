@@ -1,0 +1,3 @@
+example18
+f(a, b)
+RETURN $a * b$
