@@ -8,6 +8,7 @@ import pydot
 # from DSLTools.core.rule_wirth_converter import convert_rules_to_diagrams
 # from DSLTools.core.wirth_diagram_generation import generate_dot
 from DSLTools.models.legacy_for_wirth import NodeTypeLegacy, NodeLegacy
+from DSLTools.core.vertex_tool import generate_wirth_by_rule
 # from DSLTools.utils.file_ops import generate_file
 from settings import settings
 
@@ -377,6 +378,10 @@ class GrammarObject:
             res += f'\n\t\tLHS: {key, type(key)}'
             res += f'\n\t\tRHS: {str(val), type(val)}'
         return res
+
+    def rules_to_dot_files(dest: Path) -> None:
+        for rulename, rule in self.rules.items():
+            continue
 
     def upload(self, dest: Path) -> None:
         """Метод для создания syntaxInfoObject"""

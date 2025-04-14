@@ -83,5 +83,7 @@ if __name__ == '__main__':
                 ]
             ),
         })
+    # print(f'Path: {__file__}')
     serializer = GrammarObjectSerializer()
-    serializer.serialize(go, r'./DSLTools/core')
+    dest = Path(__file__).resolve().parent
+    serializer.serialize(go, dest)

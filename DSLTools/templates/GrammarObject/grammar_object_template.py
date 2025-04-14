@@ -16,8 +16,14 @@ grammar_axiom = {axiom}
 grammar_syntax_rules = {{ {syntax_rules} }}
 
 # New formed grammatical object
-GrammarObject(terminals=grammar_terminals,
+stored_go = GrammarObject(terminals=grammar_terminals,
               non_terminals=grammar_nonterminals,
               keys=grammar_keywords,
               axiom=grammar_axiom,
               rules=grammar_syntax_rules)
+
+dest = {destination}
+
+
+
+stored_go.upload()
