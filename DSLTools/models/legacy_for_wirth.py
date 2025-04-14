@@ -21,7 +21,7 @@ class NodeLegacy:
         """Было динамически появляющимся полем, явно его здесь объявил. В случае если нетерминал будет не null."""
         self.terminal: str | None = None
         """Было динамически появляющимся полем, явно его здесь объявил. В случае если терминал будет не null"""
-    
+
     def __str__(self):
         res = (
             "NodeLegacy("
@@ -34,7 +34,7 @@ class NodeLegacy:
         for node in self.nextNodes:
             res += f'{node}'
         return res + '])'
-    
+
     def __repr__(self):
         res = (
             "NodeLegacy("

@@ -172,6 +172,9 @@ class Terminal:
 
     def __str__(self) -> str:
         return f"Terminal(name: {self.name}, pattern: {self.pattern})"
+    
+    def serialized(self) -> str:
+        return f"Terminal(name='{self.name}', pattern=r'{self.pattern}')"
 
 
 class ElementType(Enum):
@@ -278,6 +281,15 @@ class Rule:
     node_matrix: list[list[int]]
     """Матрица, позволяющая собрать узлы в граф правил."""
 
+    def serialized(self) -> str:
+        nodes = ',\n\t\t'.join(str(nl) for nl in self.definition)
+        matrix_str = ''
+        row_strs = []
+        for row in self.node_matrix:
+            row_strs.append('[' + ','.join(str(v) for v in row) + ']')
+        matrix_str = '[\n\t\t' + '\n\t\t'.join(row_strs) + '\n\t\t]'
+        return f"Rule(definition=[{nodes}],\n\tnode_matrix={matrix_str})"
+
     def __str__(self):
         return f"{self.lpart} ::= \n" + str(self.rpart)
 
@@ -320,6 +332,22 @@ class GrammarObject:
         # all_symbols = [t.name for t in self.terminals.values()] + [k[0] for k in self.keys]
         # if len(all_symbols) != len(set(all_symbols)):
         #     raise ValueError("Duplicate terminal/key definitions")
+
+    def serialized_terminals(self) -> str:
+        return ',\n\t'.join(
+            terminal.serialized() for terminal in self.terminals.values())
+
+    def serialized_nonterminals(self) -> str:
+        return ',.\n\t'.join(f"'{nt}'" for nt in self.non_terminals)
+
+    def serialized_keys(self) -> str:
+        return ",\n\t".join([f"('{item[1]}', Terminal.{item[0]})" for item in self.keys])
+
+    def serialized_axiom(self) -> str:
+        return f"'{self.axiom}'"
+
+    def serialized_rules(self) -> str:
+        pass
 
     def get_terminals_for_template(self) -> str:
         return "\n\t" + "\n\t".join([f"{item} = '{item}'" for item in self.terminals.keys()])

@@ -1,7 +1,7 @@
 from DSLTools.models import GrammarObject
 
 # Block with lexis
-grammar_terminals = [{terminals}]
+grammar_terminals = {{terminals}}
 
 grammar_nonterminals = [{nonterminals}]
 
