@@ -1,0 +1,17 @@
+digraph LC {
+  start [label="LC" shape=plaintext];
+  A [label="FOR" shape=oval];
+  B [label="Variable" shape=box];
+  C [label="Range" shape=box];
+  D [label="DO" shape=oval];
+  E [label="Block" shape=box];
+  F [label="END_FOR" shape=oval];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> E;
+  E -> F;
+  F -> end;
+}

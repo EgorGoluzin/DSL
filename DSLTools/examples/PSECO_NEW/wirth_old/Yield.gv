@@ -1,6 +1,6 @@
-digraph Output {
-  start [label="Output" shape=plaintext];
-  A [label="OUTPUT" shape=oval];
+digraph Yield {
+  start [label="Yield" shape=plaintext];
+  A [label="YIELD" shape=oval];
   B [label="Expression" shape=box];
   end [label="" shape=point];
   start -> A;

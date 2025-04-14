@@ -1,12 +1,13 @@
-digraph ProcDecl {
-  start [label="ProcDecl" shape=plaintext];
-  A [label="PROC" shape=oval];
+digraph FunctionDecl {
+  start [label="FunctionDecl" shape=plaintext];
+  A [label="FUNC" shape=oval];
   B [label="Identifier" shape=box];
   C [label="(" shape=oval];
   D [label=")" shape=oval];
   E [label="Parameters" shape=box];
   F [label="Block" shape=box];
-  G [label="END_PROC" shape=oval];
+  G [label="Return" shape=box];
+  H [label="END_FUNC" shape=oval];
   end [label="" shape=point];
   start -> A;
   A -> B;
@@ -15,7 +16,7 @@ digraph ProcDecl {
   C -> D;
   D -> F;
   E -> D;
-  F -> F;
   F -> G;
-  G -> end;
+  G -> H;
+  H -> end;
 }

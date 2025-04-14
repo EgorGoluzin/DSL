@@ -1,0 +1,13 @@
+digraph Range {
+  start [label="Range" shape=plaintext];
+  A [label="FROM" shape=oval];
+  B [label="Number" shape=box];
+  C [label="TO" shape=oval];
+  D [label="Number" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> end;
+}

@@ -1,0 +1,12 @@
+digraph Expression {
+  start [label="Expression" shape=plaintext];
+  A [label="$" shape=oval];
+  B [label="$" shape=oval];
+  C [label="^" shape=oval];
+  end [label="" shape=point];
+  start -> A;
+  A -> C;
+  A -> B;
+  B -> end;
+  C -> B;
+}

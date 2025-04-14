@@ -1,9 +1,9 @@
 digraph Assignment {
   start [label="Assignment" shape=plaintext];
-  A [label="Variable" shape=box];
-  B [label=":" shape=oval];
-  C [label="Expression" shape=box];
   end [label="" shape=point];
+  A [label="Variable" shape=box];
+  B [label="=" shape=oval];
+  C [label="Expression" shape=box];
   start -> A;
   A -> B;
   B -> C;

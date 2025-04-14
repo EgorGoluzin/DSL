@@ -1,0 +1,18 @@
+digraph FieldDecl {
+  start [label="FieldDecl" shape=plaintext];
+  A [label="Identifier" shape=box];
+  B [label=":" shape=oval];
+  C [label="Statement" shape=box];
+  D [label="Identifier" shape=box];
+  E [label=":" shape=oval];
+  F [label="Identifier" shape=box];
+  end [label="" shape=point];
+  start -> D;
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> end;
+  D -> E;
+  E -> F;
+  F -> end;
+}
