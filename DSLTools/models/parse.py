@@ -270,17 +270,13 @@ class RuleElement:
 
 @dataclass
 class Rule:
-    """Класс правила, который оборачивает прям все правило.
-
-    Поля:
-        lpart(str): Левая часть правила.\n
-        rpart(RuleElement): Правая часть.
-            - Важно что она сейчас обернута в RuleElement(type=ElementType.SEQUENCE, value=[...], separator=None)
-            при этом, этот тип больше пока нигде не используется.
+    """Класс для сериализации правила  GrammarObject.
     """
 
-    lpart: str
-    rpart: RuleElement  # Основное изменение: список альтернатив
+    definition: list[NodeLegacy]
+    """Последовательность узлов, представляющих правую часть правила."""
+    node_matrix: list[list[int]]
+    """Матрица, позволяющая собрать узлы в граф правил."""
 
     def __str__(self):
         return f"{self.lpart} ::= \n" + str(self.rpart)
