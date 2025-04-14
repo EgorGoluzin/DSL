@@ -10,14 +10,14 @@ digraph Block {
   H [label="Comment" shape=box];
   I [label="Output" shape=box];
   J [label="Input" shape=box];
-  K [label="FunctionDecl" shape=box];
+  K [label="FuncDecl" shape=box];
   L [label="Loop" shape=box];
   M [label="Expression" shape=box];
   N [label="Conditional" shape=box];
   O [label="Assignment" shape=box];
-  P [label="FunctionCall" shape=box];
+  P [label="FuncCall" shape=box];
   Q [label="ProcDecl" shape=box];
-  R [label="IteratorDecl" shape=box];
+  R [label="IterDecl" shape=box];
   end [label="" shape=point];
   start -> R;
   start -> Q;

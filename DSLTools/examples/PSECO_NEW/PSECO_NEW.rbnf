@@ -57,7 +57,7 @@ AXIOM:
 
 RULES:
     Program        ::= programname { Block };
-    Block          ::= Assignment | Conditional | Expression | Loop | FuncDecl | ProcDecl | IterDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor;
+    Block          ::= Assignment | Conditional | Expression | Loop | FuncCall | FuncDecl | ProcDecl | IterDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor;
     Expression     ::= exprtext;
     FuncCall       ::= Identifier '(' [ Arguments ] ')';
     Arguments      ::= Expression { ',' Expression };
