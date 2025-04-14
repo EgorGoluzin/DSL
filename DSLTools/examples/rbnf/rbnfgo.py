@@ -5,6 +5,7 @@ from DSLTools.core.astgenerator import DefaultAstBuilder
 from DSLTools.core.grammar_parsers import RBNFParser
 from DSLTools.core.scanning import DefaultScanner
 from DSLTools.core.tools import render_tree, get_parser
+from DSLTools.core.vertex_tool import generate_wirth_by_rule
 from DSLTools.core.wirth_diagram_generation import generate_dot
 from DSLTools.models.ast import EvalRegistry, EvalContext
 from DSLTools.models.tokens import Tokens, Token
@@ -12,7 +13,7 @@ from DSLTools.utils.file_ops import load_config
 from DSLTools.utils.wirth_render import render_dot_to_png
 from DSLTools.models import GetSyntaxDesription, GrammarObject, Terminal, MetaObject, ASTNode
 from settings import settings
-from DSLTools.models.legacy_for_wirth import NodeLegacy
+from DSLTools.models.legacy_for_wirth import NodeLegacy, NodeTypeLegacy
 
 
 class RuleAxiomEval(ASTNode.IAttrEval):
@@ -21,15 +22,24 @@ class RuleAxiomEval(ASTNode.IAttrEval):
         # В нашей грамматике всегда соответствует правой части правила.
         children[0].evaluated(context)
         # В нашей грамматике всегда соответствует Альтернативе(внешней).
+        context.current_scope["CURRENT_ENTRY"] = (0, 1)
+        context.current_scope["CURRENT_EXIT"] = (0, 1)
         children[2].evaluated(context)
+        children[3].evaluated(context)
         return context.current_scope["MATRIX"], \
             context.current_scope["RESULT_VERTEX_LIST"]
 
 
 class GroupEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode], context):
-        # Группа. Пока не оч ясной какая у нее должна быть семантика с точки зрения графа
-        return
+    def __call__(self, value, children, context):
+        context.current_scope["STACK"].append((
+            context.current_scope["CURRENT_ENTRY"],
+            context.current_scope["CURRENT_EXIT"]
+        ))
+        children[0].evaluated(context)
+        original_entry, original_exit = context.current_scope["STACK"].pop()
+        context.current_scope["CURRENT_ENTRY"] = original_entry
+        context.current_scope["CURRENT_EXIT"] = original_exit
 
 
 class RuleElementEval(ASTNode.IAttrEval):
@@ -42,18 +52,47 @@ class RuleElementEval(ASTNode.IAttrEval):
 
 
 class OptionalEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode], context):
-        # Ему нужно знать текущую позицию привязки для того чтобы конец связать с началом!
-        return
+    def __call__(self, value, children, context):
+        original_entry = context.current_scope["CURRENT_ENTRY"]
+        original_exit = context.current_scope["CURRENT_EXIT"]
+        new_entry = (original_entry[0] + 1, original_entry[1])
+        new_exit = (original_exit[0], original_exit[1] + 1)
+
+        # ε-переходы: вход → новый вход и новый выход → выход
+        context.current_scope["MATRIX"][original_entry[0]][new_entry[1]] = 1
+        context.current_scope["MATRIX"][new_exit[0]][original_exit[1]] = 1
+
+        # Обработка дочернего элемента
+        context.current_scope["CURRENT_ENTRY"] = new_entry
+        context.current_scope["CURRENT_EXIT"] = new_exit
+        children[0].evaluated(context)
 
 
 class IterationEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode], context):
-        """ Блок итерации."""
-        # Этот парень относительно проблемный. Если в нем есть цейтин - особенно.
-        # Ему нужно знать - начало, конец и в случае если есть тот самый, не забыть сделать смещение узла,
-        # к которому будет происходить привязка
-        pass
+    def __call__(self, value, children, context):
+        ## Вопрос совпадают ли всегда при заходе в этот блок CURRENT_ENTRY и CURRENT_EXIT
+        entry = context.current_scope["CURRENT_EXIT"]
+        # print(entry)
+        context.current_scope["CURRENT_ENTRY"] = entry
+        # loop_entry = (original_entry[0] + 1, original_entry[1])
+        # loop_exit = (original_exit[0], original_exit[1] + 1)
+        # Вытаскиваем 2-ой элемент - последовательность!
+        children[1].evaluated(context)
+        exit_of_it_block = context.current_scope["CURRENT_EXIT"]
+        if len(children) != 3:
+            # Тут логика - если есть цейтин, то будет и 2 последовательность
+            children[3].evaluated(context)
+            exit_of_it_block2 = context.current_scope["CURRENT_EXIT"]
+            context.current_scope["MATRIX"][exit_of_it_block2[0]][entry[1]] = 1
+            context.current_scope["CURRENT_EXIT"] = (exit_of_it_block2[0], exit_of_it_block2[1])
+        else:
+            # Заполнение обратной связи если нет цейтина.
+            context.current_scope["MATRIX"][exit_of_it_block[0]][entry[1]] = 1
+        # Обратная связь для повторения
+        # context.current_scope["MATRIX"][loop_exit[0]][loop_entry[1]] = 1
+
+        # Обработка разделителя (если есть)
+
 
 
 class ElementEval(ASTNode.IAttrEval):
@@ -62,36 +101,50 @@ class ElementEval(ASTNode.IAttrEval):
         к вычислению терминальных символов нашей грамматики
         (В пользовательской соответствует - именам терминалов, ключевые слова,
         нетерминалы)."""
+        entry = context.current_scope["CURRENT_ENTRY"]
+        try:
+            context.current_scope["MATRIX"][entry[0]][entry[1]] = 1
+            # print(entry)
+            # print(children[0].value)
+            # print(context.current_scope["MATRIX"])
+        except IndexError:
+            print("Ouch list index error")
+        context.current_scope["CURRENT_EXIT"] = (entry[0] + 1, entry[1] + 1)
         children[0].evaluated(context)
 
 
 class AlternativeEval(ASTNode.IAttrEval):
-    def __call__(self, value: str, children: list[ASTNode], context):
-        """Правило для альтернативы."""
+    def __call__(self, value, children, context):
         if len(children) == 1:
             children[0].evaluated(context)
             return
 
-        corent_pos = context.current_scope["CURRENT_MERGE_POSITION"]
-        # Вот тут возможно стоит изменять координату на 1
-        for el in children:
-            el.evaluated(context)
+        original_entry = context.current_scope["CURRENT_ENTRY"]
+        original_exit = context.current_scope["CURRENT_EXIT"]
 
-        return value
+        new_entry = (original_entry[0] + 1, original_entry[1])
+        new_exit = (original_exit[0], original_exit[1] + 1)
+
+        context.current_scope["STACK"].append((original_entry, original_exit))
+        for child in children:
+            context.current_scope["CURRENT_ENTRY"] = new_entry
+            context.current_scope["CURRENT_EXIT"] = new_exit
+            child.evaluated(context)
+            context.current_scope["MATRIX"][original_entry[0]][new_entry[1]] = 1  # ε-переход
+        context.current_scope["CURRENT_ENTRY"], context.current_scope["CURRENT_EXIT"] = context.current_scope[
+            "STACK"].pop()
 
 
 class SequenceEval(ASTNode.IAttrEval):
     def __call__(self, value, children, context):
-        """Правило для последовательности."""
-        if len(children) == 1:
-            children[0].evaluated(context)
-            return
-
-        # Вот тут сто проц меняем координату текущую
-
-        for el in children:
-            el.evaluated(context)
-        pass
+        entry = context.current_scope["CURRENT_EXIT"]
+        for child in children:
+            context.current_scope["CURRENT_ENTRY"] = entry
+            child.evaluated(context)
+            entry = context.current_scope["CURRENT_EXIT"]  # Обновление точки входа
+        context.current_scope["CURRENT_ENTRY"] = entry # Финальная точка входа
+        # print(entry)
+        # print(context.current_scope["CURRENT_ENTRY"])
 
 
 class KeyWordEval(ASTNode.IAttrEval):
@@ -100,19 +153,17 @@ class KeyWordEval(ASTNode.IAttrEval):
         # Вот тут проверка на то если листочек в массиве ключиков пользователя.
         # Если нас нету то бай бай бай и можем фигачить пустой моковый узел!...
         # TODO: Заменить на нормальные значения узла.
-        mearge_pos = context.current_scope["CURRENT_MERGE_POSITION"]
         new_type = None
         new_str = None
-        if children[0] in context.symbol_table["USER_KEYWORDS"]:
-            new_type = None
-            new_str = None
+        if value in context.symbol_table["USER_KEYWORDS"]:
+            new_type = NodeTypeLegacy.KEY
+            new_str = value
         else:
             new_type = None
             new_str = None
             context.errors.append(f"Unexpected keyword {children[0]=}")
 
         new_rule_vertex = NodeLegacy(type=new_type, str_=new_str, nextNodes=[])
-        context.current_scope["MATRIX"][mearge_pos[0]][mearge_pos[1]] = 1
         context.current_scope["RESULT_VERTEX_LIST"].append(new_rule_vertex)
         pass
 
@@ -126,26 +177,39 @@ class TerminalOrNonTerminalEval(ASTNode.IAttrEval):
         # Если нас нету то бай бай бай и можем фигачить пустой моковый узел!...
         # И пишем в ERROR список контекста
         # TODO: Заменить на нормальные значения узла.
-        mearge_pos = context.current_scope["CURRENT_MERGE_POSITION"]
-        new_type = None
-        new_str = None
-        if children[0] in context.symbol_table["USER_TERMINALS_NAME"]:
-            new_type = None
-            new_str = None
-        elif children[0] in context.symbol_table["USER_NON_TERMINALS"]:
-            new_type = None
-            new_str = None
+
+        if value in context.symbol_table["USER_TERMINALS_NAME"]:
+            new_type = NodeTypeLegacy.TERMINAL
+            new_str = value
+        elif value in context.symbol_table["USER_NON_TERMINALS"]:
+            if context.current_scope["CURRENT_ENTRY"] == (0, 0):
+                new_type = NodeTypeLegacy.START
+            else:
+                new_type = NodeTypeLegacy.NONTERMINAL
+            new_str = value
         else:
             new_type = None
             new_str = None
             context.errors.append(f"Unexpected keyword {children[0]=}")
 
         new_rule_vertex = NodeLegacy(type=new_type, str_=new_str, nextNodes=[])
-        context.current_scope["MATRIX"][mearge_pos[0]][mearge_pos[1]] = 1
         context.current_scope["RESULT_VERTEX_LIST"].append(new_rule_vertex)
 
-        pass
+class EndBlock(ASTNode.IAttrEval):
+    def __call__(self, value, children, context):
+        """Правило для терминала - По своей сути это либо
+        имя терминала в пользовательской грамматике, либо
+        нетерминал в пользовательской грамматике"""
+        # Тут выясняем хто мы?
+        # Если нас нету то бай бай бай и можем фигачить пустой моковый узел!...
+        # И пишем в ERROR список контекста
+        # TODO: Заменить на нормальные значения узла.
 
+        end_of_rule = NodeLegacy(type=NodeTypeLegacy.END, str_="", nextNodes=[])
+        ## Вопрос с расставлением здесь концов.
+        last_start_entry = context.current_scope["CURRENT_EXIT"]
+        context.current_scope["RESULT_VERTEX_LIST"].append(end_of_rule)
+        context.current_scope["MATRIX"][last_start_entry[0]][last_start_entry[1]] = 1
 
 rule_axiom_eval = RuleAxiomEval()
 
@@ -160,6 +224,7 @@ element_eval = ElementEval()
 
 users_keyword_eval = KeyWordEval()
 users_terminal_or_nonterminal = TerminalOrNonTerminalEval()
+end_block = EndBlock()
 
 EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'Rule', rule_axiom_eval)
 EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'Element', element_eval)
@@ -171,6 +236,8 @@ EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'RuleElement', rule_elem_eval)
 EvalRegistry.register(ASTNode.Type.NONTERMINAL, 'Sequence', sequence_eval)
 EvalRegistry.register(ASTNode.Type.TOKEN, 'name', users_terminal_or_nonterminal)
 EvalRegistry.register(ASTNode.Type.TOKEN, 'key_name', users_keyword_eval)
+EvalRegistry.register(ASTNode.Type.TOKEN, ';', end_block)
+EvalRegistry.register(ASTNode.Type.TOKEN, '.', end_block)
 
 names = ["Alternative", "Element", "Group", "Iteration", "Optional", "Rule", "RuleElement", "Sequence"]
 directory_to_save_base = fr"{settings.PROJECT_ROOT}\examples"
@@ -212,6 +279,7 @@ go = GrammarObject(terminals={
 grammar_names = ["PSECO"]
 rule_scanner = DefaultScanner(go)
 builder = DefaultAstBuilder(debug=False)
+counter = 0
 for grammar in grammar_names:
 
     path_to_save_grammar = fr"{directory_to_save}\{grammar}"
@@ -224,6 +292,8 @@ for grammar in grammar_names:
     go_cur: GrammarObject = parser.parse(mo_cur)
 
     for rule_name, rule_in_cur_grammar in parser.store_for_rules:
+        if counter > 0:
+            break
         print(rule_in_cur_grammar)
         rule_dir = fr"{path_to_save_grammar}\ast_{rule_name}"
 
@@ -245,23 +315,36 @@ for grammar in grammar_names:
         # пользовательском списке терминалов(именно их имена) / нетерминалов
         # ключевые слова мы отличаем на этапе лексического анализа - они обернуты в ' '
 
-        con.symbol_table = {"USER_TERMINALS_NAME": go_cur.terminals,
-                            "USER_NON_TERMINALS": go_cur.non_terminals,
-                            "USER_KEYWORDS": go_cur.keys,
+        con.symbol_table = {"USER_TERMINALS_NAME": go_cur.symbol_table["TERMINALS_NAME_SET"],
+                            "USER_NON_TERMINALS": go_cur.symbol_table["NON_TERMINAL_SET"],
+                            "USER_KEYWORDS": go_cur.symbol_table["KEYWORD_SET"],
                             "LIST_ROW_TOKENS": terminals}
 
-        rule_matrix = [[0] * N] * N
+        rule_matrix = [[0 for _ in range(N)] for _ in range(N)]
 
-        con.current_scope = {"MATRIX": rule_matrix,
-                             "RESULT_VERTEX_LIST": [],
-                             "CURRENT_MERGE_POSITION": (0, 0)}
+        con.current_scope = {
+            "MATRIX": rule_matrix,  # Матрица смежности
+            "RESULT_VERTEX_LIST": [],  # Список вершин графа
+            "STACK": [],  # Магазин для вложенных структур
+            "CURRENT_ENTRY": (0, 0),  # Текущая точка входа
+            "CURRENT_EXIT": (0, 0),  # Текущая точка выхода
+
+        }
 
 
         # with open(fr'{rule_dir}\tokens_{rule_name}.yaml', 'w') as file:
         #     file.write(Tokens(res).to_yaml())
 
         ast = builder.build(go, res)
+        matrix, list_nodes = ast.evaluated(con)
+        counter = 1
+        wirth_str = generate_wirth_by_rule(list_nodes, matrix)
+        with open(fr"{rule_dir}\{rule_name}.gv", 'w') as file:
+            file.write(wirth_str)
 
+        render_dot_to_png(pathlib.Path(fr"{rule_dir}\{rule_name}.gv"), pathlib.Path(fr"{rule_dir}"))
+        print(matrix)
+        print(list_nodes)
         # with open(fr"{rule_dir}\ast_{rule_name}.yaml", 'w') as file:
         #     file.write(ast.to_yaml())
 

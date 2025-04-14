@@ -304,6 +304,7 @@ class GrammarObject:
     axiom: str = ''
     rules: Dict[str, Rule] = field(default_factory=dict)
     syntax_info: dict = None
+    symbol_table: dict = field(default_factory=dict)
 
     def __post_init__(self):
         self._validate()
