@@ -32,40 +32,25 @@ class RuleAxiomEval(ASTNode.IAttrEval):
 
 class GroupEval(ASTNode.IAttrEval):
     def __call__(self, value, children, context):
-        context.current_scope["STACK"].append((
-            context.current_scope["CURRENT_ENTRY"],
-            context.current_scope["CURRENT_EXIT"]
-        ))
-        children[0].evaluated(context)
-        original_entry, original_exit = context.current_scope["STACK"].pop()
-        context.current_scope["CURRENT_ENTRY"] = original_entry
-        context.current_scope["CURRENT_EXIT"] = original_exit
+        # Здесь 0, 2 - (, ) соответственно
+        children[1].evaluated(context)
+
 
 
 class RuleElementEval(ASTNode.IAttrEval):
     def __call__(self, value: str, children: list[ASTNode], context):
-        if len(children) == 1:
-            children[0].evaluated(context)
-            return
-
-        return
+        children[0].evaluated(context)
 
 
 class OptionalEval(ASTNode.IAttrEval):
     def __call__(self, value, children, context):
-        original_entry = context.current_scope["CURRENT_ENTRY"]
         original_exit = context.current_scope["CURRENT_EXIT"]
-        new_entry = (original_entry[0] + 1, original_entry[1])
-        new_exit = (original_exit[0], original_exit[1] + 1)
+        context.current_scope["CURRENT_ENTRY"] = original_exit
+        children[1].evaluated(context)
+        curr_exit = context.current_scope["CURRENT_EXIT"]
+        # Тут крч должна произвестись работа с этим списком
+        context.current_scope["LIST_FUTURE_INDEX"].append((original_exit[1]-1, curr_exit[1]))
 
-        # ε-переходы: вход → новый вход и новый выход → выход
-        context.current_scope["MATRIX"][original_entry[0]][new_entry[1]] = 1
-        context.current_scope["MATRIX"][new_exit[0]][original_exit[1]] = 1
-
-        # Обработка дочернего элемента
-        context.current_scope["CURRENT_ENTRY"] = new_entry
-        context.current_scope["CURRENT_EXIT"] = new_exit
-        children[0].evaluated(context)
 
 
 class IterationEval(ASTNode.IAttrEval):
@@ -74,14 +59,39 @@ class IterationEval(ASTNode.IAttrEval):
         entry = context.current_scope["CURRENT_EXIT"]
         # print(entry)
         context.current_scope["CURRENT_ENTRY"] = entry
-        # loop_entry = (original_entry[0] + 1, original_entry[1])
-        # loop_exit = (original_exit[0], original_exit[1] + 1)
-        # Вытаскиваем 2-ой элемент - последовательность!
+
+        if len(context.current_scope["LIST_FUTURE_INDEX"]):
+            # В теории этого достаточно, чтобы обработать случай, когда мы пришли из альтернативы на уровне итерации
+            index_from_past_block = context.current_scope["LIST_FUTURE_INDEX"]
+            for index in index_from_past_block:
+                context.current_scope["MATRIX"][index[0]][entry[1]] = 1
+            print(f"{index_from_past_block=}")
+            context.current_scope["LIST_FUTURE_INDEX"] = []
+
         children[1].evaluated(context)
+
         exit_of_it_block = context.current_scope["CURRENT_EXIT"]
+
+        if len(context.current_scope["LIST_FUTURE_INDEX"]):
+            current_future_index = context.current_scope["LIST_FUTURE_INDEX"]
+            for index in current_future_index:
+                context.current_scope["MATRIX"][index[0]][exit_of_it_block[1]] = 1
+                ## Вот эти стрелки должны быть если альтернатива - последний блок перед концом итерации.
+                if exit_of_it_block == current_future_index[-1]:
+                    context.current_scope["MATRIX"][index[0]][entry[1]] = 1
+
+            print(f"{current_future_index=}")
+            context.current_scope["LIST_FUTURE_INDEX"] = []
+
         if len(children) != 3:
             # Тут логика - если есть цейтин, то будет и 2 последовательность
             children[3].evaluated(context)
+
+            if len(context.current_scope["LIST_FUTURE_INDEX"]):
+                print(context.current_scope["LIST_FUTURE_INDEX"])
+                # TODO: Написать логику записи.
+                context.current_scope["LIST_FUTURE_INDEX"] = current_future_index
+
             exit_of_it_block2 = context.current_scope["CURRENT_EXIT"]
             context.current_scope["MATRIX"][exit_of_it_block2[0]][entry[1]] = 1
             context.current_scope["CURRENT_EXIT"] = (exit_of_it_block2[0], exit_of_it_block2[1])
@@ -102,6 +112,11 @@ class ElementEval(ASTNode.IAttrEval):
         (В пользовательской соответствует - именам терминалов, ключевые слова,
         нетерминалы)."""
         entry = context.current_scope["CURRENT_ENTRY"]
+        past_exits = context.current_scope["LIST_FUTURE_INDEX"]
+        if len(past_exits):
+            for index in past_exits:
+                context.current_scope["MATRIX"][index[0]][entry[1]] = 1
+            context.current_scope["LIST_FUTURE_INDEX"] = []
         try:
             context.current_scope["MATRIX"][entry[0]][entry[1]] = 1
             # print(entry)
@@ -119,20 +134,25 @@ class AlternativeEval(ASTNode.IAttrEval):
             children[0].evaluated(context)
             return
 
-        original_entry = context.current_scope["CURRENT_ENTRY"]
-        original_exit = context.current_scope["CURRENT_EXIT"]
+        new_entry = context.current_scope["CURRENT_EXIT"]
+        context.current_scope["CURRENT_ENTRY"] = new_entry
+        curr_list_future_index = []
 
-        new_entry = (original_entry[0] + 1, original_entry[1])
-        new_exit = (original_exit[0], original_exit[1] + 1)
-
-        context.current_scope["STACK"].append((original_entry, original_exit))
         for child in children:
-            context.current_scope["CURRENT_ENTRY"] = new_entry
-            context.current_scope["CURRENT_EXIT"] = new_exit
+            # context.current_scope["CURRENT_ENTRY"] = new_entry
+            # context.current_scope["CURRENT_EXIT"] = new_exit
+            if child.value == "|":
+                continue
             child.evaluated(context)
-            context.current_scope["MATRIX"][original_entry[0]][new_entry[1]] = 1  # ε-переход
-        context.current_scope["CURRENT_ENTRY"], context.current_scope["CURRENT_EXIT"] = context.current_scope[
-            "STACK"].pop()
+
+            exit_eval_block = context.current_scope["CURRENT_EXIT"]
+            context.current_scope["CURRENT_EXIT"] = (new_entry[0], exit_eval_block[1])
+            ## Пока здесь ещё и храним строку! но пользоваться будем скорее всего лишь столбцом
+            curr_list_future_index.append((exit_eval_block[1] - 1, exit_eval_block[1]))
+        ## Тут важно, что мы обозначаем для следующего блока конец - он его берет себе как начало.
+        # Важно поддерживать консистентность!
+        context.current_scope["CURRENT_EXIT"] = (exit_eval_block[0] + 1, exit_eval_block[1])
+        context.current_scope["LIST_FUTURE_INDEX"] = curr_list_future_index
 
 
 class SequenceEval(ASTNode.IAttrEval):
@@ -190,7 +210,7 @@ class TerminalOrNonTerminalEval(ASTNode.IAttrEval):
         else:
             new_type = None
             new_str = None
-            context.errors.append(f"Unexpected keyword {children[0]=}")
+            context.errors.append(f"Unexpected keyword {value=}")
 
         new_rule_vertex = NodeLegacy(type=new_type, str_=new_str, nextNodes=[])
         context.current_scope["RESULT_VERTEX_LIST"].append(new_rule_vertex)
@@ -209,6 +229,11 @@ class EndBlock(ASTNode.IAttrEval):
         ## Вопрос с расставлением здесь концов.
         last_start_entry = context.current_scope["CURRENT_EXIT"]
         context.current_scope["RESULT_VERTEX_LIST"].append(end_of_rule)
+        if len(context.current_scope["LIST_FUTURE_INDEX"]):
+            # В теории этого достаточно, чтобы обработать случай, когда мы пришли из альтернативы на уровне итерации
+            index_from_past_block = context.current_scope["LIST_FUTURE_INDEX"]
+            for index in index_from_past_block:
+                context.current_scope["MATRIX"][index[0]][last_start_entry[1]] = 1
         context.current_scope["MATRIX"][last_start_entry[0]][last_start_entry[1]] = 1
 
 rule_axiom_eval = RuleAxiomEval()
@@ -328,14 +353,19 @@ for grammar in grammar_names:
             "STACK": [],  # Магазин для вложенных структур
             "CURRENT_ENTRY": (0, 0),  # Текущая точка входа
             "CURRENT_EXIT": (0, 0),  # Текущая точка выхода
-
+            "LIST_FUTURE_INDEX": [],
+            "FLAG_IS_INNER": False,
         }
 
 
-        # with open(fr'{rule_dir}\tokens_{rule_name}.yaml', 'w') as file:
-        #     file.write(Tokens(res).to_yaml())
+        with open(fr'{rule_dir}\tokens_{rule_name}.yaml', 'w') as file:
+            file.write(Tokens(res).to_yaml())
 
         ast = builder.build(go, res)
+        with open(fr"{rule_dir}\ast_{rule_name}.yaml", 'w') as file:
+            file.write(ast.to_yaml())
+
+        render_tree(f"ast_{rule_name}", ast, pathlib.Path(rule_dir))
         matrix, list_nodes = ast.evaluated(con)
         counter = 1
         wirth_str = generate_wirth_by_rule(list_nodes, matrix)
@@ -345,7 +375,4 @@ for grammar in grammar_names:
         render_dot_to_png(pathlib.Path(fr"{rule_dir}\{rule_name}.gv"), pathlib.Path(fr"{rule_dir}"))
         print(matrix)
         print(list_nodes)
-        # with open(fr"{rule_dir}\ast_{rule_name}.yaml", 'w') as file:
-        #     file.write(ast.to_yaml())
 
-        # render_tree(f"ast_{rule_name}", ast, pathlib.Path(rule_dir))
