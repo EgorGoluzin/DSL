@@ -2,7 +2,7 @@
     "syntax": {
         "type": "rbnf",
         "info": {
-            "syntax_dir": "PSECO_NEW\\wirth",
+            "syntax_dir": "examples\\PSECO_NEW",
             "filenames": ["PSECO_NEW.rbnf"],
             "support_dir": ""
         }
