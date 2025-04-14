@@ -1,7 +1,7 @@
 digraph Number {
   start [label="Number" shape=plaintext];
+  A [label="number" shape=oval];
   end [label="" shape=point];
-  A [label="number" shape=diamond];
   start -> A;
   A -> end;
 }
