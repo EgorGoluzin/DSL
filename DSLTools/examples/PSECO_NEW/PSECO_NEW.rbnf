@@ -6,7 +6,6 @@ TERMINALS:
     symbol        ::= '[:=#;(){}\[\]|.,<>+^]';
     text          ::= '"[^"]*"';
     whitespace    ::= '\s+';
-    programname   ::= '"[^"]*\n"';
 
 KEYS:
     'IF';

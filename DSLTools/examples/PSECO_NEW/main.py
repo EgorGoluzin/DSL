@@ -23,7 +23,7 @@ from DSLTools.core.tokenpostprocessing import TokenPostProcessingManager
 
 PROJECT_ROOT = settings.PROJECT_ROOT
 
-EXAMPLE = 3
+EXAMPLE = 21
 
 
 class ExpressionsEval(ASTNode.IAttrEval):

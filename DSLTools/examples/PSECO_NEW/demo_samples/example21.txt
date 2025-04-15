@@ -1,0 +1,11 @@
+big_example
+$M = C$
+WHILE $s \notin M$ DO
+$Choose(M, c_1, c_2, p_1, p_2, sigma)$
+IF $c_1, c_2 = \emptyset$ THEN
+RETURN $0$
+END_IF
+$c = R(c_1, c_2, p_1, p_2, sigma)$
+$M = M + c$
+END_WHILE
+RETURN $1$
