@@ -82,9 +82,9 @@ class DefaultAstBuilder(IAstBuilder):
         limit = -100
         while True:
             counter += 1
-            print(f'Iteration {counter}')
+            # print(f'Iteration {counter}')
             if counter == limit:
-                print(f'Counter reached {limit = }')
+                # print(f'Counter reached {limit = }')
                 raise Exception(f'Counter reached {limit = }')
             state = self.states[-1]
             pos = state.pos

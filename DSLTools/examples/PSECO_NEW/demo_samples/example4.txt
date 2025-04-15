@@ -1,0 +1,4 @@
+example4
+FOR i FROM 1 TO 3 DO
+OUTPUT $i$
+END_FOR
