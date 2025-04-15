@@ -1,0 +1,10 @@
+digraph Program {
+  start [label="Program" shape=plaintext];
+  A [label="programname" shape=diamond];
+  B [label="Block" shape=box];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> B;
+  B -> end;
+}

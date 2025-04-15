@@ -1,0 +1,11 @@
+{
+    "syntax": {
+        "type": "rbnf",
+        "info": {
+            "syntax_dir": "examples\\PSECO",
+            "filenames": ["PSECO.rbnf"],
+            "support_dir": ""
+        }
+    },
+    "debugInfoDir": "_debug"
+}

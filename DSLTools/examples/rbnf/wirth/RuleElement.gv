@@ -1,0 +1,16 @@
+digraph RuleElement {
+    start [label = "RuleElement" shape = plaintext];
+    end [label = "" shape = point];
+    A [label = "Element" shape = box];
+    B [label = "Group" shape = box];
+    C [label = "Optional" shape = box];
+    D [label = "Iteration" shape = box];
+    start -> A;
+    start -> B;
+    start -> C;
+    start -> D;
+    A -> end;
+    B -> end;
+    C -> end;
+    D -> end;
+}

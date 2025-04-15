@@ -1,0 +1,145 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: 'example12'
+children:
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Comment'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'commenttext'
+            value: '// Structure with fields'
+            attribute: ''
+            children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'StructDecl'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'STRUCT'
+            value: 'STRUCT'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Identifier'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'name'
+                value: 'Point'
+                attribute: ''
+                children: []
+          - type: 'TOKEN'
+            subtype: '{'
+            value: '{'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'FieldDecl'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'x'
+                    attribute: ''
+                    children: []
+              - type: 'TOKEN'
+                subtype: ':'
+                value: ':'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'A'
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'FieldDecl'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'y'
+                    attribute: ''
+                    children: []
+              - type: 'TOKEN'
+                subtype: ':'
+                value: ':'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'B'
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'FieldDecl'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'z'
+                    attribute: ''
+                    children: []
+              - type: 'TOKEN'
+                subtype: ':'
+                value: ':'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'exprtext'
+                    value: '$a + b$'
+                    attribute: ''
+                    children: []
+          - type: 'TOKEN'
+            subtype: '}'
+            value: '}'
+            attribute: ''
+            children: []

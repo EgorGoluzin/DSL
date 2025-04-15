@@ -1,0 +1,3 @@
+// Apply function
+f(a, b)
+RETURN $a * b$

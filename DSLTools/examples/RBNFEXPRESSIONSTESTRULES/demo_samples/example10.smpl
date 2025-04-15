@@ -1,0 +1,6 @@
+// Example with GOTO
+x : $1$
+GOTO L1
+x : $0$ // skipped
+L1
+OUTPUT $x$

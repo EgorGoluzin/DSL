@@ -26,6 +26,77 @@ def __GetType(shape):
         return NodeTypeLegacy.KEY
     raise Exception(f"Insopported shape - {shape}")
 
+def get_outgoing_edges(edges, nodeName):
+    res = []
+    for edge in edges:
+        if edge.obj_dict["points"][0] == nodeName:
+            ## Это ветка про нагруженные диаграммы вирта.
+            if "label" in edge.obj_dict["attributes"]:
+                res.append((edge.obj_dict["points"][1], edge.obj_dict["attributes"]["label"]))
+            else:
+                res.append((edge.obj_dict["points"][1], ""))
+    return res
+
+
+def GetMySyntaxDesription(diagramsDir, go):
+    files = Path(diagramsDir).glob('**/*.gv')
+    res = dict()
+    for file in files:
+        print(f"Process {file.name}")
+        source = pydot.graph_from_dot_file(file)
+        diagram = source[0]
+        a = diagram.get_type()
+        if ("digraph" != diagram.get_type()):
+            raise Exception("Virt diagram must be digraph")
+        nodes = diagram.get_nodes()
+        edges = diagram.get_edges()
+
+        virtNodes = dict()
+        startArray = []
+        endArray = []
+        for dotNode in nodes:
+            attribs = dotNode.obj_dict["attributes"]
+            if attribs.get('fontname') is not None:
+                continue
+            value_in_label = "" if "label" not in attribs else attribs["label"]
+            nodeType = __GetType("box" if "shape" not in attribs else attribs["shape"])
+
+            if len(value_in_label) != 0 and value_in_label[0] == '"':
+                value_in_label = value_in_label[1:-1]
+
+            node = NodeLegacy(nodeType, value_in_label)
+            key_for_node = dotNode.get_name()
+            if key_for_node == '"\\n"':
+                continue
+            virtNodes[key_for_node] = node
+
+            if NodeTypeLegacy.NONTERMINAL == nodeType:
+                node.nonterminal = value_in_label
+            elif NodeTypeLegacy.TERMINAL == nodeType:
+                node.terminal = value_in_label
+            elif NodeTypeLegacy.START == nodeType:
+                startArray.append(node)
+            elif NodeTypeLegacy.END == nodeType:
+                endArray.append(node)
+
+        if len(startArray) != 1:
+            raise Exception(f"Incorrect number of starts")
+        if len(endArray) != 1:
+            raise Exception(f"Incorrect number of ends")
+        for nodeName, node in virtNodes.items():
+
+            outgoingEdges = get_outgoing_edges(edges, nodeName)
+            for edge in outgoingEdges:
+                if len(edge[1]) != 0 and edge[1][0] == '"':
+                    code = edge[1][1:-1]
+                else:
+                    code = edge[1]
+                node.nextNodes.append((virtNodes[edge[0]], code.replace('\\"', '"')))
+        diagram_name = diagram.get_name()
+        res[diagram_name] = startArray[0]
+
+    return res
+
 
 def GetSyntaxDesription(diagramsDir, go):
     files = Path(diagramsDir).glob('**/*.gv')
@@ -51,7 +122,7 @@ def GetSyntaxDesription(diagramsDir, go):
             if len(value_in_label) != 0 and value_in_label[0] == '"':
                 value_in_label = value_in_label[1:-1]
 
-            node = NodeLegacy(nodeType, str)
+            node = NodeLegacy(nodeType, value_in_label)
             virtNodes[dotNode.get_name()] = node
 
             if NodeTypeLegacy.NONTERMINAL == nodeType:
@@ -82,7 +153,6 @@ def GetSyntaxDesription(diagramsDir, go):
         res[diagram.get_name()] = startArray[0]
 
     return res
-
 class VirtNodeType(Enum):
     NONTERMINAL = "box"
     TERMINAL = "diamond"
@@ -117,6 +187,7 @@ class ElementType(Enum):
     SEP_MARKER = "sep_marker"
     MERGE_FLAG = "merge_flag"
     ALTERNATIVE_FLAG = "alternative_flag"
+    ITERATION = "iteration"
 
 
 @dataclass
@@ -233,6 +304,7 @@ class GrammarObject:
     axiom: str = ''
     rules: Dict[str, Rule] = field(default_factory=dict)
     syntax_info: dict = None
+    symbol_table: dict = field(default_factory=dict)
 
     def __post_init__(self):
         self._validate()
@@ -273,6 +345,10 @@ class GrammarObject:
         res += "\n\tNonTerminals:" + "\n\t\t" + "\n\t\t".join(self.non_terminals) + ";"
         res += "\n\tRules:" + "\n\t\t" + "\n\t\t".join([rule.to_string("\n\t\t") for rule in self.rules.values()])
         res += "\n\tAxiom:" + f"\n\t\t{self.axiom}"
+        res += "\n\tSyntax info:"
+        for key, val in self.syntax_info.items():
+            res += f'\n\t\tLHS: {key, type(key)}'
+            res += f'\n\t\tRHS: {str(val), type(val)}'
         return res
 
     def upload(self, dest: Path) -> None:

@@ -1,21 +1,16 @@
-digraph PROCDECL {
-  rankdir=LR;
-  node [fontname="Arial"];
+digraph ProcDecl {
   start [label="ProcDecl" shape=plaintext];
-  end [label="" shape=point];
   A [label="PROC" shape=oval];
   B [label="Identifier" shape=box];
   C [label="(" shape=oval];
-  D [label="Parameters" shape=box];
-  E [label=")" shape=oval];
-  F [label="Block" shape=box];
-  G [label="END_PROC" shape=oval];
+  D [label=")" shape=oval];
+  E [label="Parameters" shape=box];
+  end [label="" shape=point];
   start -> A;
   A -> B;
   B -> C;
+  C -> E;
   C -> D;
-  D -> E;
-  E -> F;
-  F -> G;
-  G -> end;
+  D -> end;
+  E -> D;
 }

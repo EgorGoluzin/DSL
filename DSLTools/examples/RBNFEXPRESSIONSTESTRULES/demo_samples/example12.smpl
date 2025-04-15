@@ -1,0 +1,6 @@
+// Structure with fields
+STRUCT Point {
+x : A
+y : B
+z : $a + b$
+}

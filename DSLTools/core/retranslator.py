@@ -5,22 +5,28 @@ from DSLTools.models import IRetranslator, ASTNode, NodeType
 class ReToExpression(IRetranslator):
     def translate(self, head: ASTNode) -> str | None:
         # Обработка терминалов
-        if head.type == NodeType.TERMINAL:
-            return head.value
-
-        # Обработка ключей (игнорируем запятые)
-        if head.type == NodeType.KEY:
+        if head.type == ASTNode.Type.TOKEN:
+            # Возвращаем значение, если оно не является запятой
             return head.value if head.value != ',' else None
 
         # Обработка нетерминалов
-        if head.type == NodeType.NONTERMINAL:
-            # Рекурсивно обрабатываем дочерние узлы
-            children_results = [self.translate(child) for child in head.children if child]
-            children_results = [res for res in children_results if res]  # Убираем None
+        if head.type == ASTNode.Type.NONTERMINAL:
+            # Рекурсивно обрабатываем дочерние узлы, исключая None
+            children_results = [
+                res for child in head.children if child
+                if (res := self.translate(child)) is not None
+            ]
 
-            if head.subtype == Nonterminal.EXPRESSIONS:
-                return ",".join(children_results)  # Объединяем выражения через запятую
+            # Словарь для объединения результатов в зависимости от подтипа
+            join_strategies = {
+                Nonterminal.EXPRESSIONS: lambda results: ",".join(results),
+                Nonterminal.EXPRESSION: lambda results: "".join(results),
+                Nonterminal.TERM: lambda results: "".join(results),
+            }
 
-            elif head.subtype in (Nonterminal.EXPRESSION, Nonterminal.TERM):
-                return "".join(children_results)  # Объединяем в одну строку
+            # Выбираем стратегию объединения или возвращаем None
+            strategy = join_strategies.get(head.subtype)
+            return strategy(children_results) if strategy else None
+
+        # Если тип узла не распознан, возвращаем None
         return None

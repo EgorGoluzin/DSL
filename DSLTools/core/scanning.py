@@ -7,13 +7,15 @@ class DefaultScanner(IScanner):
     def __init__(self, grammar: GrammarObject):
         self.grammar = grammar
         self.patterns = []
-
+        self.terminal_list = [term.name for term in grammar.terminals.values()]
+        self.key_list = [value for key, value in grammar.keys]
+        print(self.key_list)
         # Сначала добавляем ключевые слова как литералы
         for key_type, key_value in self.grammar.keys:
             # Экранируем специальные символы в ключах
             pattern = re.escape(key_value)
             self.patterns.append(
-                (key_type, re.compile(f'{pattern}'))
+                (key_value, re.compile(f'{pattern}'))
             )
 
         # Затем добавляем терминалы по убыванию специфичности
@@ -49,13 +51,26 @@ class DefaultScanner(IScanner):
             match = None
             for token_type, pattern in self.patterns:
                 if (regex_match := pattern.match(input_str, position)) is not None:
+                    print(token_type)
                     value = regex_match.group()
-                    token = Token(
-                        token_type=token_type,
-                        value=value,
-                        line=line_num,
-                        column=column
-                    )
+                    if token_type in self.terminal_list:
+                        token = Token(
+                            token_type=Token.Type.TERMINAL,
+                            value=value,
+                            line=line_num,
+                            column=column
+                        )
+                        token.terminalType = token_type
+                    elif token_type in self.key_list:
+                        token = Token(
+                            token_type=Token.Type.KEY,
+                            value=value,
+                            line=line_num,
+                            column=column
+                        )
+                        token.str = token_type
+                    else:
+                        raise "Unexpected token!"
                     tokens.append(token)
 
                     # Обновляем позицию

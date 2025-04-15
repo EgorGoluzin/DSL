@@ -1,0 +1,20 @@
+digraph ProcDecl {
+  start [label="ProcDecl" shape=plaintext];
+  A [label="PROC" shape=oval];
+  B [label="Identifier" shape=box];
+  C [label="(" shape=oval];
+  D [label=")" shape=oval];
+  E [label="Parameters" shape=box];
+  F [label="Block" shape=box];
+  G [label="END_PROC" shape=oval];
+  end [label="" shape=point];
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> E;
+  C -> D;
+  E -> D;
+  D -> F;
+  F -> G;
+  G -> end;
+}

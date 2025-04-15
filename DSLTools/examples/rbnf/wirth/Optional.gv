@@ -1,0 +1,11 @@
+digraph Optional {
+    start [label = "Optional" shape = plaintext];
+    end [label = "" shape = point];
+    A [label = "Alternative" shape = box];
+    B [label = "[" shape = oval];
+    C [label = "]" shape = oval];
+    start -> B;
+    B -> A;
+    A -> C
+    C -> end;
+}

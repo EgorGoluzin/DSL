@@ -1,0 +1,135 @@
+type: 'NONTERMINAL'
+subtype: 'EXPRESSIONS'
+value: ''
+attribute: ''
+children:
+  - type: 'NONTERMINAL'
+    subtype: 'EXPRESSION'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'TERM'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '2'
+            attribute: '2'
+            children: []
+          - type: 'TOKEN'
+            subtype: '*'
+            value: '*'
+            attribute: '*'
+            children: []
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '5'
+            attribute: '5'
+            children: []
+      - type: 'TOKEN'
+        subtype: '+'
+        value: '+'
+        attribute: '+'
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'TERM'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '3'
+            attribute: '3'
+            children: []
+      - type: 'TOKEN'
+        subtype: '+'
+        value: '+'
+        attribute: '+'
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'TERM'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '7'
+            attribute: '7'
+            children: []
+  - type: 'TOKEN'
+    subtype: ','
+    value: ','
+    attribute: ','
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'EXPRESSION'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'TERM'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '8'
+            attribute: '8'
+            children: []
+  - type: 'TOKEN'
+    subtype: ','
+    value: ','
+    attribute: ','
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'EXPRESSION'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'TERM'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '6'
+            attribute: '6'
+            children: []
+          - type: 'TOKEN'
+            subtype: '*'
+            value: '*'
+            attribute: '*'
+            children: []
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '1'
+            attribute: '1'
+            children: []
+      - type: 'TOKEN'
+        subtype: '+'
+        value: '+'
+        attribute: '+'
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'TERM'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '9'
+            attribute: '9'
+            children: []
+          - type: 'TOKEN'
+            subtype: '*'
+            value: '*'
+            attribute: '*'
+            children: []
+          - type: 'TOKEN'
+            subtype: 'number'
+            value: '2'
+            attribute: '2'
+            children: []

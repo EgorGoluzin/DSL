@@ -1,0 +1,160 @@
+type: 'NONTERMINAL'
+subtype: 'Rule'
+value: ''
+attribute: ''
+children:
+  - type: 'TOKEN'
+    subtype: 'name'
+    value: 'ArrayDecl'
+    attribute: ''
+    children: []
+  - type: 'TOKEN'
+    subtype: '::='
+    value: '::='
+    attribute: ''
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Alternative'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'key_name'
+                    value: ''ARRAY''
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Expression'
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'key_name'
+                    value: ''OF''
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Identifier'
+                    attribute: ''
+                    children: []
+      - type: 'TOKEN'
+        subtype: '|'
+        value: '|'
+        attribute: ''
+        children: []
+      - type: 'NONTERMINAL'
+        subtype: 'Sequence'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'key_name'
+                    value: ''ARRAY''
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Expression'
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'key_name'
+                    value: ''OF''
+                    attribute: ''
+                    children: []
+          - type: 'NONTERMINAL'
+            subtype: 'RuleElement'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Element'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'Expression'
+                    attribute: ''
+                    children: []
+  - type: 'TOKEN'
+    subtype: ';'
+    value: ';'
+    attribute: ''
+    children: []

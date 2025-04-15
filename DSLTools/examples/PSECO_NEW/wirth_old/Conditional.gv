@@ -1,0 +1,33 @@
+digraph Conditional {
+  start [label="Conditional" shape=plaintext];
+  end [label="" shape=point];
+
+  A [label="IF" shape=oval];
+  B [label="Expression" shape=box];
+  C [label="THEN" shape=oval];
+  D [label="Block" shape=box];
+  E [label="ELSEIF?" shape=diamond];
+  F [label="Expression" shape=box];
+  G [label="THEN" shape=oval];
+  H [label="Block" shape=box];
+  I [label="ELSE?" shape=diamond];
+  J [label="Block" shape=box];
+  K [label="END_IF" shape=oval];
+
+  start -> A;
+  A -> B;
+  B -> C;
+  C -> D;
+  D -> E;
+
+  E -> F [label="yes"];
+  F -> G;
+  G -> H;
+  H -> E;
+
+  E -> I [label="no"];
+  I -> J [label="yes"];
+  J -> K;
+  I -> K [label="no"];
+  K -> end;
+}

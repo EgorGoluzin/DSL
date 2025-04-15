@@ -1,0 +1,50 @@
+digraph ast_Assignment {
+	1 [label="NONTERMINAL
+type: Rule" shape=box]
+	2 [label="TERMINAL
+type: name
+string: Assignment" shape=diamond]
+	1 -> 2
+	3 [label="KEY
+string: ::=" shape=oval]
+	1 -> 3
+	4 [label="NONTERMINAL
+type: Alternative" shape=box]
+	1 -> 4
+	5 [label="KEY
+string: ;" shape=oval]
+	1 -> 5
+	6 [label="NONTERMINAL
+type: Sequence" shape=box]
+	4 -> 6
+	7 [label="NONTERMINAL
+type: RuleElement" shape=box]
+	6 -> 7
+	8 [label="NONTERMINAL
+type: RuleElement" shape=box]
+	6 -> 8
+	9 [label="NONTERMINAL
+type: RuleElement" shape=box]
+	6 -> 9
+	10 [label="NONTERMINAL
+type: Element" shape=box]
+	7 -> 10
+	11 [label="NONTERMINAL
+type: Element" shape=box]
+	8 -> 11
+	12 [label="NONTERMINAL
+type: Element" shape=box]
+	9 -> 12
+	13 [label="TERMINAL
+type: name
+string: Variable" shape=diamond]
+	10 -> 13
+	14 [label="TERMINAL
+type: key_name
+string: ':'" shape=diamond]
+	11 -> 14
+	15 [label="TERMINAL
+type: name
+string: Expression" shape=diamond]
+	12 -> 15
+}

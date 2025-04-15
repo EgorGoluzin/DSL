@@ -1,0 +1,6 @@
+PROC p(x)
+x : $x * 2$
+OUTPUT $x$
+END_PROC
+
+p($5$)

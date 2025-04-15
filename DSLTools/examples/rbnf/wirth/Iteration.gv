@@ -1,0 +1,16 @@
+digraph Iteration {
+    start [label = "Iteration" shape = plaintext];
+    end [label = "" shape = point];
+    A [label = "Alternative" shape = box];
+    B [label = "#" shape = oval];
+    C [label = "Alternative" shape = box];
+    E [label = "{" shape = oval];
+    F [label = "}" shape = oval];
+    start -> E;
+    E -> A;
+    A -> B;
+    B -> C;
+    C -> F;
+    A -> F;
+    F -> end;
+}
