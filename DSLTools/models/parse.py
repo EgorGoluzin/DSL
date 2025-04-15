@@ -343,7 +343,7 @@ class GrammarObject:
         return ',\n\t'.join(f"'{nt}'" for nt in self.non_terminals)
 
     def serialized_keys(self) -> str:
-        return ",\n\t".join([f"('{item[1]}', '{item[0]}')" for item in self.keys])
+        return ",\n\t".join([f"('{item[0]}', '{item[1]}')" for item in self.keys])
 
     def serialized_axiom(self) -> str:
         return f"'{self.axiom}'"

@@ -32,27 +32,18 @@ if __name__ == '__main__':
         "terminator": Terminal(name="terminator", pattern=','),
         },
         non_terminals=["EXPRESSIONS", "EXPRESSION", "TERM"],
-        keys=[("ebnf_symbol", '+'),
-              ("ebnf_symbol", ':'),
-              ("ebnf_symbol", ';'),
-              ("ebnf_symbol", '#'),
-              ("ebnf_symbol", '('),
-              ("ebnf_symbol", ')'),
-              ("ebnf_symbol", '['),
-              ("ebnf_symbol", ']'),
-              ("ebnf_symbol", '{'),
-              ("ebnf_symbol", '}'),
-              ("ebnf_symbol", '|'),
-              ("ebnf_symbol", '.'),
-              ("name", 'RULES')],
+        keys=[("operation", '+'),
+              ("operation", '*'),
+              ("terminator", ','),],
         axiom="EXPRESSIONS",
         # Alternative       ::= { Sequence # '|' };
         # Sequence          ::= { RuleElement };
         # RuleElement       ::= Element | Group | Optional | Iteration;
         rules={
-            'Alternative': Rule(
-                definition=[NodeLegacy(NTL.NONTERMINAL, 'Sequence'),
-                            NodeLegacy(NTL.KEY, '|')],
+            # EXPRESSIONS ::= { EXPRESSION # , }
+            'EXPRESSIONS': Rule(
+                definition=[NodeLegacy(NTL.NONTERMINAL, 'EXPRESSION'),
+                            NodeLegacy(NTL.KEY, ',')],
                 node_matrix=[
                     [0, 1, 0, 0],
                     [0, 0, 1, 1],
@@ -60,26 +51,26 @@ if __name__ == '__main__':
                     [0, 0, 0, 0],
                 ]
             ),
-            'Sequence': Rule(
-                definition=[NodeLegacy(NTL.NONTERMINAL, 'RuleElement')],
+            # EXPRESSION ::= { TERM # + }
+            'EXPRESSION': Rule(
+                definition=[NodeLegacy(NTL.NONTERMINAL, 'TERM'),
+                            NodeLegacy(NTL.KEY, '+')],
                 node_matrix=[
-                    [0, 1, 0],
-                    [0, 1, 1],
-                    [0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 1],
+                    [0, 1, 0, 0],
+                    [0, 0, 0, 0],
                 ]
             ),
-            'RuleElement': Rule(
-                definition=[NodeLegacy(NTL.NONTERMINAL, 'Element'),
-                            NodeLegacy(NTL.NONTERMINAL, 'Group'),
-                            NodeLegacy(NTL.NONTERMINAL, 'Optional'),
-                            NodeLegacy(NTL.NONTERMINAL, 'Iteration')],
+            # TERM ::= { number # * }
+            'TERM': Rule(
+                definition=[NodeLegacy(NTL.TERMINAL, 'number'),
+                            NodeLegacy(NTL.KEY, '*'),],
                 node_matrix=[
-                    [0, 1, 1, 1, 1, 0],
-                    [0, 0, 0, 0, 0, 1],
-                    [0, 0, 0, 0, 0, 1],
-                    [0, 0, 0, 0, 0, 1],
-                    [0, 0, 0, 0, 0, 1],
-                    [0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 1],
+                    [0, 1, 0, 0],
+                    [0, 0, 0, 0],
                 ]
             ),
         })

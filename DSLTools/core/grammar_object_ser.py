@@ -5,77 +5,78 @@ import time
 
 # Block with lexis
 grammar_terminals = {
-    'key_name': Terminal(name='key_name', pattern=r'\'[^\']*\''),
-	'name': Terminal(name='name', pattern=r'[A-Za-z_][A-Za-z0-9_]*'),
-	'ebnf_symbol': Terminal(name='ebnf_symbol', pattern=r'[::=#;(){}\[\]|.]'),
-	'whitespace': Terminal(name='whitespace', pattern=r'\s+')
+    "number": Terminal(name="number", pattern=r"[1-9]\d*"),
+    "operation": Terminal(name="operation", pattern=r"[\+\*]"),
+    "terminator": Terminal(name="terminator", pattern=r","),
 }
 
-grammar_nonterminals = ['Alternative',
-	'Element',
-	'Group',
-	'Iteration',
-	'Optional',
-	'Rule',
-	'RuleElement',
-	'Sequence']
+grammar_nonterminals = ["EXPRESSIONS", "EXPRESSION", "TERM"]
 
-grammar_keywords = [('::=', 'ebnf_symbol'),
-	(':', 'ebnf_symbol'),
-	(';', 'ebnf_symbol'),
-	('#', 'ebnf_symbol'),
-	('(', 'ebnf_symbol'),
-	(')', 'ebnf_symbol'),
-	('[', 'ebnf_symbol'),
-	(']', 'ebnf_symbol'),
-	('{', 'ebnf_symbol'),
-	('}', 'ebnf_symbol'),
-	('|', 'ebnf_symbol'),
-	('.', 'ebnf_symbol'),
-	('RULES', 'name')]
+grammar_keywords = [("operation", "+"), ("operation", "*"), ("terminator", ",")]
 
-grammar_axiom = 'Rule'
+grammar_axiom = "EXPRESSIONS"
 
 # Block syntax rules
 
 
 grammar_syntax_rules = {
-    'Alternative': Rule(definition=[NodeLegacy(type= 'nonterminal', str_= 'Sequence', nonterminal='None', terminal='None', nextNodes=[]),
-		NodeLegacy(type= 'key', str_= '|', nonterminal='None', terminal='None', nextNodes=[])],
-	node_matrix=[
-		[0,1,0,0],
-		[0,0,1,1],
-		[0,1,0,0],
-		[0,0,0,0]
-		]),
-	'Sequence': Rule(definition=[NodeLegacy(type= 'nonterminal', str_= 'RuleElement', nonterminal='None', terminal='None', nextNodes=[])],
-	node_matrix=[
-		[0,1,0],
-		[0,1,1],
-		[0,0,0]
-		]),
-	'RuleElement': Rule(definition=[NodeLegacy(type= 'nonterminal', str_= 'Element', nonterminal='None', terminal='None', nextNodes=[]),
-		NodeLegacy(type= 'nonterminal', str_= 'Group', nonterminal='None', terminal='None', nextNodes=[]),
-		NodeLegacy(type= 'nonterminal', str_= 'Optional', nonterminal='None', terminal='None', nextNodes=[]),
-		NodeLegacy(type= 'nonterminal', str_= 'Iteration', nonterminal='None', terminal='None', nextNodes=[])],
-	node_matrix=[
-		[0,1,1,1,1,0],
-		[0,0,0,0,0,1],
-		[0,0,0,0,0,1],
-		[0,0,0,0,0,1],
-		[0,0,0,0,0,1],
-		[0,0,0,0,0,0]
-		])
+    "EXPRESSIONS": Rule(
+        definition=[
+            NodeLegacy(
+                type="nonterminal",
+                str_="EXPRESSION",
+                nonterminal="None",
+                terminal="None",
+                nextNodes=[],
+            ),
+            NodeLegacy(
+                type="key", str_=",", nonterminal="None", terminal="None", nextNodes=[]
+            ),
+        ],
+        node_matrix=[[0, 1, 0, 0], [0, 0, 1, 1], [0, 1, 0, 0], [0, 0, 0, 0]],
+    ),
+    "EXPRESSION": Rule(
+        definition=[
+            NodeLegacy(
+                type="nonterminal",
+                str_="TERM",
+                nonterminal="None",
+                terminal="None",
+                nextNodes=[],
+            ),
+            NodeLegacy(
+                type="key", str_="+", nonterminal="None", terminal="None", nextNodes=[]
+            ),
+        ],
+        node_matrix=[[0, 1, 0, 0], [0, 0, 1, 1], [0, 1, 0, 0], [0, 0, 0, 0]],
+    ),
+    "TERM": Rule(
+        definition=[
+            NodeLegacy(
+                type="terminal",
+                str_="number",
+                nonterminal="None",
+                terminal="None",
+                nextNodes=[],
+            ),
+            NodeLegacy(
+                type="key", str_="*", nonterminal="None", terminal="None", nextNodes=[]
+            ),
+        ],
+        node_matrix=[[0, 1, 0, 0], [0, 0, 1, 1], [0, 1, 0, 0], [0, 0, 0, 0]],
+    ),
 }
 
 # New formed grammatical object
-stored_go = GrammarObject(terminals=grammar_terminals,
-              non_terminals=grammar_nonterminals,
-              keys=grammar_keywords,
-              axiom=grammar_axiom,
-              rules=grammar_syntax_rules)
+stored_go = GrammarObject(
+    terminals=grammar_terminals,
+    non_terminals=grammar_nonterminals,
+    keys=grammar_keywords,
+    axiom=grammar_axiom,
+    rules=grammar_syntax_rules,
+)
 
-wirth_dest = Path(r'C:\WORK\DSL\DSLTools\core\wirth_dest') / str(time.time_ns())
+wirth_dest = Path(r"C:\WORK\DSL\DSLTools\core\wirth_dest") / str(time.time_ns())
 
 stored_go.rules_to_dot_files(wirth_dest)
 
