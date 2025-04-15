@@ -1,6 +1,6 @@
 example12
 STRUCT Point {
-x : A
-y : B
-z : $a + b$
+x = A
+y = B
+z = $a + b$
 }

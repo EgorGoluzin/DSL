@@ -1,0 +1,125 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: 'example5'
+children:
+  - type: 'TOKEN'
+    subtype: 'name'
+    value: 'example5'
+    attribute: 'example5'
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Assignment'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'Variable'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Identifier'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'name'
+                    value: 'x'
+                    attribute: ''
+                    children: []
+          - type: 'TOKEN'
+            subtype: '='
+            value: '='
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Expression'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'exprtext'
+                value: '$3$'
+                attribute: ''
+                children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Loop'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'LA'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'REPEAT'
+                value: 'REPEAT'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Assignment'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'NONTERMINAL'
+                        subtype: 'Variable'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'NONTERMINAL'
+                            subtype: 'Identifier'
+                            value: ''
+                            attribute: ''
+                            children:
+                              - type: 'TOKEN'
+                                subtype: 'name'
+                                value: 'x'
+                                attribute: ''
+                                children: []
+                      - type: 'TOKEN'
+                        subtype: '='
+                        value: '='
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Expression'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'TOKEN'
+                            subtype: 'exprtext'
+                            value: '$x - 1$'
+                            attribute: ''
+                            children: []
+              - type: 'TOKEN'
+                subtype: 'UNTIL'
+                value: 'UNTIL'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Expression'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'exprtext'
+                    value: '$x = 0$'
+                    attribute: ''
+                    children: []

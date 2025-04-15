@@ -1,6 +1,6 @@
 example7
 PROC p(x)
-x : $x * 2$
+x = $x * 2$
 OUTPUT $x$
 END_PROC
 

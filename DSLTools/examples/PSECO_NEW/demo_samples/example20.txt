@@ -1,5 +1,5 @@
 example20
 REPEAT
-x : $x - 1$
+x = $x - 1$
 OUTPUT $x$
 UNTIL $x = 0$

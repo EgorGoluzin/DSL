@@ -121,7 +121,7 @@ def main():
     go = parser.parse(mo)
     go.upload(pathlib.Path(fr"{directory_to_save}\wirth"))
     print(go)
-    for i in range(2, 3):
+    for i in range(3, 4):
         file_name = f"example{i}"
         # Шаг 4: Генерация dsl_info.py
         # generate_dsl_info(go=go, dest=directory_to_save)

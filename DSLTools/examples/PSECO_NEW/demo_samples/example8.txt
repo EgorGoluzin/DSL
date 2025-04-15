@@ -1,6 +1,6 @@
 example8
 ITER I(n)
-n : $n + 1$
+n = $n + 1$
 YIELD $n$
 END_ITER
 
