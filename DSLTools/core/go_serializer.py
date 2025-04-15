@@ -27,15 +27,12 @@ if __name__ == '__main__':
     dest = Path(__file__).resolve().parent
     wirth_dest = dest / 'wirth_dest'
     go = GrammarObject(terminals={
-        "key_name": Terminal(name="key_name", pattern=r'\'[^\']*\''),
-        "name": Terminal(name="name", pattern='[A-Za-z_][A-Za-z0-9_]*'),
-        "ebnf_symbol": Terminal(name="ebnf_symbol", pattern="[::=#;(){}\[\]|.]"),
-        "whitespace": Terminal(name="whitespace", pattern="\s+")},
-        non_terminals=["Alternative", "Element", "Group",
-                       "Iteration", "Optional",
-                       "Rule", "RuleElement",
-                       "Sequence"],
-        keys=[("ebnf_symbol", '::='),
+        "number": Terminal(name="number", pattern=r'[1-9]\d*'),
+        "operation": Terminal(name="operation", pattern=r'[\+\*]'),
+        "terminator": Terminal(name="terminator", pattern=','),
+        },
+        non_terminals=["EXPRESSIONS", "EXPRESSION", "TERM"],
+        keys=[("ebnf_symbol", '+'),
               ("ebnf_symbol", ':'),
               ("ebnf_symbol", ';'),
               ("ebnf_symbol", '#'),
@@ -48,7 +45,7 @@ if __name__ == '__main__':
               ("ebnf_symbol", '|'),
               ("ebnf_symbol", '.'),
               ("name", 'RULES')],
-        axiom="Rule",
+        axiom="EXPRESSIONS",
         # Alternative       ::= { Sequence # '|' };
         # Sequence          ::= { RuleElement };
         # RuleElement       ::= Element | Group | Optional | Iteration;

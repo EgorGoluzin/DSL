@@ -1,8 +1,12 @@
 from DSLTools.models import GrammarObject, Terminal, Rule
 from DSLTools.models.legacy_for_wirth import NodeTypeLegacy, NodeLegacy
+from pathlib import Path
+import time
 
 # Block with lexis
-grammar_terminals = {{ {terminals} }}
+grammar_terminals = {{
+    {terminals}
+}}
 
 grammar_nonterminals = [{nonterminals}]
 
@@ -13,7 +17,9 @@ grammar_axiom = {axiom}
 # Block syntax rules
 
 
-grammar_syntax_rules = {{ {syntax_rules} }}
+grammar_syntax_rules = {{
+    {syntax_rules}
+}}
 
 # New formed grammatical object
 stored_go = GrammarObject(terminals=grammar_terminals,
@@ -22,7 +28,7 @@ stored_go = GrammarObject(terminals=grammar_terminals,
               axiom=grammar_axiom,
               rules=grammar_syntax_rules)
 
-wirth_dest = {wirth_dest}
+wirth_dest = Path({wirth_dest}) / str(time.time_ns())
 
 stored_go.rules_to_dot_files(wirth_dest)
 

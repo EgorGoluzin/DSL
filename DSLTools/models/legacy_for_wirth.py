@@ -11,12 +11,12 @@ class NodeTypeLegacy(str, Enum):
 
 class NodeLegacy:
     """Это старый объект узла правила, который нужно переработать."""
-    def __init__(self, type, str_, nextNodes=None):
+    def __init__(self, type, str_, nonterminal=None, terminal=None, nextNodes=None):
 
         self.type = type
         self.str = str_
         self.nextNodes: list | None = (nextNodes, [])[nextNodes is None]
-
+        
         self.nonterminal: str | None = None
         """Было динамически появляющимся полем, явно его здесь объявил. В случае если нетерминал будет не null."""
         self.terminal: str | None = None

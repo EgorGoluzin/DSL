@@ -337,7 +337,7 @@ class GrammarObject:
 
     def serialized_terminals(self) -> str:
         return ',\n\t'.join(
-            terminal.serialized() for terminal in self.terminals.values())
+            f"'{name}': {terminal.serialized()}" for name, terminal in self.terminals.items())
 
     def serialized_nonterminals(self) -> str:
         return ',\n\t'.join(f"'{nt}'" for nt in self.non_terminals)
