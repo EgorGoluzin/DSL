@@ -1,4 +1,4 @@
 example13
 SELECT x IN X
-x : $x + 1$
+x = $x + 1$
 OUTPUT $x$

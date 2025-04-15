@@ -1,6 +1,6 @@
 example6
 FUNC f(a, b)
-c : $a + b$
+c = $a + b$
 RETURN $c$
 END_FUNC
 

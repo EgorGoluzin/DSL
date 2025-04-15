@@ -1,3 +1,3 @@
 example17
 CALL(x, y)
-z : $x + y$
+z = $x + y$

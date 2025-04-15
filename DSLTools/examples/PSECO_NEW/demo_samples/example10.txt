@@ -1,6 +1,6 @@
 example10
-x : $1$
+x = $1$
 GOTO L1
-x : $0$ // skipped
+x = $0$ // skipped
 L1
 OUTPUT $x$
