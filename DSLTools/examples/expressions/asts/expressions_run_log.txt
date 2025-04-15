@@ -1,0 +1,158 @@
+Process expression.gv
+Process expressions.gv
+Process term.gv
+GrammarObject(
+        Terminals:
+                Terminal(name: number, pattern: [1-9]\d*)
+                Terminal(name: operation, pattern: [\+\*])
+                Terminal(name: terminator, pattern: ,);
+        Keys:
+                type: operation, val: +
+                type: operation, val: *
+                type: terminator, val: ,;
+        NonTerminals:
+                EXPRESSIONS
+                EXPRESSION
+                TERM;
+        Rules:
+
+        Axiom:
+                EXPRESSIONS
+        Syntax info:
+                LHS: ('EXPRESSION', <class 'str'>)
+                RHS: ("NodeLegacy(type= 'NodeTypeLegacy.START', str_= 'EXPRESSION', nonterminal='None', terminal='None', nextNodes=[(NodeLegacy(type= 'NodeTypeLegacy.NONTERMINAL',
+str_= 'TERM', nonterminal= 'TERM', terminal= 'None', nextNodes= [(NodeLegacy(type= 'NodeTypeLegacy.KEY', str_= '+', nonterminal= 'None', terminal= 'None', nextNodes= [(NodeLegacy(t
+ype= 'NodeTypeLegacy.NONTERMINAL', str_= 'TERM', nonterminal= 'TERM', terminal= 'None', nextNodes= [(...)(NodeLegacy(type= 'NodeTypeLegacy.END', str_= '', nonterminal= 'None', term
+inal= 'None', nextNodes= []), '')]), '')]), '')(NodeLegacy(type= 'NodeTypeLegacy.END', str_= '', nonterminal= 'None', terminal= 'None', nextNodes= []), '')]), '')])", <class 'DSLTo
+ols.models.legacy_for_wirth.NodeLegacy'>)
+                LHS: ('EXPRESSIONS', <class 'str'>)
+                RHS: ("NodeLegacy(type= 'NodeTypeLegacy.START', str_= 'EXPRESSIONS', nonterminal='None', terminal='None', nextNodes=[(NodeLegacy(type= 'NodeTypeLegacy.NONTERMINAL',
+ str_= 'EXPRESSION', nonterminal= 'EXPRESSION', terminal= 'None', nextNodes= [(NodeLegacy(type= 'NodeTypeLegacy.KEY', str_= ',', nonterminal= 'None', terminal= 'None', nextNodes= [
+(NodeLegacy(type= 'NodeTypeLegacy.NONTERMINAL', str_= 'EXPRESSION', nonterminal= 'EXPRESSION', terminal= 'None', nextNodes= [(...)(NodeLegacy(type= 'NodeTypeLegacy.END', str_= '',
+nonterminal= 'None', terminal= 'None', nextNodes= []), '')]), '')]), '')(NodeLegacy(type= 'NodeTypeLegacy.END', str_= '', nonterminal= 'None', terminal= 'None', nextNodes= []), '')
+]), '')])", <class 'DSLTools.models.legacy_for_wirth.NodeLegacy'>)
+                LHS: ('TERM', <class 'str'>)
+                RHS: ("NodeLegacy(type= 'NodeTypeLegacy.START', str_= 'TERM', nonterminal='None', terminal='None', nextNodes=[(NodeLegacy(type= 'NodeTypeLegacy.TERMINAL', str_= 'nu
+mber', nonterminal= 'None', terminal= 'number', nextNodes= [(NodeLegacy(type= 'NodeTypeLegacy.KEY', str_= '*', nonterminal= 'None', terminal= 'None', nextNodes= [(NodeLegacy(type=
+'NodeTypeLegacy.TERMINAL', str_= 'number', nonterminal= 'None', terminal= 'number', nextNodes= [(...)(NodeLegacy(type= 'NodeTypeLegacy.END', str_= '', nonterminal= 'None', terminal
+= 'None', nextNodes= []), '')]), '')]), '')(NodeLegacy(type= 'NodeTypeLegacy.END', str_= '', nonterminal= 'None', terminal= 'None', nextNodes= []), '')]), '')])", <class 'DSLTools.
+models.legacy_for_wirth.NodeLegacy'>)
+['+', '*', ',']
+number
+*
+number
++
+number
++
+number
+,
+number
+,
+number
+*
+number
++
+number
+*
+number
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '2'', pos: (l: 1, c: 1), self.attribute = None
+Token(self.terminalType = None, self.str = '*', self.token_type = <Type.KEY: 'key'>, 'self.value = '*'', pos: (l: 1, c: 3), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '5'', pos: (l: 1, c: 5), self.attribute = None
+Token(self.terminalType = None, self.str = '+', self.token_type = <Type.KEY: 'key'>, 'self.value = '+'', pos: (l: 1, c: 7), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '3'', pos: (l: 1, c: 9), self.attribute = None
+Token(self.terminalType = None, self.str = '+', self.token_type = <Type.KEY: 'key'>, 'self.value = '+'', pos: (l: 1, c: 11), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '7'', pos: (l: 1, c: 13), self.attribute = None
+Token(self.terminalType = None, self.str = ',', self.token_type = <Type.KEY: 'key'>, 'self.value = ','', pos: (l: 1, c: 14), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '8'', pos: (l: 2, c: 1), self.attribute = None
+Token(self.terminalType = None, self.str = ',', self.token_type = <Type.KEY: 'key'>, 'self.value = ','', pos: (l: 2, c: 2), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '6'', pos: (l: 2, c: 4), self.attribute = None
+Token(self.terminalType = None, self.str = '*', self.token_type = <Type.KEY: 'key'>, 'self.value = '*'', pos: (l: 2, c: 6), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '1'', pos: (l: 2, c: 8), self.attribute = None
+Token(self.terminalType = None, self.str = '+', self.token_type = <Type.KEY: 'key'>, 'self.value = '+'', pos: (l: 2, c: 10), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '9'', pos: (l: 2, c: 12), self.attribute = None
+Token(self.terminalType = None, self.str = '*', self.token_type = <Type.KEY: 'key'>, 'self.value = '*'', pos: (l: 2, c: 14), self.attribute = None
+Token(self.terminalType = 'number', self.str = None, self.token_type = <Type.TERMINAL: 'terminal'>, 'self.value = '2'', pos: (l: 2, c: 16), self.attribute = None
+Iteration 1
+[Builder.walk] pos = 0, depth = 0, branch = 'nonterminal', rule for: EXPRESSION, token: Token: terminal = number, value = 2; pos = (l: 1, c: 1)
+Iteration 2
+[Builder.walk] pos = 0, depth = 1, branch = 'nonterminal', rule for: TERM, token: Token: terminal = number, value = 2; pos = (l: 1, c: 1)
+Iteration 3
+[Builder.walk] pos = 0, depth = 2, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 2; pos = (l: 1, c: 1)
+Iteration 4
+[Builder.walk] pos = 1, depth = 2, branch = 'key', rule for: *, token: Token: key = *; pos = (l: 1, c: 3)
+Iteration 5
+[Builder.walk] pos = 2, depth = 2, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 5; pos = (l: 1, c: 5)
+Iteration 6
+Iteration 7
+[Builder.walk] pos = 3, depth = 2, branch = 'end', rule for: None, token: Token: key = +; pos = (l: 1, c: 7)
+Iteration 8
+[Builder.walk] pos = 3, depth = 0, branch = 'key', rule for: +, token: Token: key = +; pos = (l: 1, c: 7)
+Iteration 9
+[Builder.walk] pos = 4, depth = 0, branch = 'nonterminal', rule for: TERM, token: Token: terminal = number, value = 3; pos = (l: 1, c: 9)
+Iteration 10
+[Builder.walk] pos = 4, depth = 1, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 3; pos = (l: 1, c: 9)
+Iteration 11
+Iteration 12
+[Builder.walk] pos = 5, depth = 1, branch = 'end', rule for: None, token: Token: key = +; pos = (l: 1, c: 11)
+Iteration 13
+[Builder.walk] pos = 5, depth = 0, branch = 'key', rule for: +, token: Token: key = +; pos = (l: 1, c: 11)
+Iteration 14
+[Builder.walk] pos = 6, depth = 0, branch = 'nonterminal', rule for: TERM, token: Token: terminal = number, value = 7; pos = (l: 1, c: 13)
+Iteration 15
+[Builder.walk] pos = 6, depth = 1, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 7; pos = (l: 1, c: 13)
+Iteration 16
+Iteration 17
+[Builder.walk] pos = 7, depth = 1, branch = 'end', rule for: None, token: Token: key = ,; pos = (l: 1, c: 14)
+Iteration 18
+Iteration 19
+[Builder.walk] pos = 7, depth = 0, branch = 'end', rule for: None, token: Token: key = ,; pos = (l: 1, c: 14)
+Iteration 20
+[Builder.walk] pos = 7, depth = 0, branch = 'key', rule for: ,, token: Token: key = ,; pos = (l: 1, c: 14)
+Iteration 21
+[Builder.walk] pos = 8, depth = 0, branch = 'nonterminal', rule for: EXPRESSION, token: Token: terminal = number, value = 8; pos = (l: 2, c: 1)
+Iteration 22
+[Builder.walk] pos = 8, depth = 1, branch = 'nonterminal', rule for: TERM, token: Token: terminal = number, value = 8; pos = (l: 2, c: 1)
+Iteration 23
+[Builder.walk] pos = 8, depth = 2, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 8; pos = (l: 2, c: 1)
+Iteration 24
+Iteration 25
+[Builder.walk] pos = 9, depth = 2, branch = 'end', rule for: None, token: Token: key = ,; pos = (l: 2, c: 2)
+Iteration 26
+Iteration 27
+[Builder.walk] pos = 9, depth = 0, branch = 'end', rule for: None, token: Token: key = ,; pos = (l: 2, c: 2)
+Iteration 28
+[Builder.walk] pos = 9, depth = 0, branch = 'key', rule for: ,, token: Token: key = ,; pos = (l: 2, c: 2)
+Iteration 29
+[Builder.walk] pos = 10, depth = 0, branch = 'nonterminal', rule for: EXPRESSION, token: Token: terminal = number, value = 6; pos = (l: 2, c: 4)
+Iteration 30
+[Builder.walk] pos = 10, depth = 1, branch = 'nonterminal', rule for: TERM, token: Token: terminal = number, value = 6; pos = (l: 2, c: 4)
+Iteration 31
+[Builder.walk] pos = 10, depth = 2, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 6; pos = (l: 2, c: 4)
+Iteration 32
+[Builder.walk] pos = 11, depth = 2, branch = 'key', rule for: *, token: Token: key = *; pos = (l: 2, c: 6)
+Iteration 33
+[Builder.walk] pos = 12, depth = 2, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 1; pos = (l: 2, c: 8)
+Iteration 34
+Iteration 35
+[Builder.walk] pos = 13, depth = 2, branch = 'end', rule for: None, token: Token: key = +; pos = (l: 2, c: 10)
+Iteration 36
+[Builder.walk] pos = 13, depth = 0, branch = 'key', rule for: +, token: Token: key = +; pos = (l: 2, c: 10)
+Iteration 37
+[Builder.walk] pos = 14, depth = 0, branch = 'nonterminal', rule for: TERM, token: Token: terminal = number, value = 9; pos = (l: 2, c: 12)
+Iteration 38
+[Builder.walk] pos = 14, depth = 1, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 9; pos = (l: 2, c: 12)
+Iteration 39
+[Builder.walk] pos = 15, depth = 1, branch = 'key', rule for: *, token: Token: key = *; pos = (l: 2, c: 14)
+Iteration 40
+[Builder.walk] pos = 16, depth = 1, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 2; pos = (l: 2, c: 16)
+Iteration 41
+Iteration 42
+[Builder.walk] pos = 16, depth = 1, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 2; pos = (l: 2, c: 16)
+Iteration 43
+Iteration 44
+[Builder.walk] pos = 16, depth = 1, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 2; pos = (l: 2, c: 16)
+Iteration 45
+Iteration 46
+[Builder.walk] pos = 16, depth = 1, branch = 'terminal', rule for: number, token: Token: terminal = number, value = 2; pos = (l: 2, c: 16)
+Result: [20, 8, 24], EvalContext(symbol_table={}, errors=[], warnings=['Calculating Expressions'], current_scope=None, data_types={})
+Finished processing test.smpl. AST saved to ...
