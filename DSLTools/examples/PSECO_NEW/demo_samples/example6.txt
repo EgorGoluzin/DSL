@@ -4,4 +4,4 @@ c = $a + b$
 RETURN $c$
 END_FUNC
 
-f(x, y)
+f($x$, $y$)

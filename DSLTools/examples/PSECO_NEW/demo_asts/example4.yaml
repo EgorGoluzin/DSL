@@ -1,0 +1,115 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: 'example4'
+children:
+  - type: 'TOKEN'
+    subtype: 'name'
+    value: 'example4'
+    attribute: 'example4'
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Loop'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'LC'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'FOR'
+                value: 'FOR'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Variable'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'name'
+                        value: 'i'
+                        attribute: ''
+                        children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Range'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'FROM'
+                    value: 'FROM'
+                    attribute: ''
+                    children: []
+                  - type: 'NONTERMINAL'
+                    subtype: 'Number'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'number'
+                        value: '1'
+                        attribute: ''
+                        children: []
+                  - type: 'TOKEN'
+                    subtype: 'TO'
+                    value: 'TO'
+                    attribute: ''
+                    children: []
+                  - type: 'NONTERMINAL'
+                    subtype: 'Number'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'number'
+                        value: '3'
+                        attribute: ''
+                        children: []
+              - type: 'TOKEN'
+                subtype: 'DO'
+                value: 'DO'
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Block'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Output'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'OUTPUT'
+                        value: 'OUTPUT'
+                        attribute: ''
+                        children: []
+                      - type: 'NONTERMINAL'
+                        subtype: 'Expression'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'TOKEN'
+                            subtype: 'exprtext'
+                            value: '$i$'
+                            attribute: ''
+                            children: []
+              - type: 'TOKEN'
+                subtype: 'END_FOR'
+                value: 'END_FOR'
+                attribute: ''
+                children: []

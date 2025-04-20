@@ -12,6 +12,7 @@ digraph LC {
   B -> C;
   C -> D;
   D -> E;
+  E -> E;
   E -> F;
   F -> end;
 }

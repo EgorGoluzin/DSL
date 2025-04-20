@@ -7,6 +7,7 @@ digraph LA {
   end [label="" shape=point];
   start -> A;
   A -> B;
+  B -> B;
   B -> C;
   C -> D;
   D -> end;

@@ -16,6 +16,7 @@ digraph Conditional {
   A -> B;
   B -> C;
   C -> D;
+  D -> D;
   D -> I;
   D -> G;
   D -> F;
@@ -25,6 +26,7 @@ digraph Conditional {
   J -> K;
   K -> L;
   L -> I;
+  L -> L;
   L -> G;
   L -> F;
   F -> end;

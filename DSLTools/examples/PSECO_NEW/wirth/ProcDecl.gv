@@ -15,6 +15,7 @@ digraph ProcDecl {
   C -> D;
   E -> D;
   D -> F;
+  F -> F;
   F -> G;
   G -> end;
 }
