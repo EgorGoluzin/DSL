@@ -277,54 +277,39 @@ class DefaultAstBuilder(IAstBuilder):
 
 
 class DefaultAstRenderer(IAstRender):
-    def visualize(self, go: GrammarObject, tokens: List[Token]):
-        # Шаг 1: Построить AST из GrammarObject и токенов
-        parser = GeneralizedParser(go)
-        ast = parser.parse(tokens)
+    def visualize(self, head: ASTNode, dest: Path):
+        h = graphviz.Digraph('AST', format='svg')
+        h.attr(rankdir='TB')
 
-        # Шаг 2: Создать граф с помощью graphviz
-        diagram_name = "ast_visualization"
-        h = graphviz.Digraph(diagram_name, format='svg')
-        h.attr(rankdir='TB')  # Сверху вниз для читаемости
-
-        # Шаг 3: Обойти AST и построить граф
         i = 1
-        nodes = [(ast, 0)]  # (узел, ID родителя)
+        nodes = [(head, 0)]
+
         while nodes:
-            node, parent_id = nodes.pop(0)
-
-            # Определяем тип узла и его форму
-            if node.type in go.non_terminals:
-                # Нетерминал
+            node, parent_idx = nodes.pop(0)
+            if node.type == "keyword":
+                label = f"KEY\nvalue: {node.value}"
+                shape = 'oval'
+            elif node.type in {"Expression", "Term"} or node.type.isupper():
                 label = f"NONTERMINAL\ntype: {node.type}"
-                if node.value:
-                    label += f"\nvalue: {node.value}"
-                h.node(str(i), label, shape='box')
-            elif node.type in go.terminals:
-                # Терминал
-                label = f"TERMINAL\ntype: {node.type}\nvalue: {node.value}"
-                h.node(str(i), label, shape='diamond')
-            elif any(key[0] == node.type for key in go.keys):
-                # Ключ
-                label = f"KEY\nstring: {node.value}"
-                h.node(str(i), label, shape='oval')
+                shape = 'box'
             else:
-                # Неизвестный тип (на всякий случай)
-                label = f"UNKNOWN\ntype: {node.type}\nvalue: {node.value}"
-                h.node(str(i), label, shape='ellipse')
+                label = f"TERMINAL\ntype: {node.type}\nvalue: {node.value}"
+                shape = 'diamond'
 
-            # Связываем с родителем, если он есть
-            if parent_id != 0:
-                h.edge(str(parent_id), str(i))
+            if node.position:
+                label += f"\npos: {node.position[0]}:{node.position[1]}"
 
-            # Добавляем детей в очередь
-            nodes.extend((child, i) for child in node.children)
+            h.node(str(i), label, shape=shape)
+            if parent_idx != 0:
+                h.edge(str(parent_idx), str(i))
+
+            if node.children:
+                nodes.extend((child, i) for child in node.children)
             i += 1
 
-        # Шаг 4: Сохраняем и рендерим граф
-        output_dir = "debug_ast"  # Можно сделать параметром, если нужно
-        h.render(directory=output_dir, view=True, cleanup=False)  # Оставляем .gv файл для отладки
-
+        dest_dir = dest.parent
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        h.render(filename=dest.stem, directory=str(dest_dir), format='svg', view=True, cleanup=False)
 
 class GeneralizedParser:
     def __init__(self, grammar: GrammarObject):
