@@ -71,6 +71,38 @@ class UMLParser(IGrammarParser):
     def _support_parse(self, support_file: Path):
         return [""], [""], ""
 
+class ParserError(Exception):
+    """Базовый класс для ошибок парсинга RBNF-грамматики."""
+    def __init__(self, message: str, line: str = None):
+        self.message = message
+        self.line = line
+        super().__init__(self.message)
+
+class KeyNotMatchedError(ParserError):
+    """Ошибка, когда ключ не соответствует ни одному терминалу."""
+    def __init__(self, key: str, line: str = None):
+        message = f"No one regular form included '{key}'"
+        super().__init__(message, line)
+
+class MultipleKeyMatchError(ParserError):
+    """Ошибка, когда ключ соответствует нескольким терминалам."""
+    def __init__(self, key: str, line: str = None):
+        message = f"More than one regular form included '{key}'"
+        super().__init__(message, line)
+
+class SeparatorError(ParserError):
+    """Ошибка, связанная с некорректным использованием разделителей."""
+    def __init__(self, key: str, separator: str, line: str = None):
+        message = f"Invalid use of separator '{separator}' in key '{key}'"
+        super().__init__(message, line)
+
+class Separators:
+    """Класс для управления разделителями в RBNF-парсере."""
+    def __init__(self):
+        self.separators = {';', '.'}
+
+    def is_separator(self, char: str) -> bool:
+        return char in self.separators
 
 class RBNFParser(IGrammarParser):
     def __init__(self):
@@ -142,17 +174,45 @@ class RBNFParser(IGrammarParser):
         self.terminals[name] = Terminal(name, pattern)
 
     def _parse_keys(self, line: str):
-        if line == ";":
-            key = line
-            for terminal in self.terminals.values():
-                res = re.match(terminal.pattern, key)
-                if res is not None:
-                    self.keys.append((terminal.name, key))
-                    return
-        keys = [k.strip('\'" ') for k in line.split(' ') if k.strip()]
-        is_key_in_regular_definition_error = True
-        is_key_in_more_than_one_regular_def_error = False
+        # Вот эта версия может не работать. В предыдущем коммите еще ок)
+        line = line.strip()
+        if not line:
+            return
+
+        separators = Separators()  # Создаём экземпляр разделителей
+        keys = []
+        current_key = ""
+        in_quotes = False
+        quote_char = None
+
+        for char in line:
+            if char in ('"', "'") and not in_quotes:  # Начало кавычек
+                in_quotes = True
+                quote_char = char
+                current_key += char
+            elif char == quote_char and in_quotes:  # Конец кавычек
+                in_quotes = False
+                current_key += char
+            elif separators.is_separator(char) and not in_quotes:  # Разделитель вне кавычек
+                if current_key.strip():
+                    keys.append(current_key.strip())
+                current_key = ""
+            elif char == ' ' and not in_quotes and current_key.strip():  # Пробел вне кавычек
+                keys.append(current_key.strip())
+                current_key = ""
+            else:
+                current_key += char
+
+        # Добавляем последний ключ
+        if current_key.strip():
+            keys.append(current_key.strip())
+
+        # Проверка ключей
         for key in keys:
+            if not key:
+                continue
+            is_key_in_regular_definition_error = True
+            is_key_in_more_than_one_regular_def_error = False
             for terminal in self.terminals.values():
                 res = re.match(terminal.pattern, key)
                 if res is not None and not is_key_in_more_than_one_regular_def_error:
@@ -160,9 +220,9 @@ class RBNFParser(IGrammarParser):
                     is_key_in_regular_definition_error = False
                     is_key_in_more_than_one_regular_def_error = True
                 elif is_key_in_more_than_one_regular_def_error and res is not None:
-                    raise f"More than one regular form included {key}"
+                    raise MultipleKeyMatchError(key, line)
             if is_key_in_regular_definition_error:
-                raise f"No one regular form included {key}"
+                raise KeyNotMatchedError(key, line)
 
     def _parse_non_terminals(self, line: str):
         nts = [nt.strip() for nt in line.split(';') if nt.strip()]
