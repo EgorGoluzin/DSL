@@ -1,0 +1,7 @@
+example6
+FUNC f(a, b)
+c = $a + b$
+RETURN $c$
+END_FUNC
+
+f($x$, $y$)

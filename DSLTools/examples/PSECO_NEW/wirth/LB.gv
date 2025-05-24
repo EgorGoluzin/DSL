@@ -10,6 +10,7 @@ digraph LB {
   A -> B;
   B -> C;
   C -> D;
+  D -> D;
   D -> E;
   E -> end;
 }

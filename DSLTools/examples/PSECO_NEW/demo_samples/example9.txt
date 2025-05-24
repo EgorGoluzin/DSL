@@ -1,0 +1,4 @@
+example9
+INPUT $x$
+x = $x * 2$
+OUTPUT $x$

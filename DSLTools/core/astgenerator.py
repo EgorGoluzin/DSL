@@ -47,6 +47,7 @@ class DefaultAstBuilder(IAstBuilder):
         self._debug = debug
         self.__logs: list[str] = []
         self.depth: int = 0
+        self.max_pos: int = 0
 
     def __ret(self):
         # print('States:')
@@ -63,6 +64,7 @@ class DefaultAstBuilder(IAstBuilder):
                 print(self.__ast)
                 error = f'Current token: {self.tokens[snap[-1].pos].repr()}\r\n'
                 self._log_ret(error)
+                error += f'Furthest token reached: {self.tokens[self.max_pos if self.max_pos < self.end else self.end].repr()}\r\n'
                 error += 'States to crash:\r\n'
                 for step in snap:
                     info = str(step)
@@ -82,12 +84,14 @@ class DefaultAstBuilder(IAstBuilder):
         limit = -100
         while True:
             counter += 1
-            print(f'Iteration {counter}')
+            # print(f'Iteration {counter}')
             if counter == limit:
-                print(f'Counter reached {limit = }')
+                # print(f'Counter reached {limit = }')
                 raise Exception(f'Counter reached {limit = }')
             state = self.states[-1]
             pos = state.pos
+            if pos > self.max_pos:
+                self.max_pos = pos
             node = state.node
             depth = state.depth
             rule = node.nextNodes[state.rule_index]
