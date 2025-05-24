@@ -42,7 +42,10 @@ KEYS:
     '(';
     ')';
     ',';
+    ':';
     '=';
+    '{';
+    '}';
 
 NONTERMINALS:
     Program; Block; Expression; FuncCall; Arguments; Parameters;
@@ -56,7 +59,7 @@ AXIOM:
 
 RULES:
     Program        ::= programname { Block };
-    Block          ::= Assignment | Conditional | Expression | Loop | FuncCall | FuncDecl | ProcDecl | IterDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor;
+    Block          ::= Assignment | Conditional | Expression | Loop | FuncCall | FuncDecl | ProcDecl | IterDecl | Input | Output | Comment | Goto | ArrayDecl | StructDecl | Select | Return | Yield | NextFor | Identifier;
     Expression     ::= exprtext;
     FuncCall       ::= Identifier '(' [ Arguments ] ')';
     Arguments      ::= Expression { ',' Expression };
@@ -83,7 +86,7 @@ RULES:
     Goto           ::= 'GOTO' Identifier;
     ArrayDecl      ::= 'ARRAY' Expression 'OF' Identifier | 'ARRAY' Expression 'OF' Expression;
     StructDecl     ::= 'STRUCT' Identifier '{' { FieldDecl } '}';
-    FieldDecl      ::= Identifier ':' Identifier | Identifier ':' Statement;
+    FieldDecl      ::= Identifier ':' Identifier | Identifier ':' Expression;
     Select         ::= 'SELECT' Variable 'IN' Set;
     Yield          ::= 'YIELD' Expression;
     Return         ::= 'RETURN' Expression;

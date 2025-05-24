@@ -1,0 +1,95 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: 'example18'
+children:
+  - type: 'TOKEN'
+    subtype: 'name'
+    value: 'example18'
+    attribute: 'example18'
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'FuncCall'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'Identifier'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'name'
+                value: 'f'
+                attribute: ''
+                children: []
+          - type: 'TOKEN'
+            subtype: '('
+            value: '('
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Arguments'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Expression'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'exprtext'
+                    value: '$a$'
+                    attribute: ''
+                    children: []
+              - type: 'TOKEN'
+                subtype: ','
+                value: ','
+                attribute: ''
+                children: []
+              - type: 'NONTERMINAL'
+                subtype: 'Expression'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'exprtext'
+                    value: '$b$'
+                    attribute: ''
+                    children: []
+          - type: 'TOKEN'
+            subtype: ')'
+            value: ')'
+            attribute: ''
+            children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'Return'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'RETURN'
+            value: 'RETURN'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Expression'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'exprtext'
+                value: '$a * b$'
+                attribute: ''
+                children: []

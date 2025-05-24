@@ -14,7 +14,7 @@ children:
     attribute: ''
     children:
       - type: 'NONTERMINAL'
-        subtype: 'Expression'
+        subtype: 'Identifier'
         value: ''
         attribute: ''
         children:
@@ -64,7 +64,7 @@ children:
                 attribute: ''
                 children:
                   - type: 'NONTERMINAL'
-                    subtype: 'Expression'
+                    subtype: 'Identifier'
                     value: ''
                     attribute: ''
                     children:
@@ -139,7 +139,7 @@ children:
                 attribute: ''
                 children:
                   - type: 'NONTERMINAL'
-                    subtype: 'Expression'
+                    subtype: 'Identifier'
                     value: ''
                     attribute: ''
                     children:
@@ -154,7 +154,7 @@ children:
                 attribute: ''
                 children:
                   - type: 'NONTERMINAL'
-                    subtype: 'Expression'
+                    subtype: 'Identifier'
                     value: ''
                     attribute: ''
                     children:

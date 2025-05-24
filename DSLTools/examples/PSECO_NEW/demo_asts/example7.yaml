@@ -1,0 +1,180 @@
+type: 'NONTERMINAL'
+subtype: 'Program'
+value: ''
+attribute: 'example7'
+children:
+  - type: 'TOKEN'
+    subtype: 'name'
+    value: 'example7'
+    attribute: 'example7'
+    children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'ProcDecl'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'TOKEN'
+            subtype: 'PROC'
+            value: 'PROC'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Identifier'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'name'
+                value: 'p'
+                attribute: ''
+                children: []
+          - type: 'TOKEN'
+            subtype: '('
+            value: '('
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Parameters'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Variable'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Identifier'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'name'
+                        value: 'x'
+                        attribute: ''
+                        children: []
+          - type: 'TOKEN'
+            subtype: ')'
+            value: ')'
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Block'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Assignment'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'NONTERMINAL'
+                    subtype: 'Variable'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'NONTERMINAL'
+                        subtype: 'Identifier'
+                        value: ''
+                        attribute: ''
+                        children:
+                          - type: 'TOKEN'
+                            subtype: 'name'
+                            value: 'x'
+                            attribute: ''
+                            children: []
+                  - type: 'TOKEN'
+                    subtype: '='
+                    value: '='
+                    attribute: ''
+                    children: []
+                  - type: 'NONTERMINAL'
+                    subtype: 'Expression'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'exprtext'
+                        value: '$x * 2$'
+                        attribute: ''
+                        children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Block'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Output'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'OUTPUT'
+                    value: 'OUTPUT'
+                    attribute: ''
+                    children: []
+                  - type: 'NONTERMINAL'
+                    subtype: 'Expression'
+                    value: ''
+                    attribute: ''
+                    children:
+                      - type: 'TOKEN'
+                        subtype: 'exprtext'
+                        value: '$x$'
+                        attribute: ''
+                        children: []
+          - type: 'TOKEN'
+            subtype: 'END_PROC'
+            value: 'END_PROC'
+            attribute: ''
+            children: []
+  - type: 'NONTERMINAL'
+    subtype: 'Block'
+    value: ''
+    attribute: ''
+    children:
+      - type: 'NONTERMINAL'
+        subtype: 'FuncCall'
+        value: ''
+        attribute: ''
+        children:
+          - type: 'NONTERMINAL'
+            subtype: 'Identifier'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'TOKEN'
+                subtype: 'name'
+                value: 'p'
+                attribute: ''
+                children: []
+          - type: 'TOKEN'
+            subtype: '('
+            value: '('
+            attribute: ''
+            children: []
+          - type: 'NONTERMINAL'
+            subtype: 'Arguments'
+            value: ''
+            attribute: ''
+            children:
+              - type: 'NONTERMINAL'
+                subtype: 'Expression'
+                value: ''
+                attribute: ''
+                children:
+                  - type: 'TOKEN'
+                    subtype: 'exprtext'
+                    value: '$5$'
+                    attribute: ''
+                    children: []
+          - type: 'TOKEN'
+            subtype: ')'
+            value: ')'
+            attribute: ''
+            children: []
